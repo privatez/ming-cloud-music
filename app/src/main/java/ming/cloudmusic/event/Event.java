@@ -5,7 +5,7 @@ package ming.cloudmusic.event;
  */
 public class Event {
 
-    public static class ServiceEvent {
+    public static class Service {
 
         public static final String SERVICE_PLAY = "S_PLAY";
 

@@ -1,7 +1,6 @@
 package ming.cloudmusic.event.model;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Lhy on 2016/3/5.
@@ -9,7 +8,7 @@ import java.util.Map;
 public class MusicEvent {
 
     private String msg;
-    private Map extras;
+    private HashMap extras;
 
     public MusicEvent() {
         extras = new HashMap<>();
@@ -23,11 +22,11 @@ public class MusicEvent {
         this.msg = msg;
     }
 
-    public Map getExtras() {
+    public HashMap getExtras() {
         return extras;
     }
 
-    public void setExtras(Map extras) {
+    public void setExtras(HashMap extras) {
         this.extras = extras;
     }
 }

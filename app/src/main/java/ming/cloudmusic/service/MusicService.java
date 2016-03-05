@@ -1,6 +1,5 @@
 package ming.cloudmusic.service;
 
-import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -21,7 +20,7 @@ import ming.cloudmusic.event.model.MusicEvent;
 import ming.cloudmusic.model.LocalMusic;
 import ming.cloudmusic.util.Constant;
 
-public class MusicService extends Service implements Constant {
+public class MusicService extends android.app.Service implements Constant {
 
 	private MediaPlayer mPlayer;
 
@@ -116,7 +115,7 @@ public class MusicService extends Service implements Constant {
 					if (mPlayer.isPlaying()) {
 						mExtras.clear();
 						mExtras.put(Event.Extra.EXTRA_BAR_CHANGE, mPlayer.getCurrentPosition());
-						postEventMsgHasExtra(Event.ServiceEvent.SERVICE_BAR_CHANGE);
+						postEventMsgHasExtra(Event.Service.SERVICE_BAR_CHANGE);
 						Thread.sleep(1000);
 					}
 				}
@@ -172,7 +171,7 @@ public class MusicService extends Service implements Constant {
 
 		mExtras.clear();
 		mExtras.put(Event.Extra.EXTRA_PLAY_MODE, mPlayingMode);
-		postEventMsgHasExtra(Event.ServiceEvent.SERVICE_PLAY_MODE);
+		postEventMsgHasExtra(Event.Service.SERVICE_PLAY_MODE);
 
 	}
 
@@ -188,15 +187,15 @@ public class MusicService extends Service implements Constant {
 			mExtras.put(Event.Extra.EXTRA_PLAYING_DURATION, music.getDuration());
 
 			if (mPlayer.isPlaying()) {
-				postEventMsg(Event.ServiceEvent.SERVICE_PLAY);
+				postEventMsg(Event.Service.SERVICE_PLAY);
 			} else {
-				postEventMsg(Event.ServiceEvent.SERVICE_PAUSE);
+				postEventMsg(Event.Service.SERVICE_PAUSE);
 			}
 
 		} else {
 			return;
 		}
-		postEventMsgHasExtra(Event.ServiceEvent.SERVICE_POST_PLAYINGMUSIC);
+		postEventMsgHasExtra(Event.Service.SERVICE_POST_PLAYINGMUSIC);
 	}
 
 	public void right() {
@@ -263,7 +262,7 @@ public class MusicService extends Service implements Constant {
 	private void pause() {
 		mPlayer.stop();
 		musicPosition = mPlayer.getCurrentPosition();
-		postEventMsg(Event.ServiceEvent.SERVICE_PAUSE);
+		postEventMsg(Event.Service.SERVICE_PAUSE);
 	}
 
 	private void play() {

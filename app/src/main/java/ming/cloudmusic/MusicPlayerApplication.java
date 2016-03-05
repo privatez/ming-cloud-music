@@ -1,20 +1,17 @@
 package ming.cloudmusic;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import org.xutils.x;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
-
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import com.lhy.cloudmusic.bll.MusicBiz;
-import com.lhy.cloudmusic.daoimp.DataBaseDao;
-import com.lhy.cloudmusic.entity.Music;
 
 import ming.cloudmusic.model.LocalMusic;
 
@@ -65,7 +62,7 @@ public class MusicPlayerApplication extends Application {
 		@Override
 		public void run() {
 			super.run();
-			MusicBiz.insertOnPlayMusics(onPlayMusics);
+			/*MusicBiz.insertOnPlayMusics(onPlayMusics);*/
 		}
 	}
 
@@ -82,6 +79,8 @@ public class MusicPlayerApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		new InnerDataThread(this).start();
+		x.Ext.init(this);
+		x.Ext.setDebug(true);
 	}
 
 	private class InnerDataThread extends Thread {
@@ -127,15 +126,14 @@ public class MusicPlayerApplication extends Application {
 			}
 			SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
 			boolean isFirstRun = sp.getBoolean("isFirstRun", true);
-			if (isFirstRun) {
+			/*if (isFirstRun) {
 				DataBaseDao.createMusicDatabase(getContentResolver());
 			}
 			File file2 = new File("/data/cloudmusic/pic");
 			file2.mkdirs();
 
 			localMusics = MusicBiz.getLocalMusic();
-			onPlayMusics = MusicBiz.getOnPlayMusic();
-			Log.e("", "----创建数据库成功-----");
+			onPlayMusics = MusicBiz.getOnPlayMusic();*/
 		}
 	}
 }

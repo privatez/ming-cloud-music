@@ -3,34 +3,41 @@ package ming.cloudmusic.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
+@Table(name = "LocalMusic")
 public class LocalMusic implements Parcelable {
-    /**
-     * ¸èÇúID
-     */
+
+    @Column(name = "id",isId = true)
     private long id;
-    /**
-     * ¸èÇútitle
-     */
+
+
+    @Column(name = "title")
     private String title;
-    /**
-     * ¸èÇúÃû
-     */
+
+
+    @Column(name = "title")
     private String name;
-    /**
-     * ¸èÇú´æ·ÅÂ·¾¶
-     */
+
+
+    @Column(name = "path")
     private String path;
-    /**
-     * ¸èÇúµÄÑÝ³ªÕß
-     */
+
+
+    @Column(name = "shortPath")
+    private String shortPath;
+
+
+    @Column(name = "artlist")
     private String artlist;
-    /**
-     * ¸èÇú×¨¼­Ãû
-     */
+
+
+    @Column(name = "album")
     private String album;
-    /**
-     * ¸èÇúÊ±³¤
-     */
+
+
+    @Column(name = "duration")
     private int duration;
 
     @Override
@@ -78,6 +85,14 @@ public class LocalMusic implements Parcelable {
         this.path = path;
     }
 
+    public String getShortPath() {
+        return shortPath;
+    }
+
+    public void setShortPath(String shortPath) {
+        this.shortPath = shortPath;
+    }
+
     public String getArtlist() {
         return artlist;
     }
@@ -113,6 +128,7 @@ public class LocalMusic implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.name);
         dest.writeString(this.path);
+        dest.writeString(this.shortPath);
         dest.writeString(this.artlist);
         dest.writeString(this.album);
         dest.writeInt(this.duration);
@@ -126,12 +142,13 @@ public class LocalMusic implements Parcelable {
         this.title = in.readString();
         this.name = in.readString();
         this.path = in.readString();
+        this.shortPath = in.readString();
         this.artlist = in.readString();
         this.album = in.readString();
         this.duration = in.readInt();
     }
 
-    public static final Parcelable.Creator<LocalMusic> CREATOR = new Parcelable.Creator<LocalMusic>() {
+    public static final Creator<LocalMusic> CREATOR = new Creator<LocalMusic>() {
         public LocalMusic createFromParcel(Parcel source) {
             return new LocalMusic(source);
         }

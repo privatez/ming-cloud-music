@@ -6,6 +6,8 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/ming/cloudmusic/model/LocalMusic.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/ming/cloudmusic/service/MusicService.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/ming/cloudmusic/util/Constant.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/ming/cloudmusic/util/DateSDF.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/ming/cloudmusic/util/ReaderMusicDao.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/abc_ic_ab_back_mtrl_am_alpha.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/abc_ic_menu_moreoverflow_mtrl_alpha.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/about_logo.png" charset="GBK" />
@@ -132,6 +134,7 @@
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/topmenu_icn_skin.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/topmenu_icn_store.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/topmenu_icn_time.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_launch.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_musicplay.xml" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>

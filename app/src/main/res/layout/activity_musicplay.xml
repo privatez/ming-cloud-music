@@ -39,7 +39,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="5dp"
             android:singleLine="true"
-            android:text="@string/art_narmal"
             android:textColor="@color/black"
             android:textSize="12sp" />
 
@@ -51,7 +50,6 @@
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/tv_play_back"
             android:singleLine="true"
-            android:text="@string/songname_narmal"
             android:textColor="@color/black"
             android:textSize="14sp" />
 
@@ -120,7 +118,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="7dp"
         android:layout_marginRight="5dp"
-        android:text="@string/time"
+        android:text="00:00"
         android:textColor="@color/black" />
 
     <TextView
@@ -130,7 +128,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/tv_alltime"
         android:layout_marginLeft="5dp"
-        android:text="@string/time"
+        android:text="00:00"
         android:textColor="@color/black" />
 
 </RelativeLayout>
