@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/playpage_background">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/play_btn_getlrc_prs">
+
+        <TextView
+            android:id="@+id/tv_playinfo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/play_btn_info" />
+
+
+        <TextView
+            android:id="@+id/tv_play_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/abc_ic_ab_back_mtrl_am_alpha" />
+
+        <TextView
+            android:id="@+id/tv_playtitle_art"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_playtitle_title"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:singleLine="true"
+            android:text="@string/art_narmal"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_playtitle_title"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tv_playinfo"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/tv_play_back"
+            android:singleLine="true"
+            android:text="@string/songname_narmal"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_play_playorpasue"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/play_btn_play" />
+
+    <TextView
+        android:id="@+id/tv_play_prev"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignBaseline="@+id/tv_play_playorpasue"
+        android:layout_alignBottom="@+id/tv_play_playorpasue"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/tv_play_playorpasue"
+        android:background="@drawable/play_btn_prev" />
+
+    <TextView
+        android:id="@+id/tv_play_next"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignBaseline="@+id/tv_play_playorpasue"
+        android:layout_alignBottom="@+id/tv_play_playorpasue"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/tv_play_playorpasue"
+        android:background="@drawable/play_btn_next" />
+
+    <TextView
+        android:id="@+id/tv_play_mode"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignBaseline="@+id/tv_play_prev"
+        android:layout_alignBottom="@+id/tv_play_prev"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/play_icn_one" />
+
+    <TextView
+        android:id="@+id/tv_play_menu"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignBaseline="@+id/tv_play_next"
+        android:layout_alignBottom="@+id/tv_play_next"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/play_icn_src" />
+
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_play_playorpasue"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp" />
+
+    <TextView
+        android:id="@+id/tv_alltime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/seekBar1"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="7dp"
+        android:layout_marginRight="5dp"
+        android:text="@string/time"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_playtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/tv_alltime"
+        android:layout_marginLeft="5dp"
+        android:text="@string/time"
+        android:textColor="@color/black" />
+
+</RelativeLayout>
