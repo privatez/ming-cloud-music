@@ -16,7 +16,6 @@ public class LaunchActivity extends DefalutBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
         ReaderMusicDao dao = new ReaderMusicDao();
-        dao.findLocalMusic(getContentResolver());
-        dao.getMusics();
+        dao.findMobleMusic(getContentResolver());
     }
 }

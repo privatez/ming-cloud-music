@@ -6,8 +6,8 @@ import android.os.Parcelable;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
-@Table(name = "LocalMusic")
-public class LocalMusic implements Parcelable {
+@Table(name = "DbMusic")
+public class DbMusic implements Parcelable {
 
     @Column(name = "id",isId = true)
     private long id;
@@ -42,7 +42,7 @@ public class LocalMusic implements Parcelable {
 
     @Override
     public String toString() {
-        return "LocalMusic{" +
+        return "DbMusic{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", name='" + name + '\'' +
@@ -134,10 +134,10 @@ public class LocalMusic implements Parcelable {
         dest.writeInt(this.duration);
     }
 
-    public LocalMusic() {
+    public DbMusic() {
     }
 
-    protected LocalMusic(Parcel in) {
+    protected DbMusic(Parcel in) {
         this.id = in.readLong();
         this.title = in.readString();
         this.name = in.readString();
@@ -148,13 +148,13 @@ public class LocalMusic implements Parcelable {
         this.duration = in.readInt();
     }
 
-    public static final Creator<LocalMusic> CREATOR = new Creator<LocalMusic>() {
-        public LocalMusic createFromParcel(Parcel source) {
-            return new LocalMusic(source);
+    public static final Creator<DbMusic> CREATOR = new Creator<DbMusic>() {
+        public DbMusic createFromParcel(Parcel source) {
+            return new DbMusic(source);
         }
 
-        public LocalMusic[] newArray(int size) {
-            return new LocalMusic[size];
+        public DbMusic[] newArray(int size) {
+            return new DbMusic[size];
         }
     };
 }

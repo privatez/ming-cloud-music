@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import ming.cloudmusic.model.LocalMusic;
+import ming.cloudmusic.model.DbMusic;
 
 public class MusicPlayerApplication extends Application {
 
-	private ArrayList<LocalMusic> localMusics;
-	private ArrayList<LocalMusic> onPlayMusics;
+	private ArrayList<DbMusic> localMusics;
+	private ArrayList<DbMusic> onPlayMusics;
 
 	public int getOnPlaySize() {
 		return onPlayMusics.size();
@@ -41,19 +41,19 @@ public class MusicPlayerApplication extends Application {
 		return -1;
 	}
 
-	public LocalMusic getOnPlayMusicByFlag(int num) {
+	public DbMusic getOnPlayMusicByFlag(int num) {
 		if (onPlayMusics.size() == 0) {
 			return null;
 		}
 		return onPlayMusics.get(num);
 	}
 
-	public ArrayList<LocalMusic> getOnPlayMusics() {
+	public ArrayList<DbMusic> getOnPlayMusics() {
 
 		return onPlayMusics;
 	}
 
-	public void setOnPlayMusics(ArrayList<LocalMusic> onPlayMusics) {
+	public void setOnPlayMusics(ArrayList<DbMusic> onPlayMusics) {
 		this.onPlayMusics = onPlayMusics;
 		new InsertThread().start();
 	}
@@ -66,12 +66,12 @@ public class MusicPlayerApplication extends Application {
 		}
 	}
 
-	public ArrayList<LocalMusic> getLocalMusics() {
+	public ArrayList<DbMusic> getLocalMusics() {
 
 		return localMusics;
 	}
 
-	public void setLocalMusics(ArrayList<LocalMusic> localMusics) {
+	public void setLocalMusics(ArrayList<DbMusic> localMusics) {
 		this.localMusics = localMusics;
 	}
 
