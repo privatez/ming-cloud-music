@@ -12,18 +12,20 @@ import ming.cloudmusic.event.EventUtils;
  */
 public class DefalutBaseActivity extends Activity {
 
+    protected HashMap mExtras;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mExtras = new HashMap();
     }
 
     protected void postEventMsg(String msg) {
-        EventUtils.getDefault().postEventMsg(msg);
+        EventUtils.getDefault().postEventMsg(msg, EventUtils.KEY);
     }
 
-    protected void postEventMsgHasExtra(String msg,HashMap extras) {
-        EventUtils.getDefault().postEventMsgHasExtra(msg,extras);
+    protected void postEventMsgHasExtra(String msg, HashMap mExtras) {
+        EventUtils.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtils.KEY);
     }
 
 }

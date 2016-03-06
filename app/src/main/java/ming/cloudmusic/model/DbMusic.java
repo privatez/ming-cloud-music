@@ -17,7 +17,7 @@ public class DbMusic implements Parcelable {
     private String title;
 
 
-    @Column(name = "title")
+    @Column(name = "name")
     private String name;
 
 

@@ -5,42 +5,6 @@ package ming.cloudmusic.event;
  */
 public class Event {
 
-    public static class Service {
-
-        public static final String SERVICE_PLAY = "S_PLAY";
-
-        public static final String SERVICE_PAUSE = "S_PAUSE";
-
-        public static final String SERVICE_NEXT = "S_NEXT";
-
-        public static final String SERVICE_PREVIOUS = "S_PREVIOUS";
-
-        public static final String SERVICE_PLAY_MODE = "S_PLAY_MODE";
-
-        public static final String SERVICE_BAR_CHANGE = "S_BAR_CHANGE";
-
-        public static final String SERVICE_POST_PLAYINGMUSIC = "S_POST_PLAYINGMUSIC";
-
-    }
-
-    public static class KeyEvent {
-
-        public static final String KEY_PLAY = "K_PLAY";
-
-        public static final String KEY_PAUSE = "K_PAUSE";
-
-        public static final String KEY_NEXT = "K_NEXT";
-
-        public static final String KEY_PREVIOUS = "K_PREVIOUS";
-
-        public static final String KEY_PLAY_MODE = "K_PLAY_MODE";
-
-        public static final String KEY_BAR_CHANGE = "K_BAR_CHANGE";
-
-        public static final String KEY_GET_PLAYINGMUSIC = "KEY_GET_PLAYINGMUSIC";
-
-    }
-
     public static class Extra {
 
         public static final String EXTRA_PLAY_MODE = "EXTRA_PLAY_MODE";
@@ -54,6 +18,8 @@ public class Event {
         public static final String EXTRA_PLAYING_ART = "EXTRA_PLAYING_ART";
 
         public static final String EXTRA_PLAYING_DURATION = "EXTRA_PLAYING_DURATION";
+
+        public static final String EXTRA_PLAYING_POINT = "EXTRA_PLAYING_POINT";
 
     }
 

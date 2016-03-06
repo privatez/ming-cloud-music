@@ -14,18 +14,20 @@ import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import ming.cloudmusic.model.DbMusic;
+import ming.cloudmusic.model.PlayingMusic;
 
 public class ReaderMusicDao implements Constant {
 
     private SQLiteDatabase db;
 
     /**
-     * µçÄÔ
+     * åœ°å€
      */
     private static String path;
 
@@ -37,35 +39,25 @@ public class ReaderMusicDao implements Constant {
             .setDbOpenListener(new DbManager.DbOpenListener() {
                 @Override
                 public void onDbOpened(DbManager db) {
-                    // ¿ªÆôWAL, ¶ÔĞ´Èë¼ÓËÙÌáÉı¾Ş´ó
+                    // ï¿½ï¿½ï¿½ï¿½WAL, ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş´ï¿½
                     db.getDatabase().enableWriteAheadLogging();
                 }
             });
 
     private void onTestDbClick(ContentResolver cr) {
 
-        // Ò»¶Ô¶à: (±¾Ê¾ÀıµÄ´úÂë)
-        // ×Ô¼ºÔÚ¶àµÄÒ»·½(child)±£´æÁíÒ»·½µÄ(parentId), ²éÕÒµÄÊ±ºòÓÃparentId²éparent»òchild.
-        // Ò»¶ÔÒ»:
-        // ÔÚÈÎºÎÒ»±ß±£´æÁíÒ»±ßµÄId²¢¼ÓÉÏÎ¨Ò»ÊôĞÔ: @Column(name = "parentId", property = "UNIQUE")
-        // ¶à¶Ô¶à:
-        // ÔÙ½¨Ò»¸ö¹ØÁª±í, ±£´æÁ½±ßµÄid. ²éÑ¯·ÖÁ½²½: ÏÈ²é¹ØÁª±íµÃµ½id, ÔÙ²é¶ÔÓ¦±íµÄÊôĞÔ.
+			/*db.save(parent);
 
-		/*	Parent test = db.selector(Parent.class).where("id", "in", new int[]{1, 3, 6}).findFirst();
-
-			db.save(parent);
-
-			db.saveBindingId(child);//±£´æ¶ÔÏó¹ØÁªÊı¾İ¿âÉú³ÉµÄid
+			db.saveBindingId(child);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½Éµï¿½id
 
 			List<DbModel> dbModels = db.selector(Parent.class)
 					.groupBy("name")
 					.select("name", "count(name) as count").findAll();
 			temp += "group by result:" + dbModels.get(0).getDataMap() + "\n";*/
-
     }
 
     /**
-     * Ò»¼ü»ñµÃµ±Ç°ÊÖ»úÒôÀÖÎÄ¼ş
+     * æ‰«æå½“å‰æ‰‹æœºå­˜å‚¨çš„éŸ³ä¹æ–‡ä»¶
      *
      * @param cr
      */
@@ -75,6 +67,10 @@ public class ReaderMusicDao implements Constant {
                 Audio.Media.DISPLAY_NAME, Audio.Media.DATA, Audio.Media.ARTIST,
                 Audio.Media.ALBUM, Audio.Media.DURATION,};
         Cursor c = cr.query(uri, projection, null, null, null);
+        DbMusic dbMusic;
+
+        ArrayList<PlayingMusic> playingMusics = new ArrayList<>();
+        PlayingMusic playingMusic ;
 
         try {
 
@@ -90,24 +86,35 @@ public class ReaderMusicDao implements Constant {
                 String album = (c.getString(c.getColumnIndex(Audio.Media.ALBUM)));
                 int duration = (c.getInt(c.getColumnIndex(Audio.Media.DURATION)));
 
-                DbMusic music = new DbMusic();
-                music.setId(id);
-                music.setTitle(title);
-                music.setName(name);
-                music.setPath(path);
-                music.setArtlist(artlist);
-                music.setAlbum(album);
-                music.setDuration(duration);
+                dbMusic = new DbMusic();
+                dbMusic.setId(id);
+                dbMusic.setTitle(title);
+                dbMusic.setName(name);
+                dbMusic.setPath(path);
+                dbMusic.setArtlist(artlist);
+                dbMusic.setAlbum(album);
+                dbMusic.setDuration(duration);
 
-                LogUtils.log(music.toString());
-                LogUtil.e(music.toString());
+                playingMusic = new PlayingMusic();
+                playingMusic.setId(id);
+                playingMusic.setTitle(title);
+                playingMusic.setName(name);
+                playingMusic.setPath(path);
+                playingMusic.setArtlist(artlist);
+                playingMusic.setAlbum(album);
+                playingMusic.setDuration(duration);
+
+                playingMusics.add(playingMusic);
+
+                LogUtils.log(dbMusic.toString());
+                LogUtil.e(dbMusic.toString());
 
                 int num = path.lastIndexOf("/");
                 String subpath = path.substring(0, num);
-                music.setShortPath(subpath);
+                dbMusic.setShortPath(subpath);
 
-                db.save(music);
-
+                db.save(dbMusic);
+                db.close();
             }
         } catch (Throwable e) {
             LogUtil.e(e.getMessage());
@@ -115,11 +122,13 @@ public class ReaderMusicDao implements Constant {
             c.close();
         }
 
+        insertPlayingMusics(playingMusics);
+
     }
 
 
     /**
-     * »ñÈ¡µ±Ç°ÏµÍ³ÒÑ¶ÁÈ¡µÄ¸èÇú
+     * è·å–å·²å­˜å‚¨åœ¨è½¯ä»¶æ•°æ®åº“ä¸­çš„éŸ³ä¹åˆ—è¡¨
      *
      * @return
      */
@@ -128,83 +137,73 @@ public class ReaderMusicDao implements Constant {
         DbManager db = x.getDb(daoConfig);
         try {
             musics.addAll(db.findAll(DbMusic.class));
-        } catch (DbException e) {
+            db.close();
+        } catch (java.io.IOException e) {
             e.printStackTrace();
         }
 
-        LogUtils.log(musics.toString());
+        LogUtils.log("æ•°æ®åº“ä¸­çš„éŸ³ä¹ï¼š"+musics.toString());
 
         return musics;
     }
 
     /**
-     * »ñÈ¡µ±Ç°²¥·Å¸èÇúÁĞ±íĞÅÏ¢
+     * è·å–æ­£åœ¨æ’­æ”¾çš„éŸ³ä¹åˆ—è¡¨
      *
      * @return ArrayList<Music>
      */
-    public ArrayList<DbMusic> getOnPlayMusics() {
-        DbMusic music = null;
-        ArrayList<DbMusic> musics = new ArrayList<DbMusic>();
-        musics.clear();
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
+    public ArrayList<PlayingMusic> getPlayingMusics() {
 
-        String sql = "select * from onplaymusic_info";
-        Cursor c = db.rawQuery(sql, null);
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            music = new DbMusic();
-            music.setId(c.getLong(c.getColumnIndex("_id")));
-            music.setTitle(c.getString(c.getColumnIndex("_title")));
-            music.setName(c.getString(c.getColumnIndex("display_name")));
-            music.setPath(c.getString(c.getColumnIndex("data")));
-            music.setArtlist(c.getString(c.getColumnIndex("artlist")));
-            music.setAlbum(c.getString(c.getColumnIndex("album")));
-            music.setDuration(c.getInt(c.getColumnIndex("duration")));
-            musics.add(music);
+        ArrayList<PlayingMusic> musics = new ArrayList();
+
+        DbManager db = x.getDb(daoConfig);
+        try {
+            musics.addAll(db.findAll(PlayingMusic.class));
+            db.close();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
-        close(c);
+
+        LogUtils.log("æ’­æ”¾ä¸­çš„éŸ³ä¹ï¼š"+musics.toString());
+
         return musics;
     }
 
     /**
-     * ¸øµ±Ç°²¥·ÅÁĞ±íÌí¼Ó¸èÇú
+     * æ·»åŠ éŸ³ä¹åˆ°æ’­æ”¾æ•°æ®åº“
      *
      * @param musics
-     * @return ³É¹¦Ìí¼ÓµÄÊıÁ¿
+     * @return ï¿½É¹ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½
      */
 
-    public int insertOnPlayMusics(ArrayList<DbMusic> musics) {
+    public int insertPlayingMusics(ArrayList<PlayingMusic> musics) {
+
         int Flag = 0;
-        DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
+
+        PlayingMusic music;
+
+        DbManager db = x.getDb(daoConfig);
 
         for (int i = 0; i < musics.size(); i++) {
             music = musics.get(i);
-            long id = (music.getId());
-            String title = (music.getTitle());
-            String name = (music.getName());
-            String path = (music.getPath());
-            String artlist = (music.getArtlist());
-            String album = (music.getAlbum());
-            int duration = (music.getDuration());
-            // °ÑÊı¾İ´æÔÚonplaymusic_info±íÖĞ
             try {
-                Object[] bindArgs = {id, title, name, path, artlist, album,
-                        duration};
-
-                String insertSql = "insert into onplaymusic_info values(?,?,?,?,?,?,?)";
-                db.execSQL(insertSql, bindArgs);
-            } catch (SQLException e) {
+                db.save(music);
+            } catch (DbException e) {
                 Flag++;
-                Log.e("cloudmusic", e.getMessage());
             }
         }
 
-        close();
+        try {
+            db.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return musics.size() - Flag;
     }
 
     /**
-     * »ñµÃÀúÊ·²¥·ÅÁĞ±í
+     * ï¿½ï¿½ï¿½ï¿½ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½
      *
      * @return
      */
@@ -233,10 +232,10 @@ public class ReaderMusicDao implements Constant {
     }
 
     /**
-     * Ìí¼Ó²¥·ÅÍêµÄ¸èÇúµ½ÀúÊ·²¥·ÅÁĞ±í
+     * ï¿½ï¿½Ó²ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½
      *
      * @param musics
-     * @return ³É¹¦µÄÊıÁ¿
+     * @return ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     public int insertHistoryMusics(ArrayList<DbMusic> musics) {
         int okFlag = 0;
@@ -254,7 +253,7 @@ public class ReaderMusicDao implements Constant {
             int duration = (music.getDuration());
             // String
             // date=String.valueOf(SystemClock.currentThreadTimeMillis());
-            // °ÑÊı¾İ´æÔÚonplaymusic_info±íÖĞ
+            // ï¿½ï¿½ï¿½ï¿½İ´ï¿½ï¿½ï¿½onplaymusic_infoï¿½ï¿½ï¿½ï¿½
             try {
                 Object[] bindArgs = {id, title, name, path, artlist, album,
                         duration};
@@ -271,9 +270,9 @@ public class ReaderMusicDao implements Constant {
     }
 
     /**
-     * Ò»¼üÇå¿ÕÀúÊ·²¥·ÅÁĞ±í
+     * Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê·ï¿½ï¿½ï¿½ï¿½ï¿½Ğ±ï¿½
      *
-     * @return É¾³ı³É¹¦µÄÌõÊı,-1±íÊ¾É¾³ıÊ§°Ü
+     * @return É¾ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,-1ï¿½ï¿½Ê¾É¾ï¿½ï¿½Ê§ï¿½ï¿½
      */
     public int clearHistoryMusic() {
         int okFlag = -1;
@@ -289,9 +288,9 @@ public class ReaderMusicDao implements Constant {
     }
 
     /**
-     * Ê¹ÓÃ¸èÊÖÃû·ÖÀàÏÔÊ¾
+     * Ê¹ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
      *
-     * @return ArrayListĞÍµÄMap·ºĞÍµÄ¼¯ºÏ
+     * @return ArrayListï¿½Íµï¿½Mapï¿½ï¿½ï¿½ÍµÄ¼ï¿½ï¿½ï¿½
      */
     public ArrayList<Map<String, String>> groupByArtlist() {
         ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -313,9 +312,9 @@ public class ReaderMusicDao implements Constant {
     }
 
     /**
-     * Ê¹ÓÃÎÄ¼şÃû·ÖÀàÏÔÊ¾
+     * Ê¹ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
      *
-     * @return ArrayListĞÍµÄMap·ºĞÍµÄ¼¯ºÏ
+     * @return ArrayListï¿½Íµï¿½Mapï¿½ï¿½ï¿½ÍµÄ¼ï¿½ï¿½ï¿½
      */
     public ArrayList<Map<String, String>> groupByFilePath() {
         ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -337,9 +336,9 @@ public class ReaderMusicDao implements Constant {
     }
 
     /**
-     * Ê¹ÓÃ×¨¼­Ãû·ÖÀàÏÔÊ¾
+     * Ê¹ï¿½ï¿½×¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
      *
-     * @return ArrayListĞÍµÄMap·ºĞÍµÄ¼¯ºÏ
+     * @return ArrayListï¿½Íµï¿½Mapï¿½ï¿½ï¿½ÍµÄ¼ï¿½ï¿½ï¿½
      */
     public ArrayList<Map<String, String>> groupByAlubm() {
         ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -366,8 +365,8 @@ public class ReaderMusicDao implements Constant {
     }
 
     /**
-     * @param key   ÁĞÃû=?
-     * @param value ?µÄÖµ
+     * @param key   ï¿½ï¿½ï¿½ï¿½=?
+     * @param value ?ï¿½ï¿½Öµ
      * @return
      */
 
@@ -434,7 +433,7 @@ public class ReaderMusicDao implements Constant {
     }
 
     /**
-     * ËÑË÷±¾µØ¸èÇú
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½
      *
      * @param value
      * @return
@@ -470,7 +469,7 @@ public class ReaderMusicDao implements Constant {
     }
 
     /**
-     * µ±ÓĞCursor »Øµ÷¸Ã·½·¨¹Ø±ÕÊı¾İ¿âÁ¬½ÓÒÔ¼°¹Ø±ÕCursor
+     * ï¿½ï¿½ï¿½ï¿½Cursor ï¿½Øµï¿½ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ø±ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Ø±ï¿½Cursor
      */
     public void close(Cursor c) {
         if (db != null && db.isOpen()) {
@@ -482,7 +481,7 @@ public class ReaderMusicDao implements Constant {
     }
 
     /**
-     * µ¥¶À¹Ø±ÕÊı¾İ¿âÁ¬½Ó
+     * ï¿½ï¿½ï¿½ï¿½ï¿½Ø±ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½ï¿½
      */
     public void close() {
         if (db != null && db.isOpen()) {

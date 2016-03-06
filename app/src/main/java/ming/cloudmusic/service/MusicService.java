@@ -16,29 +16,38 @@ import java.util.HashMap;
 import ming.cloudmusic.MusicPlayerApplication;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.EventUtils;
-import ming.cloudmusic.event.model.MusicEvent;
+import ming.cloudmusic.event.model.KeyEvent;
+import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.model.DbMusic;
+import ming.cloudmusic.model.PlayingMusic;
 import ming.cloudmusic.util.Constant;
 
 public class MusicService extends android.app.Service implements Constant {
 
     private MediaPlayer mPlayer;
 
-    private DbMusic music;
+    private PlayingMusic mPlayingMusic;
     private ArrayList<DbMusic> historyMusics;
 
     /**
-     * µ±«∞≤•∑≈ƒ£ Ω
+     * Êí≠ÊîæÊ®°Âºè
      */
     private int mPlayingMode;
     /**
-     * ±Íº«
+     * Ê≠£Âú®Êí≠ÊîæÁöÑÊ≠åÊõ≤
      */
-    private int mPlayingMusic;
+    private int mPlayingPosition;
 
+    /**
+     * Ê≠£Âú®Êí≠ÊîæÁöÑÂàóË°®Ê≠åÊõ≤Êï∞
+     */
     private int musicsSize;
 
-    private int musicPosition;
+    /**
+     * Êí≠ÊîæËøõÂ∫¶
+     */
+    private int mPlayingPoint;
+    
     private boolean isRunning;
 
     private MusicPlayerApplication app;
@@ -80,7 +89,7 @@ public class MusicService extends android.app.Service implements Constant {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            music = app.getOnPlayMusicByFlag(mPlayingMusic);
+            mPlayingMusic = app.getOnPlayMusicByFlag(mPlayingPosition);
             musicsSize = app.getOnPlaySize();
             return null;
         }
@@ -93,7 +102,6 @@ public class MusicService extends android.app.Service implements Constant {
             mPlayer = new MediaPlayer();
             isRunning = true;
 
-            // ø™∆Ù∏¸–¬Ω¯∂»Ãı◊”œﬂ≥Ã
             new UpdateSeekBarThread().start();
 
             mPlayer.setOnCompletionListener(new OnCompletionListener() {
@@ -112,9 +120,8 @@ public class MusicService extends android.app.Service implements Constant {
             try {
                 while (isRunning) {
                     if (mPlayer.isPlaying()) {
-                        mExtras.clear();
                         mExtras.put(Event.Extra.EXTRA_BAR_CHANGE, mPlayer.getCurrentPosition());
-                        postEventMsgHasExtra(Event.Service.SERVICE_BAR_CHANGE);
+                        postEventMsgHasExtra(ServiceEvent.SERVICE_BAR_CHANGE);
                         Thread.sleep(1000);
                     }
                 }
@@ -125,38 +132,38 @@ public class MusicService extends android.app.Service implements Constant {
     }
 
     @Subscribe
-    private void onEventMainThread(MusicEvent event) {
+    public void onEventMainThread(KeyEvent event) {
         String msg = event.getMsg();
         switch (msg) {
-            case Event.KeyEvent.KEY_PLAY:
+            case KeyEvent.KEY_PLAY:
                 play();
                 break;
-            case Event.KeyEvent.KEY_PAUSE:
+            case KeyEvent.KEY_PAUSE:
                 pause();
                 break;
-            case Event.KeyEvent.KEY_PREVIOUS:
+            case KeyEvent.KEY_PREVIOUS:
                 pause();
                 right();
                 break;
-            case Event.KeyEvent.KEY_NEXT:
+            case KeyEvent.KEY_NEXT:
                 pause();
                 left();
                 break;
-            case Event.KeyEvent.KEY_PLAY_MODE:
+            case KeyEvent.KEY_PLAY_MODE:
                 changePlayMode();
                 break;
-            case Event.KeyEvent.KEY_BAR_CHANGE:
+            case KeyEvent.KEY_BAR_CHANGE:
                 int num = (int) event.getExtras().get(Event.Extra.EXTRA_BAR_CHANGE);
-                musicPosition = num * mPlayer.getDuration() / 100;
+                mPlayingPoint = num * mPlayer.getDuration() / 100;
                 play();
                 break;
-            case Event.KeyEvent.KEY_GET_PLAYINGMUSIC:
+            case KeyEvent.KEY_GET_PLAYINGMUSIC:
                 sendMusicInfo();
                 break;
             /*else if (INTENT_ACTION_CLICKPLAY.equals(action)) {
 				long songId = intent.getLongExtra(INTENT_ACTION_CLICKPLAY_DATA,
 						0);
-				mPlayingMusic = app.getOnPlayMusicById(songId);
+				mPlayingPosition = app.getOnPlayMusicById(songId);
 				play();
 			}*/
         }
@@ -168,44 +175,42 @@ public class MusicService extends android.app.Service implements Constant {
             mPlayingMode = 0;
         }
 
-        mExtras.clear();
         mExtras.put(Event.Extra.EXTRA_PLAY_MODE, mPlayingMode);
-        postEventMsgHasExtra(Event.Service.SERVICE_PLAY_MODE);
+        postEventMsgHasExtra(ServiceEvent.SERVICE_PLAY_MODE);
 
     }
 
     public void sendMusicInfo() {
 
-        mExtras.clear();
+        if (mPlayingMusic != null) {
 
-        if (music != null) {
-
-            mExtras.put(Event.Extra.EXTRA_PLAYING_POSITION, mPlayingMusic);
-            mExtras.put(Event.Extra.EXTRA_PLAYING_TITLE, music.getTitle());
-            mExtras.put(Event.Extra.EXTRA_PLAYING_ART, music.getArtlist());
-            mExtras.put(Event.Extra.EXTRA_PLAYING_DURATION, music.getDuration());
+            mExtras.put(Event.Extra.EXTRA_PLAYING_POSITION, mPlayingPosition);
+            mExtras.put(Event.Extra.EXTRA_PLAYING_TITLE, mPlayingMusic.getTitle());
+            mExtras.put(Event.Extra.EXTRA_PLAYING_ART, mPlayingMusic.getArtlist());
+            mExtras.put(Event.Extra.EXTRA_PLAYING_DURATION, mPlayingMusic.getDuration());
+            mExtras.put(Event.Extra.EXTRA_PLAYING_POINT, mPlayer.getCurrentPosition());
 
             if (mPlayer.isPlaying()) {
-                postEventMsg(Event.Service.SERVICE_PLAY);
+                postEventMsg(ServiceEvent.SERVICE_PLAY);
             } else {
-                postEventMsg(Event.Service.SERVICE_PAUSE);
+                postEventMsg(ServiceEvent.SERVICE_PAUSE);
             }
 
         } else {
             return;
         }
-        postEventMsgHasExtra(Event.Service.SERVICE_POST_PLAYINGMUSIC);
+        postEventMsgHasExtra(ServiceEvent.SERVICE_POST_PLAYINGMUSIC);
     }
 
     public void right() {
         if (mPlayingMode == 1) {
             random();
         } else {
-            mPlayingMusic++;
-            if (mPlayingMusic == musicsSize) {
-                mPlayingMusic = 0;
+            mPlayingPosition++;
+            if (mPlayingPosition == musicsSize) {
+                mPlayingPosition = 0;
             }
-            musicPosition = 0;
+            mPlayingPoint = 0;
             play();
         }
     }
@@ -214,18 +219,18 @@ public class MusicService extends android.app.Service implements Constant {
         if (mPlayingMode == 1) {
             random();
         } else {
-            mPlayingMusic--;
-            if (mPlayingMusic < 0) {
-                mPlayingMusic = musicsSize - 1;
+            mPlayingPosition--;
+            if (mPlayingPosition < 0) {
+                mPlayingPosition = musicsSize - 1;
             }
-            musicPosition = 0;
+            mPlayingPoint = 0;
             play();
         }
     }
 
     public void next() {
         historyMusics.clear();
-        historyMusics.add(music);
+        //historyMusics.add(mPlayingMusic);
 		/*MusicBiz.insertHistoryMusics(historyMusics);*/
         switch (mPlayingMode) {
             case 2:
@@ -241,41 +246,41 @@ public class MusicService extends android.app.Service implements Constant {
     }
 
     private void all() {
-        mPlayingMusic++;
-        musicPosition = 0;
+        mPlayingPosition++;
+        mPlayingPoint = 0;
         play();
     }
 
     private void random() {
-        int num = app.getNumByRandom(mPlayingMusic);
-        mPlayingMusic = num;
-        musicPosition = 0;
+        int num = app.getNumByRandom(mPlayingPosition);
+        mPlayingPosition = num;
+        mPlayingPoint = 0;
         play();
     }
 
     private void single() {
-        musicPosition = 0;
+        mPlayingPoint = 0;
         play();
     }
 
     private void pause() {
         mPlayer.stop();
-        musicPosition = mPlayer.getCurrentPosition();
-        postEventMsg(Event.Service.SERVICE_PAUSE);
+        mPlayingPoint = mPlayer.getCurrentPosition();
+        postEventMsg(ServiceEvent.SERVICE_PAUSE);
     }
 
     private void play() {
-        music = app.getOnPlayMusicByFlag(mPlayingMusic);
-        if (music == null) {
+        mPlayingMusic = app.getOnPlayMusicByFlag(mPlayingPosition);
+        if (mPlayingMusic == null) {
             return;
         }
         try {
-            mPlayer.reset();// ÷ÿ÷√≤•∑≈∆˜
-            mPlayer.setDataSource(music.getPath());//
+            mPlayer.reset();
+            mPlayer.setDataSource(mPlayingMusic.getPath());
             mPlayer.prepare();
-            mPlayer.seekTo(musicPosition);// ÷∏∂®¥”ƒƒ¿Ôø™ º
+            mPlayer.seekTo(mPlayingPoint);
             mPlayer.start();
-            musicPosition = 0;
+            mPlayingPoint = 0;
             sendMusicInfo();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -288,12 +293,12 @@ public class MusicService extends android.app.Service implements Constant {
         }
     }
 
-    protected void postEventMsg(String msg) {
-        EventUtils.getDefault().postEventMsg(msg);
+    private void postEventMsg(String msg) {
+        EventUtils.getDefault().postEventMsg(msg,EventUtils.SER);
     }
 
-    protected void postEventMsgHasExtra(String msg) {
-        EventUtils.getDefault().postEventMsgHasExtra(msg, mExtras);
+    private void postEventMsgHasExtra(String msg) {
+        EventUtils.getDefault().postEventMsgHasExtra(msg, mExtras,EventUtils.SER);
     }
 
 }

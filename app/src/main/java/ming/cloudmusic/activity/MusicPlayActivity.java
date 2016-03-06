@@ -16,8 +16,8 @@ import java.util.HashMap;
 import ming.cloudmusic.R;
 import ming.cloudmusic.activity.BaseActivity.DefalutBaseActivity;
 import ming.cloudmusic.event.Event;
-import ming.cloudmusic.event.EventUtils;
-import ming.cloudmusic.event.model.MusicEvent;
+import ming.cloudmusic.event.model.KeyEvent;
+import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.DateSDF;
 
@@ -33,17 +33,14 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     private TextView tvPlayNext;
     private TextView tvPlayMode;
     private TextView tvPlayMenu;
-    private SeekBar seekBar1;
+    private SeekBar seekBar;
     private TextView tvAlltime;
     private TextView tvPlaytime;
 
     private int duration;
     private int mPlayingMusic;
-    private int mPlayingMode;
 
     private boolean mIsPlaying;
-
-    private HashMap mExtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +49,11 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
         mIsPlaying = false;
 
-        mExtras = new HashMap();
-
         initView();
 
         EventBus.getDefault().register(this);
 
-        EventUtils.getDefault().postEventMsg(Event.EVENT_MSG_GETMUSICFLAG);
+        postEventMsg(KeyEvent.KEY_GET_PLAYINGMUSIC);
 
     }
 
@@ -79,7 +74,7 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         tvPlayNext = (TextView) findViewById(R.id.tv_play_next);
         tvPlayMode = (TextView) findViewById(R.id.tv_play_mode);
         tvPlayMenu = (TextView) findViewById(R.id.tv_play_menu);
-        seekBar1 = (SeekBar) findViewById(R.id.seekBar1);
+        seekBar = (SeekBar) findViewById(R.id.seekbar_play);
         tvAlltime = (TextView) findViewById(R.id.tv_alltime);
         tvPlaytime = (TextView) findViewById(R.id.tv_playtime);
 
@@ -94,75 +89,83 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         tvPlayMenu.setOnClickListener(this);
         tvPlayBack.setOnClickListener(this);
 
-        seekBar1.setOnSeekBarChangeListener(this);
+        seekBar.setOnSeekBarChangeListener(this);
 
+    }
+
+    @Subscribe
+    public void onEventMainThread(ServiceEvent event) {
+        String msg = event.getMsg();
+        HashMap data = event.getExtras();
+        switch (msg) {
+            case ServiceEvent.SERVICE_PLAY:
+                mIsPlaying = true;
+                tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_pause);
+                //refreshView(event.getExtras());
+                break;
+            case ServiceEvent.SERVICE_PAUSE:
+                mIsPlaying = false;
+                tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_play);
+                break;
+            case ServiceEvent.SERVICE_BAR_CHANGE:
+                setSeekBarPro((int) data.get(Event.Extra.EXTRA_BAR_CHANGE));
+                break;
+            case ServiceEvent.SERVICE_PLAY_MODE:
+                setPlayModeIcon((int) data.get(Event.Extra.EXTRA_PLAY_MODE));
+                break;
+            case ServiceEvent.SERVICE_POST_PLAYINGMUSIC:
+                setListener();
+                refreshView(event.getExtras());
+                break;
+        }
+    }
+
+    private void setSeekBarPro(int currentPosition) {
+        if (duration > 0) {
+            tvAlltime.setText(DateSDF.getSDF(currentPosition).toString());
+            seekBar.setProgress(currentPosition * 100 / duration);
+        }
+    }
+
+    private void setPlayModeIcon(int mode) {
+        switch (mode) {
+            case 0:
+                tvPlayMode.setBackgroundResource(R.drawable.play_icn_one);
+                break;
+            case 1:
+                tvPlayMode.setBackgroundResource(R.drawable.play_icn_shuffle);
+                break;
+            case 2:
+                tvPlayMode.setBackgroundResource(R.drawable.play_icn_loop);
+                break;
+        }
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent ;
+        Intent intent;
         switch (v.getId()) {
             case R.id.tv_play_playorpasue:
-                if(mIsPlaying){
-                    postEventMsg(Event.KeyEvent.KEY_PLAY);
+                if (mIsPlaying) {
+                    postEventMsg(KeyEvent.KEY_PAUSE);
                 } else {
-                    postEventMsg(Event.KeyEvent.KEY_PAUSE);
+                    postEventMsg(KeyEvent.KEY_PLAY);
                 }
                 break;
             case R.id.tv_play_next:
-                postEventMsg(Event.KeyEvent.KEY_NEXT);
+                postEventMsg(KeyEvent.KEY_NEXT);
                 break;
             case R.id.tv_play_prev:
-                postEventMsg(Event.KeyEvent.KEY_PREVIOUS);
+                postEventMsg(KeyEvent.KEY_PREVIOUS);
                 break;
             case R.id.tv_play_mode:
-                postEventMsg(Event.KeyEvent.KEY_PLAY_MODE);
+                postEventMsg(KeyEvent.KEY_PLAY_MODE);
                 break;
             case R.id.tv_play_back:
                 finish();
                 break;
             case R.id.tv_play_menu:
 
-                break;
-        }
-    }
-
-    @Subscribe
-    private void onEventMainThread(MusicEvent event) {
-        String msg = event.getMsg();
-        HashMap data =  event.getExtras();
-        switch (msg) {
-            case Event.Service.SERVICE_PLAY:
-                tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_play);
-                refreshView(event.getExtras());
-                break;
-            case Event.Service.SERVICE_PAUSE:
-                tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_pause);
-                break;
-            case Event.Service.SERVICE_BAR_CHANGE:
-                int currentPosition = (int) data.get(Event.Extra.EXTRA_PLAYING_ART);
-                if (duration > 0) {
-                    tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());
-                    seekBar1.setProgress(currentPosition * 100 / duration);
-                }
-                break;
-            case Event.Service.SERVICE_PLAY_MODE:
-                mPlayingMode = (int) data.get(Event.Extra.EXTRA_PLAY_MODE);
-                switch (mPlayingMode) {
-                    case 0:
-                        tvPlayMode.setBackgroundResource(R.drawable.play_icn_one);
-                        break;
-                    case 1:
-                        tvPlayMode.setBackgroundResource(R.drawable.play_icn_shuffle);
-                        break;
-                    case 2:
-                        tvPlayMode.setBackgroundResource(R.drawable.play_icn_loop);
-                        break;
-                }
-                break;
-            case Event.Service.SERVICE_POST_PLAYINGMUSIC:
-                setListener();
-                refreshView(event.getExtras());
                 break;
         }
     }
@@ -181,9 +184,8 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
-        mExtras.clear();
         mExtras.put(Event.Extra.EXTRA_BAR_CHANGE, seekBar.getProgress());
-        postEventMsgHasExtra(Event.KeyEvent.KEY_BAR_CHANGE,mExtras);
+        postEventMsgHasExtra(KeyEvent.KEY_BAR_CHANGE, mExtras);
 
     }
 
@@ -191,7 +193,9 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         mPlayingMusic = (int) data.get(Event.Extra.EXTRA_PLAYING_POSITION);
         tvPlaytitleTitle.setText(data.get(Event.Extra.EXTRA_PLAYING_TITLE).toString());
         tvPlaytitleArt.setText(data.get(Event.Extra.EXTRA_PLAYING_ART).toString());
-        tvPlaytime.setText(DateSDF.getSDF(data.get(Event.Extra.EXTRA_PLAYING_DURATION)).toString());
+        tvPlaytime.setText(DateSDF.getSDF(data.get(Event.Extra.EXTRA_PLAYING_POINT)).toString());
+        tvAlltime.setText(DateSDF.getSDF(data.get(Event.Extra.EXTRA_PLAYING_DURATION)).toString());
+        duration = (int) data.get(Event.Extra.EXTRA_PLAYING_DURATION);
     }
 
 }

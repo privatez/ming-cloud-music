@@ -4,19 +4,27 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 
-import ming.cloudmusic.event.model.MusicEvent;
+import ming.cloudmusic.event.model.KeyEvent;
+import ming.cloudmusic.event.model.ServiceEvent;
 
 /**
  * Created by Lhy on 2016/3/5.
  */
 public class EventUtils {
 
-    private MusicEvent mEvent;
+    public static final String KEY = "KEY";
+
+    public static final String SER = "SER";
+
+    private KeyEvent mKeyEvent;
+
+    private ServiceEvent mSerEvent;
 
     private static EventUtils eventUtils;
 
     private EventUtils (){
-        mEvent = new MusicEvent();
+        mKeyEvent = new KeyEvent();
+        mSerEvent = new ServiceEvent();
     }
 
     public static EventUtils getDefault() {
@@ -31,18 +39,32 @@ public class EventUtils {
         return eventUtils;
     }
 
-    public void postEventMsg(String msg) {
-        postEventMsgHasExtra(msg,null);
+    public void postEventMsg(String msg,String type) {
+        postEventMsgHasExtra(msg,null,type);
     }
 
-    public void postEventMsgHasExtra(String msg,HashMap extras) {
-        if(mEvent!=null) {
-            mEvent.setMsg(msg);
-            if(extras!=null) {
-                mEvent.getExtras().putAll(extras);
-            }
-            EventBus.getDefault().post(mEvent);
+    public void postEventMsgHasExtra(String msg,HashMap extras,String type) {
+        switch (type) {
+            case SER:
+                if(mSerEvent !=null) {
+                    mSerEvent.setMsg(msg);
+                    if(extras!=null) {
+                        mSerEvent.getExtras().putAll(extras);
+                    }
+                    EventBus.getDefault().post(mSerEvent);
+                }
+                break;
+            case KEY:
+                if(mKeyEvent !=null) {
+                    mKeyEvent.setMsg(msg);
+                    if(extras!=null) {
+                        mKeyEvent.getExtras().putAll(extras);
+                    }
+                    EventBus.getDefault().post(mKeyEvent);
+                }
+                break;
         }
+
     }
 
 }

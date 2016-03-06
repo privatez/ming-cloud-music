@@ -1,60 +1,55 @@
 package ming.cloudmusic;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
 
 import org.xutils.x;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Properties;
 
 import ming.cloudmusic.model.DbMusic;
+import ming.cloudmusic.model.PlayingMusic;
+import ming.cloudmusic.util.ReaderMusicDao;
 
 public class MusicPlayerApplication extends Application {
 
-	private ArrayList<DbMusic> localMusics;
-	private ArrayList<DbMusic> onPlayMusics;
+	private ArrayList<DbMusic> mLocalMusics;
+	private ArrayList<PlayingMusic> mPlayingMusics;
 
 	public int getOnPlaySize() {
-		return onPlayMusics.size();
+		return mPlayingMusics.size();
 	}
 
 	public int getNumByRandom(int musicFlag) {
 		int num;
 		do {
-			num = (int) (Math.random() * onPlayMusics.size());
+			num = (int) (Math.random() * mPlayingMusics.size());
 		} while (num == musicFlag);
 		return num;
 	}
 
-	public int getOnPlayMusicById(long id) {
-		for (int i = 0; i < onPlayMusics.size(); i++) {
-			if (id == onPlayMusics.get(i).getId()) {
+	public int getPlayingMusicById(long id) {
+		for (int i = 0; i < mPlayingMusics.size(); i++) {
+			if (id == mPlayingMusics.get(i).getId()) {
 				return i;
 			}
 		}
 		return -1;
 	}
 
-	public DbMusic getOnPlayMusicByFlag(int num) {
-		if (onPlayMusics.size() == 0) {
+	public PlayingMusic getOnPlayMusicByFlag(int num) {
+		if (mPlayingMusics.size() == 0) {
 			return null;
 		}
-		return onPlayMusics.get(num);
+		return mPlayingMusics.get(num);
 	}
 
-	public ArrayList<DbMusic> getOnPlayMusics() {
+	public ArrayList<PlayingMusic> getmPlayingMusics() {
 
-		return onPlayMusics;
+		return mPlayingMusics;
 	}
 
-	public void setOnPlayMusics(ArrayList<DbMusic> onPlayMusics) {
-		this.onPlayMusics = onPlayMusics;
+	public void setmPlayingMusics(ArrayList<PlayingMusic> mPlayingMusics) {
+		this.mPlayingMusics = mPlayingMusics;
 		new InsertThread().start();
 	}
 
@@ -62,78 +57,30 @@ public class MusicPlayerApplication extends Application {
 		@Override
 		public void run() {
 			super.run();
-			/*MusicBiz.insertOnPlayMusics(onPlayMusics);*/
+			/*MusicBiz.insertPlayingMusics(mPlayingMusics);*/
 		}
 	}
 
-	public ArrayList<DbMusic> getLocalMusics() {
+	public ArrayList<DbMusic> getmLocalMusics() {
 
-		return localMusics;
+		return mLocalMusics;
 	}
 
-	public void setLocalMusics(ArrayList<DbMusic> localMusics) {
-		this.localMusics = localMusics;
+	public void setmLocalMusics(ArrayList<DbMusic> mLocalMusics) {
+		this.mLocalMusics = mLocalMusics;
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		new InnerDataThread(this).start();
+
+		//初始化xUtil
 		x.Ext.init(this);
 		x.Ext.setDebug(true);
+		ReaderMusicDao dao = new ReaderMusicDao();
+
+		mLocalMusics = dao.getDbMusics();
+		mPlayingMusics = dao.getPlayingMusics();
 	}
 
-	private class InnerDataThread extends Thread {
-		Context context;
-
-		public InnerDataThread(Context context) {
-			super();
-			this.context = context;
-		}
-
-		@Override
-		public void run() {
-			super.run();
-			File file = new File(context.getFilesDir().toString(),
-					"project.properties");
-			if (!file.exists()) {
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			Properties properties = new Properties();
-			try {
-				properties.load(context.openFileInput("project.properties"));
-				OutputStream out = context.openFileOutput("project.properties",
-						Context.MODE_PRIVATE);
-				Enumeration<?> e = properties.propertyNames();
-				if (e.hasMoreElements()) {
-					while (e.hasMoreElements()) {
-						String s = (String) e.nextElement();
-						if (!s.equals("filepath")) {
-							properties
-									.setProperty(s, properties.getProperty(s));
-						}
-					}
-				}
-				properties.setProperty("filepath", context.getFilesDir()
-						.toString());
-				properties.store(out, null);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			SharedPreferences sp = getSharedPreferences("config", MODE_PRIVATE);
-			boolean isFirstRun = sp.getBoolean("isFirstRun", true);
-			/*if (isFirstRun) {
-				DataBaseDao.createMusicDatabase(getContentResolver());
-			}
-			File file2 = new File("/data/cloudmusic/pic");
-			file2.mkdirs();
-
-			localMusics = MusicBiz.getLocalMusic();
-			onPlayMusics = MusicBiz.getOnPlayMusic();*/
-		}
-	}
 }

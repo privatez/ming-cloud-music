@@ -103,7 +103,7 @@
         android:background="@drawable/play_icn_src" />
 
     <SeekBar
-        android:id="@+id/seekBar1"
+        android:id="@+id/seekbar_play"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/tv_play_playorpasue"
@@ -114,7 +114,7 @@
         android:id="@+id/tv_alltime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/seekBar1"
+        android:layout_alignBottom="@+id/seekbar_play"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="7dp"
         android:layout_marginRight="5dp"

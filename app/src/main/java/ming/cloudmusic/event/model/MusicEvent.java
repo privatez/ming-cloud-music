@@ -3,7 +3,7 @@ package ming.cloudmusic.event.model;
 import java.util.HashMap;
 
 /**
- * Created by Lhy on 2016/3/5.
+ * Created by Lhy on 2016/3/6.
  */
 public class MusicEvent {
 

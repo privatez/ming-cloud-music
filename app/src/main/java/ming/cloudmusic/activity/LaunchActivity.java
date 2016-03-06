@@ -1,9 +1,11 @@
 package ming.cloudmusic.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import ming.cloudmusic.R;
 import ming.cloudmusic.activity.BaseActivity.DefalutBaseActivity;
+import ming.cloudmusic.service.MusicService;
 import ming.cloudmusic.util.ReaderMusicDao;
 
 /**
@@ -17,5 +19,11 @@ public class LaunchActivity extends DefalutBaseActivity {
         setContentView(R.layout.activity_launch);
         ReaderMusicDao dao = new ReaderMusicDao();
         dao.findMobleMusic(getContentResolver());
+
+        Intent service = new Intent(this, MusicService.class);
+        startService(service);
+
+        startActivity(new Intent(this, MusicPlayActivity.class));
+        finish();
     }
 }
