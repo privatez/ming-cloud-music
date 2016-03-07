@@ -20,6 +20,50 @@ android {
     compileOptions {
         encoding "UTF-8"
     }
+
+    signingConfigs {
+        myConfig {
+            storeFile file("nt.keystore")
+            storePassword "ntandroid"
+            keyAlias "nt.android"
+            keyPassword "ntandroid"
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.myConfig
+        }
+
+        release {
+            signingConfig signingConfigs.myConfig
+            minifyEnabled true
+            proguardFile file('proguard.txt')
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.assemble.doLast {
+            variant.outputs.each { output ->
+                def outputFile = output.outputFile
+                def versionSuffix = variant.buildType.versionNameSuffix ? variant.buildType.versionNameSuffix : ""
+                def customSuffix = project.hasProperty('suffix') ? "_" + suffix : ""
+                def versionCode = variant.mergedFlavor.versionCode + versionSuffix;
+                // 移出apk并重命名
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    println("copying apk")
+                    def renameApkFile = outputFile.name.replace("app", "cloud-music-"+versionCode).replace(".apk", customSuffix + ".apk")
+
+                    copy {
+                        from "$outputFile"
+                        into "$rootProject.projectDir/../apk"
+                        rename ("$outputFile.name", "$renameApkFile")
+                    }
+                }
+
+            }
+        }
+    }
 }
 
 tasks.withType(JavaCompile) {

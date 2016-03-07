@@ -73,7 +73,7 @@ public class MusicPlayerApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+		//http://cl.avicl.ws/index.php
 		//初始化xUtil
 		x.Ext.init(this);
 		x.Ext.setDebug(true);

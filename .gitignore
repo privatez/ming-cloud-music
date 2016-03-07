@@ -1,7 +1,14 @@
-*.iml
-.gradle
-/local.properties
-.idea/
+# general
+*~
+*.swp
 .DS_Store
-/build
-/captures
+
+# java
+*.class
+
+# android
+.idea
+*.iml
+build
+local.properties
+.gradle
