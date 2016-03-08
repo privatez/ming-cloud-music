@@ -23,8 +23,7 @@ public class EventUtils {
     private static EventUtils eventUtils;
 
     private EventUtils (){
-        mKeyEvent = new KeyEvent();
-        mSerEvent = new ServiceEvent();
+
     }
 
     public static EventUtils getDefault() {
@@ -46,6 +45,7 @@ public class EventUtils {
     public void postEventMsgHasExtra(String msg,HashMap extras,String type) {
         switch (type) {
             case SER:
+                mSerEvent = new ServiceEvent();
                 if(mSerEvent !=null) {
                     mSerEvent.setMsg(msg);
                     if(extras!=null) {
@@ -55,6 +55,7 @@ public class EventUtils {
                 }
                 break;
             case KEY:
+                mKeyEvent = new KeyEvent();
                 if(mKeyEvent !=null) {
                     mKeyEvent.setMsg(msg);
                     if(extras!=null) {

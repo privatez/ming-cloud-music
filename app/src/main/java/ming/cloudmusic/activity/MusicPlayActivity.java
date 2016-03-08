@@ -20,6 +20,7 @@ import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.DateSDF;
+import ming.cloudmusic.util.LogUtils;
 
 public class MusicPlayActivity extends DefalutBaseActivity implements OnClickListener,
         Constant, OnSeekBarChangeListener {
@@ -46,8 +47,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_musicplay);
-
-        mIsPlaying = false;
 
         initView();
 
@@ -99,13 +98,10 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         HashMap data = event.getExtras();
         switch (msg) {
             case ServiceEvent.SERVICE_PLAY:
-                mIsPlaying = true;
                 tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_pause);
-                //refreshView(event.getExtras());
                 break;
             case ServiceEvent.SERVICE_PAUSE:
-                mIsPlaying = false;
-                tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_play);
+                //tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_play);
                 break;
             case ServiceEvent.SERVICE_BAR_CHANGE:
                 setSeekBarPro((int) data.get(Event.Extra.EXTRA_BAR_CHANGE));
@@ -122,7 +118,8 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
     private void setSeekBarPro(int currentPosition) {
         if (duration > 0) {
-            tvAlltime.setText(DateSDF.getSDF(currentPosition).toString());
+            LogUtils.log(DateSDF.getSDF(currentPosition).toString());
+            tvPlaytitleArt.setText(DateSDF.getSDF(currentPosition).toString());
             seekBar.setProgress(currentPosition * 100 / duration);
         }
     }
@@ -146,11 +143,7 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         Intent intent;
         switch (v.getId()) {
             case R.id.tv_play_playorpasue:
-                if (mIsPlaying) {
-                    postEventMsg(KeyEvent.KEY_PAUSE);
-                } else {
-                    postEventMsg(KeyEvent.KEY_PLAY);
-                }
+                //postEventMsg(KeyEvent.KEY_PLAY_OR_PAUSE);
                 break;
             case R.id.tv_play_next:
                 postEventMsg(KeyEvent.KEY_NEXT);
@@ -185,7 +178,7 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     public void onStopTrackingTouch(SeekBar seekBar) {
 
         mExtras.put(Event.Extra.EXTRA_BAR_CHANGE, seekBar.getProgress());
-        postEventMsgHasExtra(KeyEvent.KEY_BAR_CHANGE, mExtras);
+        //postEventMsgHasExtra(KeyEvent.KEY_BAR_CHANGE, mExtras);
 
     }
 

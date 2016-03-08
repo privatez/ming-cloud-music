@@ -106,8 +106,8 @@ public class ReaderMusicDao implements Constant {
 
                 playingMusics.add(playingMusic);
 
-                LogUtils.log(dbMusic.toString());
-                LogUtil.e(dbMusic.toString());
+                //LogUtils.log(dbMusic.toString());
+                //LogUtil.e(dbMusic.toString());
 
                 int num = path.lastIndexOf("/");
                 String subpath = path.substring(0, num);
@@ -142,7 +142,7 @@ public class ReaderMusicDao implements Constant {
             e.printStackTrace();
         }
 
-        LogUtils.log("数据库中的音乐："+musics.toString());
+        //LogUtils.log("数据库中的音乐："+musics.toString());
 
         return musics;
     }

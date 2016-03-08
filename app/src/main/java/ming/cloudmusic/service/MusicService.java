@@ -21,6 +21,7 @@ import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.model.DbMusic;
 import ming.cloudmusic.model.PlayingMusic;
 import ming.cloudmusic.util.Constant;
+import ming.cloudmusic.util.LogUtils;
 
 public class MusicService extends android.app.Service implements Constant {
 
@@ -108,7 +109,7 @@ public class MusicService extends android.app.Service implements Constant {
 
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    next();
+                    //next();
                 }
             });
         }
@@ -120,6 +121,7 @@ public class MusicService extends android.app.Service implements Constant {
             try {
                 while (isRunning) {
                     if (mPlayer.isPlaying()) {
+                        mExtras.clear();
                         mExtras.put(Event.Extra.EXTRA_BAR_CHANGE, mPlayer.getCurrentPosition());
                         postEventMsgHasExtra(ServiceEvent.SERVICE_BAR_CHANGE);
                         Thread.sleep(1000);
@@ -135,11 +137,11 @@ public class MusicService extends android.app.Service implements Constant {
     public void onEventMainThread(KeyEvent event) {
         String msg = event.getMsg();
         switch (msg) {
-            case KeyEvent.KEY_PLAY:
-                play();
-                break;
-            case KeyEvent.KEY_PAUSE:
-                pause();
+            case KeyEvent.KEY_PLAY_OR_PAUSE:
+                if (mPlayer.isPlaying())
+                    pause();
+                 else
+                    play();
                 break;
             case KeyEvent.KEY_PREVIOUS:
                 pause();
@@ -192,8 +194,10 @@ public class MusicService extends android.app.Service implements Constant {
 
             if (mPlayer.isPlaying()) {
                 postEventMsg(ServiceEvent.SERVICE_PLAY);
+                LogUtils.log("SERVICE_PLAY");
             } else {
                 postEventMsg(ServiceEvent.SERVICE_PAUSE);
+                LogUtils.log("SERVICE_PAUSE");
             }
 
         } else {
@@ -233,14 +237,14 @@ public class MusicService extends android.app.Service implements Constant {
         //historyMusics.add(mPlayingMusic);
 		/*MusicBiz.insertHistoryMusics(historyMusics);*/
         switch (mPlayingMode) {
-            case 2:
-                all();
+            case 0:
+                single();
                 break;
             case 1:
                 random();
                 break;
-            case 0:
-                single();
+            case 2:
+                all();
                 break;
         }
     }

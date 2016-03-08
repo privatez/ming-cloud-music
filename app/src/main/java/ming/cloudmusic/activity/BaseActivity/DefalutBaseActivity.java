@@ -1,6 +1,7 @@
 package ming.cloudmusic.activity.BaseActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import java.util.HashMap;
@@ -14,10 +15,13 @@ public class DefalutBaseActivity extends Activity {
 
     protected HashMap mExtras;
 
+    protected Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mExtras = new HashMap();
+        mContext = this;
     }
 
     protected void postEventMsg(String msg) {
