@@ -2,6 +2,8 @@ package ming.cloudmusic.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.SeekBar;
@@ -43,6 +45,11 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
     private boolean mIsPlaying;
 
+    private Handler mHandler;
+
+    public MusicPlayActivity() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +61,13 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
         postEventMsg(KeyEvent.KEY_GET_PLAYINGMUSIC);
 
+        mHandler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                tvPlaytime.setText(msg.getData().getString("key"));
+            }
+        };
     }
 
     @Override
@@ -94,17 +108,29 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
     @Subscribe
     public void onEventMainThread(ServiceEvent event) {
+
         String msg = event.getMsg();
         HashMap data = event.getExtras();
+
         switch (msg) {
             case ServiceEvent.SERVICE_PLAY:
                 tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_pause);
                 break;
             case ServiceEvent.SERVICE_PAUSE:
-                //tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_play);
+                tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_play);
                 break;
             case ServiceEvent.SERVICE_BAR_CHANGE:
-                setSeekBarPro((int) data.get(Event.Extra.EXTRA_BAR_CHANGE));
+                int currentPosition = (int) data.get(Event.Extra.EXTRA_BAR_CHANGE);
+                if (duration > 0) {
+                    LogUtils.log(DateSDF.getSDF(currentPosition).toString());
+                    Message msgs = new Message();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("key",DateSDF.getSDF(currentPosition).toString());
+                    msgs.setData(bundle);
+                    mHandler.sendMessage(msgs);
+                    /*tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());*/
+                    seekBar.setProgress(currentPosition * 100 / duration);
+                }
                 break;
             case ServiceEvent.SERVICE_PLAY_MODE:
                 setPlayModeIcon((int) data.get(Event.Extra.EXTRA_PLAY_MODE));
@@ -117,11 +143,7 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     }
 
     private void setSeekBarPro(int currentPosition) {
-        if (duration > 0) {
-            LogUtils.log(DateSDF.getSDF(currentPosition).toString());
-            tvPlaytitleArt.setText(DateSDF.getSDF(currentPosition).toString());
-            seekBar.setProgress(currentPosition * 100 / duration);
-        }
+
     }
 
     private void setPlayModeIcon(int mode) {
@@ -143,7 +165,7 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         Intent intent;
         switch (v.getId()) {
             case R.id.tv_play_playorpasue:
-                //postEventMsg(KeyEvent.KEY_PLAY_OR_PAUSE);
+                postEventMsg(KeyEvent.KEY_PLAY_OR_PAUSE);
                 break;
             case R.id.tv_play_next:
                 postEventMsg(KeyEvent.KEY_NEXT);
@@ -178,7 +200,7 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     public void onStopTrackingTouch(SeekBar seekBar) {
 
         mExtras.put(Event.Extra.EXTRA_BAR_CHANGE, seekBar.getProgress());
-        //postEventMsgHasExtra(KeyEvent.KEY_BAR_CHANGE, mExtras);
+        postEventMsgHasExtra(KeyEvent.KEY_BAR_CHANGE, mExtras);
 
     }
 

@@ -109,7 +109,7 @@ public class MusicService extends android.app.Service implements Constant {
 
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    //next();
+                    next();
                 }
             });
         }
@@ -190,12 +190,13 @@ public class MusicService extends android.app.Service implements Constant {
             mExtras.put(Event.Extra.EXTRA_PLAYING_TITLE, mPlayingMusic.getTitle());
             mExtras.put(Event.Extra.EXTRA_PLAYING_ART, mPlayingMusic.getArtlist());
             mExtras.put(Event.Extra.EXTRA_PLAYING_DURATION, mPlayingMusic.getDuration());
-            mExtras.put(Event.Extra.EXTRA_PLAYING_POINT, mPlayer.getCurrentPosition());
 
             if (mPlayer.isPlaying()) {
+                mExtras.put(Event.Extra.EXTRA_PLAYING_POINT, mPlayer.getCurrentPosition());
                 postEventMsg(ServiceEvent.SERVICE_PLAY);
                 LogUtils.log("SERVICE_PLAY");
             } else {
+                mExtras.put(Event.Extra.EXTRA_PLAYING_POINT, 0);
                 postEventMsg(ServiceEvent.SERVICE_PAUSE);
                 LogUtils.log("SERVICE_PAUSE");
             }

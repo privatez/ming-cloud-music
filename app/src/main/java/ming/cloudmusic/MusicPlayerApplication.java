@@ -79,6 +79,8 @@ public class MusicPlayerApplication extends Application {
 		x.Ext.setDebug(true);
 		ReaderMusicDao dao = new ReaderMusicDao();
 
+		dao.findMobleMusic(getContentResolver());
+
 		mLocalMusics = dao.getDbMusics();
 		mPlayingMusics = dao.getPlayingMusics();
 	}
