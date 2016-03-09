@@ -20,16 +20,18 @@ public class EventUtils {
 
     private ServiceEvent mSerEvent;
 
+    private EventPool mEventPool;
+
     private static EventUtils eventUtils;
 
-    private EventUtils (){
-
+    private EventUtils() {
+        mEventPool = EventPool.getDefaultPool();
     }
 
     public static EventUtils getDefault() {
-        if(eventUtils == null) {
-            synchronized (EventUtils.class){
-                if(eventUtils == null){
+        if (eventUtils == null) {
+            synchronized (EventUtils.class) {
+                if (eventUtils == null) {
                     eventUtils = new EventUtils();
                 }
             }
@@ -38,27 +40,27 @@ public class EventUtils {
         return eventUtils;
     }
 
-    public void postEventMsg(String msg,String type) {
-        postEventMsgHasExtra(msg,null,type);
+    public void postEventMsg(String msg, String type) {
+        postEventMsgHasExtra(msg, null, type);
     }
 
-    public void postEventMsgHasExtra(String msg,HashMap extras,String type) {
+    public void postEventMsgHasExtra(String msg, HashMap extras, String type) {
         switch (type) {
             case SER:
-                mSerEvent = new ServiceEvent();
-                if(mSerEvent !=null) {
+                mSerEvent = mEventPool.getServiceEvent();
+                if (mSerEvent != null) {
                     mSerEvent.setMsg(msg);
-                    if(extras!=null) {
+                    if (extras != null) {
                         mSerEvent.getExtras().putAll(extras);
                     }
                     EventBus.getDefault().post(mSerEvent);
                 }
                 break;
             case KEY:
-                mKeyEvent = new KeyEvent();
-                if(mKeyEvent !=null) {
+                mKeyEvent = mEventPool.getKeyEvent();
+                if (mKeyEvent != null) {
                     mKeyEvent.setMsg(msg);
-                    if(extras!=null) {
+                    if (extras != null) {
                         mKeyEvent.getExtras().putAll(extras);
                     }
                     EventBus.getDefault().post(mKeyEvent);
@@ -67,5 +69,6 @@ public class EventUtils {
         }
 
     }
+
 
 }
