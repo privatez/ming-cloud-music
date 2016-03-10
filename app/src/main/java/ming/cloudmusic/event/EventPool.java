@@ -5,7 +5,6 @@ import java.util.List;
 
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
-import ming.cloudmusic.util.LogUtils;
 
 /**
  * Created by lihaiye on 16/3/9.
@@ -172,7 +171,7 @@ public class EventPool {
             mServiceEventsTag = 0;
         }
 
-        LogUtils.log("mServiceEventsTag" + mServiceEventsTag + ".....");
+        //LogUtils.log("mServiceEventsTag" + mServiceEventsTag + ".....");
         return mServiceEvents.get(mServiceEventsTag);
     }
 

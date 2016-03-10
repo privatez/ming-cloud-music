@@ -16,7 +16,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.HashMap;
 
 import ming.cloudmusic.R;
-import ming.cloudmusic.activity.BaseActivity.DefalutBaseActivity;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
@@ -125,7 +124,7 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
                     LogUtils.log(DateSDF.getSDF(currentPosition).toString());
                     Message msgs = new Message();
                     Bundle bundle = new Bundle();
-                    bundle.putString("key",DateSDF.getSDF(currentPosition).toString());
+                    bundle.putString("key", DateSDF.getSDF(currentPosition).toString());
                     msgs.setData(bundle);
                     mHandler.sendMessage(msgs);
                     /*tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());*/

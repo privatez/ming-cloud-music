@@ -16,4 +16,9 @@
 #   public *;
 #}
 
+# EventBus 3.0
 -keepclassmembers,includedescriptorclasses class ** { public void onEvent*(**); }
+-keep class de.greenrobot.event.** { *; }
+-keep class * {
+    @de.greenrobot.event.* <methods>;
+}

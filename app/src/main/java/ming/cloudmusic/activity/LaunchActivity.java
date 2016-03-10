@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import ming.cloudmusic.R;
-import ming.cloudmusic.activity.BaseActivity.DefalutBaseActivity;
 import ming.cloudmusic.service.MusicService;
 
 /**

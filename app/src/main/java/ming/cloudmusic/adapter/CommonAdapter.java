@@ -1,4 +1,4 @@
-package ming.cloudmusic.adapter.BaseAdapter;
+package ming.cloudmusic.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

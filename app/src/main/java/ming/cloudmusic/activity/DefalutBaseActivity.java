@@ -1,4 +1,4 @@
-package ming.cloudmusic.activity.BaseActivity;
+package ming.cloudmusic.activity;
 
 import android.app.Activity;
 import android.content.Context;
