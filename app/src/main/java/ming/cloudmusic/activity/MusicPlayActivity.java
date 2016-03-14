@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 
@@ -105,8 +106,8 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
     }
 
-    @Subscribe
-    public void onEventMainThread(ServiceEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ServiceEvent event) {
 
         String msg = event.getMsg();
         HashMap data = event.getExtras();
@@ -126,8 +127,8 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
                     Bundle bundle = new Bundle();
                     bundle.putString("key", DateSDF.getSDF(currentPosition).toString());
                     msgs.setData(bundle);
-                    mHandler.sendMessage(msgs);
-                    /*tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());*/
+                    //mHandler.sendMessage(msgs);
+                    tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());
                     seekBar.setProgress(currentPosition * 100 / duration);
                 }
                 break;
