@@ -10,7 +10,7 @@ import ming.cloudmusic.event.model.ServiceEvent;
 /**
  * Created by Lhy on 2016/3/5.
  */
-public class EventUtils {
+public class EventUtil {
 
     public static final String KEY = "KEY";
 
@@ -22,22 +22,22 @@ public class EventUtils {
 
     private EventPool mEventPool;
 
-    private static EventUtils eventUtils;
+    private static EventUtil mEventUtil;
 
-    private EventUtils() {
+    private EventUtil() {
         mEventPool = EventPool.getDefaultPool();
     }
 
-    public static EventUtils getDefault() {
-        if (eventUtils == null) {
-            synchronized (EventUtils.class) {
-                if (eventUtils == null) {
-                    eventUtils = new EventUtils();
+    public static EventUtil getDefault() {
+        if (mEventUtil == null) {
+            synchronized (EventUtil.class) {
+                if (mEventUtil == null) {
+                    mEventUtil = new EventUtil();
                 }
             }
         }
 
-        return eventUtils;
+        return mEventUtil;
     }
 
     public void postEventMsg(String msg, String type) {

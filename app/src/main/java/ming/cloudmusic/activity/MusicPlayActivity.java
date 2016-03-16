@@ -2,8 +2,6 @@ package ming.cloudmusic.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.SeekBar;
@@ -22,7 +20,6 @@ import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.DateSDF;
-import ming.cloudmusic.util.LogUtils;
 
 public class MusicPlayActivity extends DefalutBaseActivity implements OnClickListener,
         Constant, OnSeekBarChangeListener {
@@ -45,8 +42,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
     private boolean mIsPlaying;
 
-    private Handler mHandler;
-
     public MusicPlayActivity() {
     }
 
@@ -61,13 +56,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
         postEventMsg(KeyEvent.KEY_GET_PLAYINGMUSIC);
 
-        mHandler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                tvPlaytime.setText(msg.getData().getString("key"));
-            }
-        };
     }
 
     @Override
@@ -122,12 +110,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
             case ServiceEvent.SERVICE_BAR_CHANGE:
                 int currentPosition = (int) data.get(Event.Extra.EXTRA_BAR_CHANGE);
                 if (duration > 0) {
-                    LogUtils.log(DateSDF.getSDF(currentPosition).toString());
-                    Message msgs = new Message();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("key", DateSDF.getSDF(currentPosition).toString());
-                    msgs.setData(bundle);
-                    //mHandler.sendMessage(msgs);
                     tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());
                     seekBar.setProgress(currentPosition * 100 / duration);
                 }

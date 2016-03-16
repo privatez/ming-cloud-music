@@ -9,7 +9,15 @@ import org.xutils.db.annotation.Table;
 @Table(name = "DbMusic")
 public class DbMusic implements Parcelable {
 
-    @Column(name = "id",isId = true)
+    public static final int ISPLAYING = 1;
+
+    public static final int NOTPLAYING = 2;
+
+    public static final int ISHISTORY = 31;
+
+    public static final int NOTHISTORY = 32;
+
+    @Column(name = "id", isId = true)
     private long id;
 
 
@@ -40,17 +48,22 @@ public class DbMusic implements Parcelable {
     @Column(name = "duration")
     private int duration;
 
-    @Override
-    public String toString() {
-        return "DbMusic{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", name='" + name + '\'' +
-                ", path='" + path + '\'' +
-                ", artlist='" + artlist + '\'' +
-                ", album='" + album + '\'' +
-                ", duration=" + duration +
-                '}';
+    @Column(name = "isPlaying")
+    private int isPlaying;
+
+    @Column(name = "isHistroy")
+    private int isHistroy;
+
+    public static Creator<DbMusic> getCREATOR() {
+        return CREATOR;
+    }
+
+    public int getIsHistroy() {
+        return isHistroy;
+    }
+
+    public void setIsHistroy(int isHistroy) {
+        this.isHistroy = isHistroy;
     }
 
     public long getId() {
@@ -117,6 +130,31 @@ public class DbMusic implements Parcelable {
         this.duration = duration;
     }
 
+    public int getIsPlaying() {
+        return isPlaying;
+    }
+
+    public void setIsPlaying(int isPlaying) {
+        this.isPlaying = isPlaying;
+    }
+
+    @Override
+    public String toString() {
+        return "DbMusic{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", shortPath='" + shortPath + '\'' +
+                ", artlist='" + artlist + '\'' +
+                ", album='" + album + '\'' +
+                ", duration=" + duration +
+                ", isPlaying=" + isPlaying +
+                ", isHistroy=" + isHistroy +
+                '}';
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -132,6 +170,8 @@ public class DbMusic implements Parcelable {
         dest.writeString(this.artlist);
         dest.writeString(this.album);
         dest.writeInt(this.duration);
+        dest.writeInt(this.isPlaying);
+        dest.writeInt(this.isHistroy);
     }
 
     public DbMusic() {
@@ -146,9 +186,11 @@ public class DbMusic implements Parcelable {
         this.artlist = in.readString();
         this.album = in.readString();
         this.duration = in.readInt();
+        this.isPlaying = in.readInt();
+        this.isHistroy = in.readInt();
     }
 
-    public static final Creator<DbMusic> CREATOR = new Creator<DbMusic>() {
+    public static final Parcelable.Creator<DbMusic> CREATOR = new Parcelable.Creator<DbMusic>() {
         public DbMusic createFromParcel(Parcel source) {
             return new DbMusic(source);
         }

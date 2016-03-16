@@ -5,12 +5,12 @@ import java.util.HashMap;
 /**
  * Created by Lhy on 2016/3/6.
  */
-public class MusicEvent {
+public class BaseEvent {
 
     private String msg;
     private HashMap extras;
 
-    public MusicEvent() {
+    public BaseEvent() {
         extras = new HashMap<>();
     }
 

@@ -3,7 +3,7 @@ package ming.cloudmusic.event.model;
 /**
  * Created by Lhy on 2016/3/5.
  */
-public class ServiceEvent extends MusicEvent{
+public class ServiceEvent extends BaseEvent {
 
     public static final String SERVICE_PLAY = "S_PLAY";
 

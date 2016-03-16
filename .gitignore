@@ -7,7 +7,7 @@
 *.class
 
 # android
-.idea
+.idea/
 *.iml
 build
 local.properties

@@ -15,19 +15,17 @@ import java.util.HashMap;
 
 import ming.cloudmusic.MusicPlayerApplication;
 import ming.cloudmusic.event.Event;
-import ming.cloudmusic.event.EventUtils;
+import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.model.DbMusic;
-import ming.cloudmusic.model.PlayingMusic;
 import ming.cloudmusic.util.Constant;
-import ming.cloudmusic.util.LogUtils;
 
 public class MusicService extends android.app.Service implements Constant {
 
     private MediaPlayer mPlayer;
 
-    private PlayingMusic mPlayingMusic;
+    private DbMusic mPlayingMusic;
     private ArrayList<DbMusic> historyMusics;
 
     /**
@@ -48,7 +46,7 @@ public class MusicService extends android.app.Service implements Constant {
      * 播放进度
      */
     private int mPlayingPoint;
-    
+
     private boolean isRunning;
 
     private MusicPlayerApplication app;
@@ -140,7 +138,7 @@ public class MusicService extends android.app.Service implements Constant {
             case KeyEvent.KEY_PLAY_OR_PAUSE:
                 if (mPlayer.isPlaying())
                     pause();
-                 else
+                else
                     play();
                 break;
             case KeyEvent.KEY_PREVIOUS:
@@ -163,7 +161,7 @@ public class MusicService extends android.app.Service implements Constant {
                 sendMusicInfo();
                 break;
             /*else if (INTENT_ACTION_CLICKPLAY.equals(action)) {
-				long songId = intent.getLongExtra(INTENT_ACTION_CLICKPLAY_DATA,
+                long songId = intent.getLongExtra(INTENT_ACTION_CLICKPLAY_DATA,
 						0);
 				mPlayingPosition = app.getOnPlayMusicById(songId);
 				play();
@@ -194,11 +192,11 @@ public class MusicService extends android.app.Service implements Constant {
             if (mPlayer.isPlaying()) {
                 mExtras.put(Event.Extra.EXTRA_PLAYING_POINT, mPlayer.getCurrentPosition());
                 postEventMsg(ServiceEvent.SERVICE_PLAY);
-                LogUtils.log("SERVICE_PLAY");
+                //LogUtils.log("SERVICE_PLAY");
             } else {
                 mExtras.put(Event.Extra.EXTRA_PLAYING_POINT, 0);
                 postEventMsg(ServiceEvent.SERVICE_PAUSE);
-                LogUtils.log("SERVICE_PAUSE");
+                //LogUtils.log("SERVICE_PAUSE");
             }
 
         } else {
@@ -236,7 +234,7 @@ public class MusicService extends android.app.Service implements Constant {
     public void next() {
         historyMusics.clear();
         //historyMusics.add(mPlayingMusic);
-		/*MusicBiz.insertHistoryMusics(historyMusics);*/
+        /*MusicBiz.insertHistoryMusics(historyMusics);*/
         switch (mPlayingMode) {
             case 0:
                 single();
@@ -299,11 +297,11 @@ public class MusicService extends android.app.Service implements Constant {
     }
 
     private void postEventMsg(String msg) {
-        EventUtils.getDefault().postEventMsg(msg,EventUtils.SER);
+        EventUtil.getDefault().postEventMsg(msg, EventUtil.SER);
     }
 
     private void postEventMsgHasExtra(String msg) {
-        EventUtils.getDefault().postEventMsgHasExtra(msg, mExtras,EventUtils.SER);
+        EventUtil.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtil.SER);
     }
 
 }

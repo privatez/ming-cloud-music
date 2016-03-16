@@ -1,4 +1,4 @@
-package ming.cloudmusic.util;
+package ming.cloudmusic.dao;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -20,9 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ming.cloudmusic.model.DbMusic;
-import ming.cloudmusic.model.PlayingMusic;
+import ming.cloudmusic.util.Constant;
+import ming.cloudmusic.util.LogUtils;
 
-public class ReaderMusicDao implements Constant {
+public class DbMusicDao implements Constant {
 
     private SQLiteDatabase db;
 
@@ -32,28 +33,33 @@ public class ReaderMusicDao implements Constant {
     private static String path;
 
 
-    DbManager.DaoConfig daoConfig = new DbManager.DaoConfig()
-            .setDbName("music.db")
-            .setDbDir(new File("/sdcard/cloudmusic"))
-            .setDbVersion(2)
-            .setDbOpenListener(new DbManager.DbOpenListener() {
-                @Override
-                public void onDbOpened(DbManager db) {
-                    // ����WAL, ��д���������޴�
-                    db.getDatabase().enableWriteAheadLogging();
+    private DbManager.DaoConfig mDaoConfig;
+
+    private static DbMusicDao mMusicDao;
+
+    private DbMusicDao() {
+        mDaoConfig = new DbManager.DaoConfig()
+                .setDbName("music.db")
+                .setDbDir(new File("/sdcard/cloudmusic"))
+                .setDbVersion(2)
+                .setDbOpenListener(new DbManager.DbOpenListener() {
+                    @Override
+                    public void onDbOpened(DbManager db) {
+                        db.getDatabase().enableWriteAheadLogging();
+                    }
+                });
+    }
+
+    public static DbMusicDao getDefaultDao() {
+        if (mMusicDao == null) {
+            synchronized (DbMusicDao.class) {
+                if (mMusicDao == null) {
+                    mMusicDao = new DbMusicDao();
                 }
-            });
+            }
+        }
 
-    private void onTestDbClick(ContentResolver cr) {
-
-			/*db.save(parent);
-
-			db.saveBindingId(child);//������������ݿ���ɵ�id
-
-			List<DbModel> dbModels = db.selector(Parent.class)
-					.groupBy("name")
-					.select("name", "count(name) as count").findAll();
-			temp += "group by result:" + dbModels.get(0).getDataMap() + "\n";*/
+        return mMusicDao;
     }
 
     /**
@@ -66,15 +72,12 @@ public class ReaderMusicDao implements Constant {
         String[] projection = {Audio.Media._ID, Audio.Media.TITLE,
                 Audio.Media.DISPLAY_NAME, Audio.Media.DATA, Audio.Media.ARTIST,
                 Audio.Media.ALBUM, Audio.Media.DURATION,};
-        Cursor c = cr.query(uri, projection, null, null, null);
-        DbMusic dbMusic;
 
-        ArrayList<PlayingMusic> playingMusics = new ArrayList<>();
-        PlayingMusic playingMusic ;
+        Cursor c = cr.query(uri, projection, null, null, null);
+
+        DbManager db = x.getDb(mDaoConfig);
 
         try {
-
-            DbManager db = x.getDb(daoConfig);
 
             for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
                 long id = (c.getLong(c.getColumnIndex(Audio.Media._ID)));
@@ -86,7 +89,7 @@ public class ReaderMusicDao implements Constant {
                 String album = (c.getString(c.getColumnIndex(Audio.Media.ALBUM)));
                 int duration = (c.getInt(c.getColumnIndex(Audio.Media.DURATION)));
 
-                dbMusic = new DbMusic();
+                DbMusic dbMusic = new DbMusic();
                 dbMusic.setId(id);
                 dbMusic.setTitle(title);
                 dbMusic.setName(name);
@@ -94,36 +97,37 @@ public class ReaderMusicDao implements Constant {
                 dbMusic.setArtlist(artlist);
                 dbMusic.setAlbum(album);
                 dbMusic.setDuration(duration);
-
-                playingMusic = new PlayingMusic();
-                playingMusic.setId(id);
-                playingMusic.setTitle(title);
-                playingMusic.setName(name);
-                playingMusic.setPath(path);
-                playingMusic.setArtlist(artlist);
-                playingMusic.setAlbum(album);
-                playingMusic.setDuration(duration);
-
-                playingMusics.add(playingMusic);
-
-                //LogUtils.log(dbMusic.toString());
-                //LogUtil.e(dbMusic.toString());
+                dbMusic.setIsPlaying(DbMusic.ISPLAYING);
 
                 int num = path.lastIndexOf("/");
-                String subpath = path.substring(0, num);
-                dbMusic.setShortPath(subpath);
+                dbMusic.setShortPath(path.substring(0, num));
 
-                db.save(dbMusic);
-                db.close();
+                if (!dbHasThisMusic(path)) {
+                    db.save(dbMusic);
+                }
             }
         } catch (Throwable e) {
-            LogUtil.e(e.getMessage());
+            LogUtils.log(e.getMessage());
         } finally {
+            close(db);
             c.close();
         }
 
-        insertPlayingMusics(playingMusics);
+    }
 
+    private boolean dbHasThisMusic(String path) {
+        DbManager db = x.getDb(mDaoConfig);
+        try {
+            DbMusic music = db.selector(DbMusic.class).where("path", "=", path).findFirst();
+            if (music == null) {
+                return false;
+            } else {
+                LogUtils.log("比对到的音乐：" + music.toString());
+            }
+        } catch (DbException e) {
+            LogUtils.log(e.getMessage());
+        }
+        return true;
     }
 
 
@@ -134,15 +138,17 @@ public class ReaderMusicDao implements Constant {
      */
     public ArrayList<DbMusic> getDbMusics() {
         ArrayList<DbMusic> musics = new ArrayList<>();
-        DbManager db = x.getDb(daoConfig);
+        DbManager db = x.getDb(mDaoConfig);
         try {
             musics.addAll(db.findAll(DbMusic.class));
-            db.close();
+
         } catch (java.io.IOException e) {
-            e.printStackTrace();
+            LogUtils.log(e.getMessage());
+        } finally {
+            close(db);
         }
 
-        //LogUtils.log("数据库中的音乐："+musics.toString());
+        LogUtils.log("数据库中的音乐：" + musics.toString());
 
         return musics;
     }
@@ -152,19 +158,20 @@ public class ReaderMusicDao implements Constant {
      *
      * @return ArrayList<Music>
      */
-    public ArrayList<PlayingMusic> getPlayingMusics() {
+    public ArrayList<DbMusic> getPlayingMusics() {
 
-        ArrayList<PlayingMusic> musics = new ArrayList();
+        ArrayList<DbMusic> musics = new ArrayList();
 
-        DbManager db = x.getDb(daoConfig);
+        DbManager db = x.getDb(mDaoConfig);
         try {
-            musics.addAll(db.findAll(PlayingMusic.class));
-            db.close();
+            musics.addAll(db.selector(DbMusic.class).where("isPlaying", "=", DbMusic.ISPLAYING).findAll());
         } catch (java.io.IOException e) {
             e.printStackTrace();
+        } finally {
+            close(db);
         }
 
-        LogUtils.log("播放中的音乐："+musics.toString());
+        LogUtils.log("播放中的音乐：" + musics.toString());
 
         return musics;
     }
@@ -173,16 +180,16 @@ public class ReaderMusicDao implements Constant {
      * 添加音乐到播放数据库
      *
      * @param musics
-     * @return �ɹ���ӵ�����
+     * @return musics.size() - Flag
      */
 
-    public int insertPlayingMusics(ArrayList<PlayingMusic> musics) {
+    public int insertPlayingMusics(ArrayList<DbMusic> musics) {
 
         int Flag = 0;
 
-        PlayingMusic music;
+        DbMusic music;
 
-        DbManager db = x.getDb(daoConfig);
+        DbManager db = x.getDb(mDaoConfig);
 
         for (int i = 0; i < musics.size(); i++) {
             music = musics.get(i);
@@ -193,11 +200,7 @@ public class ReaderMusicDao implements Constant {
             }
         }
 
-        try {
-            db.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        close(db);
 
         return musics.size() - Flag;
     }
@@ -265,7 +268,7 @@ public class ReaderMusicDao implements Constant {
                 Log.e("cloudmusic", e.getMessage());
             }
         }
-        close();
+
         return musics.size() - okFlag;
     }
 
@@ -283,7 +286,7 @@ public class ReaderMusicDao implements Constant {
         } catch (SQLException e) {
             LogUtil.d(e.getMessage());
         }
-        close();
+
         return okFlag;
     }
 
@@ -480,12 +483,12 @@ public class ReaderMusicDao implements Constant {
         }
     }
 
-    /**
-     * �����ر���ݿ�����
-     */
-    public void close() {
-        if (db != null && db.isOpen()) {
+
+    public void close(DbManager db) {
+        try {
             db.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

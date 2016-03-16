@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import java.util.HashMap;
 
-import ming.cloudmusic.event.EventUtils;
+import ming.cloudmusic.event.EventUtil;
 
 /**
  * Created by Lhy on 2015/12/22.
@@ -25,11 +25,11 @@ public class DefalutBaseActivity extends Activity {
     }
 
     protected void postEventMsg(String msg) {
-        EventUtils.getDefault().postEventMsg(msg, EventUtils.KEY);
+        EventUtil.getDefault().postEventMsg(msg, EventUtil.KEY);
     }
 
     protected void postEventMsgHasExtra(String msg, HashMap mExtras) {
-        EventUtils.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtils.KEY);
+        EventUtil.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtil.KEY);
     }
 
 }

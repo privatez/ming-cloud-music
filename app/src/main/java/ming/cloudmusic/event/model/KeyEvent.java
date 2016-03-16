@@ -3,7 +3,7 @@ package ming.cloudmusic.event.model;
 /**
  * Created by Lhy on 2016/3/6.
  */
-public class KeyEvent extends MusicEvent{
+public class KeyEvent extends BaseEvent {
 
     public static final String KEY_PLAY_OR_PAUSE = "KEY_PLAY_OR_PAUSE";
 
