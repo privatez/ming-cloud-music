@@ -24,4 +24,8 @@ public interface Constant {
 	 */
 	public static final String HTTPURL = "http://apis.baidu.com/geekery/music/query";
 
+	public static class SharedPrefrence {
+		public static final String SHARED_NAME = "mrwind_parttime";
+	}
+
 }
