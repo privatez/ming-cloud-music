@@ -19,7 +19,7 @@ public class LaunchActivity extends DefalutBaseActivity {
         Intent service = new Intent(this, MusicService.class);
         startService(service);
 
-        startActivity(new Intent(this, MusicPlayActivity.class));
+        startActivity(new Intent(this, CloudMusicMainActivity.class));
         finish();
     }
 }

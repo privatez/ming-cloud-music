@@ -18,9 +18,8 @@
 
         <activity
             android:name=".activity.CloudMusicMainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
 
         </activity>
 
