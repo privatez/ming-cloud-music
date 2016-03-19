@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_actionbar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_playall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_small"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_small">
+
+        <ImageView
+            android:id="@+id/iv_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lay_icn_play" />
+
+        <TextView
+            android:id="@+id/tv_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_toRightOf="@+id/iv_default"
+            android:text="播放全部"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_large" />
+
+        <TextView
+            android:id="@+id/tv_musics_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv_default"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/tv_default"
+            android:text="(共0首)"
+            android:textSize="@dimen/text_normal" />
+
+    </RelativeLayout>
+
+    <View style="@style/Line" />
+
+    <ListView
+        android:id="@+id/lv_musics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null" />
+
+</LinearLayout>

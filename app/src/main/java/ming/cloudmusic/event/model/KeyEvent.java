@@ -17,4 +17,14 @@ public class KeyEvent extends BaseEvent {
 
     public static final String KEY_GET_PLAYINGMUSIC = "KEY_GET_PLAYINGMUSIC";
 
+    public static final String KEY_TOGGLE_MENU = "KEY_TOGGLE_MENU";
+
+    public static final String KEY_ACTION_LOCALMUSIC = "localmusic";
+
+    public static final String KEY_ACTION_HISTORYMUSIC = "history";
+
+    public static final String KEY_ACTION_DLD = "dld";
+
+    public static final String KEY_ACTION_ARTLIST = "artlist";
+
 }

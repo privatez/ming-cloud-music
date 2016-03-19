@@ -1,4 +1,4 @@
-package ming.cloudmusic.dao;
+package ming.cloudmusic.db;
 
 import android.content.ContentResolver;
 import android.database.Cursor;

@@ -2,91 +2,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/rl_title"
+    <LinearLayout
+        android:id="@+id/ll_content"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/actionbar_bg">
-
-        <ImageView
-            android:id="@+id/iv_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_medium"
-            android:src="@drawable/actionbar_menu" />
-
-        <ImageView
-            android:id="@+id/iv_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/padding_medium"
-            android:src="@drawable/actionbar_search" />
-
-    </RelativeLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/rl_playbar"
-        android:layout_below="@+id/rl_title"
-        android:background="#DCDCDC" />
+        android:orientation="vertical">
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rl_playbar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="56dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/imageView1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <ImageView
+            android:id="@+id/iv_default"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/default_disc_141" />
+            android:src="@drawable/default_disc_141" />
 
-        <Button
-            android:id="@+id/playbar_next"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <ImageView
+            android:id="@+id/iv_playbar_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/playbar_btn_next" />
+            android:layout_marginRight="10dp"
+            android:src="@drawable/playbar_btn_next" />
 
-        <Button
-            android:id="@+id/playbar_playorpause"
-            android:layout_width="35dp"
-            android:layout_height="40dp"
-            android:layout_alignBaseline="@+id/playbar_next"
-            android:layout_alignBottom="@+id/playbar_next"
+        <ImageView
+            android:id="@+id/iv_playbar_playorpause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/playbar_next"
-            android:background="@drawable/playbar_btn_play" />
+            android:layout_toLeftOf="@+id/iv_playbar_next"
+            android:src="@drawable/playbar_btn_play" />
 
         <TextView
-            android:id="@+id/playbar_title"
+            android:id="@+id/tv_playbar_title"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/imageView1"
+            android:layout_alignTop="@+id/iv_default"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/imageView1"
+            android:layout_toRightOf="@+id/iv_default"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/playbar_art"
+            android:id="@+id/tv_playbar_art"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/playbar_title"
-            android:layout_below="@+id/playbar_title"
+            android:layout_alignLeft="@+id/tv_playbar_title"
+            android:layout_below="@+id/tv_playbar_title"
             android:singleLine="true"
             android:textColor="@color/black" />
 

@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="冷灰">#DCDCDC</color>
+    <color name="dan_hui">#DCDCDC</color>
     <color name="cloudred">#B0171F</color>
     <color name="white">#FFFFFF</color>
     <!--白色 -->
@@ -222,8 +222,6 @@
     <color name="slateblue">#6A5ACD</color>
     <!--石蓝色 -->
     <color name="dimgray">#696969</color>
-    <!--暗灰色 -->
-    <color name="dimgrey">#696969</color>
     <!--暗灰色 -->
     <color name="mediumaquamarine">#66CDAA</color>
     <!--中绿色-->

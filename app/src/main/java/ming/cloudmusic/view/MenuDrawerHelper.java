@@ -1,4 +1,4 @@
-package ming.cloudmusic.util;
+package ming.cloudmusic.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.View;
 import net.simonvt.menudrawer.MenuDrawer;
 
 import ming.cloudmusic.R;
+import ming.cloudmusic.util.Constant;
+import ming.cloudmusic.util.SharedPrefsUtil;
 
 
 /**

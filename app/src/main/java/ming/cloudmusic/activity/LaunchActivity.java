@@ -19,7 +19,23 @@ public class LaunchActivity extends DefalutBaseActivity {
         Intent service = new Intent(this, MusicService.class);
         startService(service);
 
-        startActivity(new Intent(this, CloudMusicMainActivity.class));
-        finish();
+        getWindow().getDecorView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(mContext, CloudMusicMainActivity.class));
+                finish();
+            }
+        }, 1000);
+
+    }
+
+    @Override
+    public void initView() {
+
+    }
+
+    @Override
+    public void initData() {
+
     }
 }

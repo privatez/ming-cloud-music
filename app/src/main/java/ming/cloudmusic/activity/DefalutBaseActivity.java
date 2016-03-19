@@ -9,11 +9,12 @@ import java.util.HashMap;
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.SharedPrefsUtil;
+import ming.cloudmusic.view.OnViewCreateListener;
 
 /**
  * Created by Lhy on 2015/12/22.
  */
-public class DefalutBaseActivity extends Activity {
+public abstract class DefalutBaseActivity extends Activity implements OnViewCreateListener {
 
     protected HashMap mExtras;
 

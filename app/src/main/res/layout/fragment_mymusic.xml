@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dan_hui"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/actionbar_bg">
+
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium"
+            android:src="@drawable/actionbar_menu" />
+
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/padding_medium"
+            android:src="@drawable/actionbar_search" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_normal">
+
+        <LinearLayout
+            android:id="@+id/rl_localmusic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/music_icn_local" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="本地音乐"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium" />
+
+            <TextView
+                android:id="@+id/tv_localmusic_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="(0)"
+                android:textColor="@color/dimgray"
+                android:textSize="@dimen/text_medium" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end">
+
+                <ImageView
+                    android:id="@+id/iv_music_playing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:src="@drawable/song_play_icon" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            style="@style/Line"
+            android:layout_marginLeft="65dp" />
+
+        <LinearLayout
+            android:id="@+id/rl_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/music_icn_recent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="最近播放"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium" />
+
+            <TextView
+                android:id="@+id/tv_history_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="(0)"
+                android:textColor="@color/dimgray"
+                android:textSize="@dimen/text_medium" />
+
+        </LinearLayout>
+
+        <View
+            style="@style/Line"
+            android:layout_marginLeft="65dp" />
+
+        <LinearLayout
+            android:id="@+id/rl_dld"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/music_icn_dld" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="下载管理"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium" />
+
+            <TextView
+                android:id="@+id/tv_dld_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="(0)"
+                android:textColor="@color/dimgray"
+                android:textSize="@dimen/text_medium" />
+
+        </LinearLayout>
+
+        <View
+            style="@style/Line"
+            android:layout_marginLeft="65dp" />
+
+        <LinearLayout
+            android:id="@+id/rl_myart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/music_icn_artist" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="我的歌手"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium" />
+
+            <TextView
+                android:id="@+id/tv_myart_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="(0)"
+                android:textColor="@color/dimgray"
+                android:textSize="@dimen/text_medium" />
+
+        </LinearLayout>
+
+        <View style="@style/Line" />
+
+    </LinearLayout>
+
+</LinearLayout>

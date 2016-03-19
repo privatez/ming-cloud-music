@@ -7,7 +7,7 @@ import org.xutils.x;
 import java.util.ArrayList;
 
 import ming.cloudmusic.model.DbMusic;
-import ming.cloudmusic.dao.DbMusicDao;
+import ming.cloudmusic.db.DbMusicDao;
 
 public class MusicPlayerApplication extends Application {
 

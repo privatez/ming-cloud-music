@@ -64,7 +64,8 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         EventBus.getDefault().unregister(this);
     }
 
-    private void initView() {
+    @Override
+    public void initView() {
 
         tvPlayinfo = (TextView) findViewById(R.id.tv_playinfo);
         tvPlayBack = (TextView) findViewById(R.id.tv_play_back);
@@ -78,6 +79,11 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         seekBar = (SeekBar) findViewById(R.id.seekbar_play);
         tvAlltime = (TextView) findViewById(R.id.tv_alltime);
         tvPlaytime = (TextView) findViewById(R.id.tv_playtime);
+
+    }
+
+    @Override
+    public void initData() {
 
     }
 
