@@ -40,12 +40,18 @@ public class EventUtil {
         return mEventUtil;
     }
 
-    public void postEventMsg(String msg, String type) {
-        postEventMsgHasExtra(msg, null, type);
+    /**
+     * 发送Event
+     *
+     * @param msg
+     * @param eventType   Event种类
+     */
+    public void postEventMsg(String msg, String eventType) {
+        postEventMsgHasExtra(msg, null, eventType);
     }
 
-    public void postEventMsgHasExtra(String msg, HashMap extras, String type) {
-        switch (type) {
+    public void postEventMsgHasExtra(String msg, HashMap extras, String eventType) {
+        switch (eventType) {
             case SER:
                 mSerEvent = mEventPool.getServiceEvent();
                 if (mSerEvent != null) {

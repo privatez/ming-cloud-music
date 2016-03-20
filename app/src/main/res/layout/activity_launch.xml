@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:background="@drawable/login_bg">
+    android:layout_height="match_parent"
+    android:background="@drawable/launch_bg">
 
     <TextView
         android:id="@+id/textView1"
@@ -11,8 +11,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="25dp"
-        android:textColor="@color/black"
-        android:text="by private" />
+        android:text="by private"
+        android:textColor="@color/black" />
 
     <ImageView
         android:id="@+id/imageView1"
@@ -31,8 +31,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:text="网易云音乐"
-        android:textColor="@color/black"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/textView3"

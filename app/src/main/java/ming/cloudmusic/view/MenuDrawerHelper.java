@@ -8,6 +8,7 @@ import android.view.View;
 import net.simonvt.menudrawer.MenuDrawer;
 
 import ming.cloudmusic.R;
+import ming.cloudmusic.activity.TempActivity;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.SharedPrefsUtil;
 
@@ -29,10 +30,8 @@ public class MenuDrawerHelper implements View.OnClickListener {
 
 
     private static final int ACTION_DEFAULT = 0;
-    private static final int ACTION_ADDINFO = 1;
-    private static final int ACTION_ACCONUT = 2;
-    private static final int ACTION_LEADER = 3;
-    private static final int ACTION_AREA = 4;
+    private static final int ACTION_LOGIN = 1;
+
 
     private MenuDrawer mDrawer;
 
@@ -76,6 +75,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
         mDrawer.findViewById(R.id.ll_menu_night).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_setting).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_exit).setOnClickListener(MenuDrawerHelper.this);
+        mDrawer.findViewById(R.id.tv_login).setOnClickListener(MenuDrawerHelper.this);
 
 
         mDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
@@ -83,11 +83,11 @@ public class MenuDrawerHelper implements View.OnClickListener {
             public void onDrawerStateChange(int oldState, int newState) {
                 //android.util.Log.d("lhy","oldState:"+oldState+".....newState:"+newState);
                 if (newState == MenuDrawer.STATE_OPEN) {
-
+                    //TODO 数据请求
                 }
 
                 if (newState == MenuDrawer.STATE_CLOSED) {
-                    startActivity(mAction);
+                    checkAction(mAction);
                 }
             }
 
@@ -100,10 +100,13 @@ public class MenuDrawerHelper implements View.OnClickListener {
     }
 
 
-    private void startActivity(int action) {
+    private void checkAction(int action) {
         Intent intent;
         switch (action) {
-
+            case ACTION_LOGIN:
+                intent = new Intent(mActivity, TempActivity.class);
+                mActivity.startActivity(intent);
+                break;
         }
         mAction = ACTION_DEFAULT;
     }
@@ -111,7 +114,10 @@ public class MenuDrawerHelper implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
+            case R.id.tv_login:
+                mAction = ACTION_LOGIN;
+                toggleMenu();
+                break;
         }
     }
 
@@ -122,7 +128,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
         Intent intent = new Intent();
         intent.setAction(Constant.LOGIN_ACTION);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        mActivity.startActivity(intent);
+        mActivity.checkAction(intent);
     }*/
 
     /**

@@ -2,14 +2,11 @@ package ming.cloudmusic.db;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.MediaStore.Audio;
-import android.util.Log;
 
 import org.xutils.DbManager;
-import org.xutils.common.util.LogUtil;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
@@ -17,13 +14,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ming.cloudmusic.model.DbMusic;
-import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.LogUtils;
 
-public class DbMusicDao implements Constant {
+public class MusicDao {
 
     private SQLiteDatabase db;
 
@@ -35,9 +32,9 @@ public class DbMusicDao implements Constant {
 
     private DbManager.DaoConfig mDaoConfig;
 
-    private static DbMusicDao mMusicDao;
+    private static MusicDao mMusicDao;
 
-    private DbMusicDao() {
+    private MusicDao() {
         mDaoConfig = new DbManager.DaoConfig()
                 .setDbName("music.db")
                 .setDbDir(new File("/sdcard/cloudmusic"))
@@ -50,11 +47,11 @@ public class DbMusicDao implements Constant {
                 });
     }
 
-    public static DbMusicDao getDefaultDao() {
+    public static MusicDao getDefaultDao() {
         if (mMusicDao == null) {
-            synchronized (DbMusicDao.class) {
+            synchronized (MusicDao.class) {
                 if (mMusicDao == null) {
-                    mMusicDao = new DbMusicDao();
+                    mMusicDao = new MusicDao();
                 }
             }
         }
@@ -115,6 +112,12 @@ public class DbMusicDao implements Constant {
 
     }
 
+    /**
+     * 通过歌曲路径判断数据库中是否有该歌曲
+     *
+     * @param path
+     * @return
+     */
     private boolean dbHasThisMusic(String path) {
         DbManager db = x.getDb(mDaoConfig);
         try {
@@ -122,7 +125,7 @@ public class DbMusicDao implements Constant {
             if (music == null) {
                 return false;
             } else {
-                LogUtils.log("比对到的音乐：" + music.toString());
+                //LogUtils.log("比对到的音乐：" + music.toString());
             }
         } catch (DbException e) {
             LogUtils.log(e.getMessage());
@@ -148,7 +151,7 @@ public class DbMusicDao implements Constant {
             close(db);
         }
 
-        LogUtils.log("数据库中的音乐：" + musics.toString());
+        //LogUtils.log("数据库中的音乐：" + musics.toString());
 
         return musics;
     }
@@ -171,7 +174,7 @@ public class DbMusicDao implements Constant {
             close(db);
         }
 
-        LogUtils.log("播放中的音乐：" + musics.toString());
+        //LogUtils.log("播放中的音乐：" + musics.toString());
 
         return musics;
     }
@@ -205,89 +208,60 @@ public class DbMusicDao implements Constant {
         return musics.size() - Flag;
     }
 
+
     /**
-     * �����ʷ�����б�
+     * 获取全部的历史播放歌曲
      *
      * @return
      */
-
     public ArrayList<DbMusic> getHistoryMusics() {
-        DbMusic music = null;
-        ArrayList<DbMusic> musics = new ArrayList<DbMusic>();
-        musics.clear();
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
 
-        String sql = "select * from history_music_info";
-        Cursor c = db.rawQuery(sql, null);
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            music = new DbMusic();
-            music.setId(c.getLong(c.getColumnIndex("_id")));
-            music.setTitle(c.getString(c.getColumnIndex("_title")));
-            music.setName(c.getString(c.getColumnIndex("display_name")));
-            music.setPath(c.getString(c.getColumnIndex("data")));
-            music.setArtlist(c.getString(c.getColumnIndex("artlist")));
-            music.setAlbum(c.getString(c.getColumnIndex("album")));
-            music.setDuration(c.getInt(c.getColumnIndex("duration")));
-            musics.add(music);
+        ArrayList<DbMusic> musics = new ArrayList();
+
+        DbManager db = x.getDb(mDaoConfig);
+        try {
+            musics.addAll(db.selector(DbMusic.class).where("isHistroy", "=", DbMusic.ISHISTORY).orderBy("playedTime", true).findAll());
+        } catch (java.io.IOException e) {
+            LogUtils.log("获取历史音乐Excetion：" + e.getMessage());
+        } finally {
+            close(db);
         }
-        close(c);
+
+        LogUtils.log("获取历史音乐：" + musics.toString());
+
         return musics;
     }
 
-    /**
-     * ��Ӳ�����ĸ�����ʷ�����б�
-     *
-     * @param musics
-     * @return �ɹ�������
-     */
-    public int insertHistoryMusics(ArrayList<DbMusic> musics) {
-        int okFlag = 0;
-        DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
 
-        for (int i = 0; i < musics.size(); i++) {
-            music = musics.get(i);
-            long id = (music.getId());
-            String title = (music.getTitle());
-            String name = (music.getName());
-            String path = (music.getPath());
-            String artlist = (music.getArtlist());
-            String album = (music.getAlbum());
-            int duration = (music.getDuration());
-            // String
-            // date=String.valueOf(SystemClock.currentThreadTimeMillis());
-            // ����ݴ���onplaymusic_info����
-            try {
-                Object[] bindArgs = {id, title, name, path, artlist, album,
-                        duration};
-                // Log.e(tag, title);
-                String insertSql = "insert into history_music_info values(?,?,?,?,?,?,?)";
-                db.execSQL(insertSql, bindArgs);
-            } catch (SQLException e) {
-                okFlag++;
-                Log.e("cloudmusic", e.getMessage());
-            }
+    public void insertHistoryMusics(DbMusic music) {
+
+        DbManager db = x.getDb(mDaoConfig);
+        try {
+            db.update(music);
+        } catch (java.io.IOException e) {
+            LogUtils.log("插入历史音乐Excetion：" + e.getMessage());
+        } finally {
+            close(db);
         }
 
-        return musics.size() - okFlag;
+        //EventUtil.getDefault().postEventMsg(DataEvent.HISTORYMUSICS_CHANGGE);
+
     }
 
-    /**
-     * һ�������ʷ�����б�
-     *
-     * @return ɾ��ɹ�������,-1��ʾɾ��ʧ��
-     */
-    public int clearHistoryMusic() {
-        int okFlag = -1;
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
-        String table = "history_music_info";
-        try {
-            okFlag = db.delete(table, null, null);
-        } catch (SQLException e) {
-            LogUtil.d(e.getMessage());
-        }
 
-        return okFlag;
+    public void clearHistoryMusic() {
+        DbManager db = x.getDb(mDaoConfig);
+        try {
+            List<DbMusic> musics = (db.selector(DbMusic.class).where("isHistroy", "=", DbMusic.ISHISTORY).findAll());
+            for (DbMusic music : musics) {
+                music.setIsHistroy(DbMusic.DEFAULT_VALUE);
+                db.update(music);
+            }
+        } catch (java.io.IOException e) {
+            LogUtils.log("清空历史音乐Excetion：" + e.getMessage());
+        } finally {
+            close(db);
+        }
     }
 
     /**

@@ -98,7 +98,7 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
         tvPlaybarArt.setText(data.get(Event.Extra.EXTRA_PLAYING_ART).toString());
     }
 
-    protected void switchContent(Fragment oldFragment, Fragment newFragment) {
+    private void switchContent(Fragment oldFragment, Fragment newFragment) {
         if (mContent != newFragment) {
             mContent = newFragment;
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -107,6 +107,12 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
             else
                 transaction.hide(oldFragment).show(newFragment).commit();
         }
+    }
+
+    private void onBackFragment(Fragment showedFragment, Fragment showingFragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        if (showedFragment.isAdded() && showingFragment.isAdded())
+            transaction.hide(showedFragment).show(showingFragment).remove(showedFragment).commit();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -160,15 +166,16 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
 
     @Override
     public boolean onTouch(View v, MotionEvent e) {
+        //获得当前事件由几个手指触发
         int howmuch = e.getPointerCount();
         if (howmuch == 1) {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 startX = e.getX();
             } else if (e.getAction() == MotionEvent.ACTION_UP) {
-                if (e.getX() - startX > 10) {
+                if (e.getX() - startX > 100) {
                     //滑动 下一首
                     postEventMsg(KeyEvent.KEY_NEXT);
-                } else if (e.getX() - startX < -10) {
+                } else if (e.getX() - startX < -100) {
                     //滑动 上一首
                     postEventMsg(KeyEvent.KEY_PREVIOUS);
                 } else if (e.getX() == startX) {

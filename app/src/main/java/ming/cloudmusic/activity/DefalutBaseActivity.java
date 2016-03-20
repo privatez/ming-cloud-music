@@ -28,6 +28,7 @@ public abstract class DefalutBaseActivity extends Activity implements OnViewCrea
         mExtras = new HashMap();
         mContext = this;
         mSharedPrefs = new SharedPrefsUtil(getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
+
     }
 
     protected void postEventMsg(String msg) {

@@ -1,5 +1,6 @@
 package ming.cloudmusic.service;
 
+import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -14,14 +15,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ming.cloudmusic.MusicPlayerApplication;
+import ming.cloudmusic.db.MusicDao;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.model.DbMusic;
-import ming.cloudmusic.util.Constant;
 
-public class MusicService extends android.app.Service implements Constant {
+public class MusicService extends Service {
 
     private MediaPlayer mPlayer;
 
@@ -234,7 +235,9 @@ public class MusicService extends android.app.Service implements Constant {
     public void next() {
         historyMusics.clear();
         //historyMusics.add(mPlayingMusic);
-        /*MusicBiz.insertHistoryMusics(historyMusics);*/
+        mPlayingMusic.setIsHistroy(DbMusic.ISHISTORY);
+        mPlayingMusic.setPlayedTime(System.currentTimeMillis());
+        MusicDao.getDefaultDao().insertHistoryMusics(mPlayingMusic);
         switch (mPlayingMode) {
             case 0:
                 single();

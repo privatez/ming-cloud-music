@@ -7,7 +7,7 @@ import org.xutils.x;
 import java.util.ArrayList;
 
 import ming.cloudmusic.model.DbMusic;
-import ming.cloudmusic.db.DbMusicDao;
+import ming.cloudmusic.db.MusicDao;
 
 public class MusicPlayerApplication extends Application {
 
@@ -76,7 +76,7 @@ public class MusicPlayerApplication extends Application {
         //初始化xUtil
         x.Ext.init(this);
         x.Ext.setDebug(true);
-        DbMusicDao dao = DbMusicDao.getDefaultDao();
+        MusicDao dao = MusicDao.getDefaultDao();
 
         dao.findMobleMusic(getContentResolver());
 

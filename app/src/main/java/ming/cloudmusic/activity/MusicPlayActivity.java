@@ -18,11 +18,9 @@ import ming.cloudmusic.R;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
-import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.DateSDF;
 
-public class MusicPlayActivity extends DefalutBaseActivity implements OnClickListener,
-        Constant, OnSeekBarChangeListener {
+public class MusicPlayActivity extends DefalutBaseActivity implements OnClickListener, OnSeekBarChangeListener {
 
     private TextView tvPlayinfo;
     private TextView tvPlayBack;

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dan_hui"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_small"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_small">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/iv_menu"
+            android:singleLine="true"
+            android:text="平凡之路"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium" />
+
+        <ImageView
+            android:id="@+id/iv_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tv_title"
+            android:layout_below="@+id/tv_title"
+            android:layout_marginTop="@dimen/margin_ssmall"
+            android:src="@drawable/local_fb_icn_ok" />
+
+        <TextView
+            android:id="@+id/tv_art"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iv_tag"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_ssmall"
+            android:layout_toLeftOf="@+id/iv_menu"
+            android:layout_toRightOf="@+id/iv_tag"
+            android:singleLine="true"
+            android:text="朴树"
+            android:textColor="@color/darkgray"
+            android:textSize="@dimen/text_normal" />
+
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/padding_small"
+            android:src="@drawable/list_icn_more" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/v_line"
+        style="@style/Line"
+        android:layout_marginLeft="@dimen/margin_medium" />
+
+</LinearLayout>

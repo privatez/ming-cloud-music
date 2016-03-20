@@ -11,11 +11,9 @@ public class DbMusic implements Parcelable {
 
     public static final int ISPLAYING = 1;
 
-    public static final int NOTPLAYING = 2;
-
     public static final int ISHISTORY = 31;
 
-    public static final int NOTHISTORY = 32;
+    public static final int DEFAULT_VALUE = 0;
 
     @Column(name = "id", isId = true)
     private long id;
@@ -54,17 +52,8 @@ public class DbMusic implements Parcelable {
     @Column(name = "isHistroy")
     private int isHistroy;
 
-    public static Creator<DbMusic> getCREATOR() {
-        return CREATOR;
-    }
-
-    public int getIsHistroy() {
-        return isHistroy;
-    }
-
-    public void setIsHistroy(int isHistroy) {
-        this.isHistroy = isHistroy;
-    }
+    @Column(name = "playedTime")
+    private long playedTime;
 
     public long getId() {
         return id;
@@ -138,6 +127,22 @@ public class DbMusic implements Parcelable {
         this.isPlaying = isPlaying;
     }
 
+    public int getIsHistroy() {
+        return isHistroy;
+    }
+
+    public void setIsHistroy(int isHistroy) {
+        this.isHistroy = isHistroy;
+    }
+
+    public long getPlayedTime() {
+        return playedTime;
+    }
+
+    public void setPlayedTime(long playedTime) {
+        this.playedTime = playedTime;
+    }
+
     @Override
     public String toString() {
         return "DbMusic{" +
@@ -151,9 +156,9 @@ public class DbMusic implements Parcelable {
                 ", duration=" + duration +
                 ", isPlaying=" + isPlaying +
                 ", isHistroy=" + isHistroy +
+                ", playedTime=" + playedTime +
                 '}';
     }
-
 
     @Override
     public int describeContents() {
@@ -172,6 +177,7 @@ public class DbMusic implements Parcelable {
         dest.writeInt(this.duration);
         dest.writeInt(this.isPlaying);
         dest.writeInt(this.isHistroy);
+        dest.writeLong(this.playedTime);
     }
 
     public DbMusic() {
@@ -188,13 +194,16 @@ public class DbMusic implements Parcelable {
         this.duration = in.readInt();
         this.isPlaying = in.readInt();
         this.isHistroy = in.readInt();
+        this.playedTime = in.readLong();
     }
 
-    public static final Parcelable.Creator<DbMusic> CREATOR = new Parcelable.Creator<DbMusic>() {
+    public static final Creator<DbMusic> CREATOR = new Creator<DbMusic>() {
+        @Override
         public DbMusic createFromParcel(Parcel source) {
             return new DbMusic(source);
         }
 
+        @Override
         public DbMusic[] newArray(int size) {
             return new DbMusic[size];
         }

@@ -19,13 +19,13 @@ import ming.cloudmusic.view.OnViewCreateListener;
  */
 public abstract class DefaultBaseFragment extends Fragment implements OnViewCreateListener {
 
-    private Context mContext;
+    protected Context mContext;
 
-    private SharedPrefsUtil mSharedPrefsUtil;
+    protected SharedPrefsUtil mSharedPrefsUtil;
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mContext = getActivity();
         mSharedPrefsUtil = new SharedPrefsUtil(mContext, Constant.SharedPrefrence.SHARED_NAME);
     }
@@ -38,7 +38,7 @@ public abstract class DefaultBaseFragment extends Fragment implements OnViewCrea
         EventUtil.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtil.KEY);
     }
 
-    public void onBackView(View v) {
+    public void onBackView() {
         ToastUtils.showShort(mContext, "返回");
     }
 
