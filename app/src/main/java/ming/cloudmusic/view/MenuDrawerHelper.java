@@ -8,7 +8,7 @@ import android.view.View;
 import net.simonvt.menudrawer.MenuDrawer;
 
 import ming.cloudmusic.R;
-import ming.cloudmusic.activity.TempActivity;
+import ming.cloudmusic.activity.EntranceActivity;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.SharedPrefsUtil;
 
@@ -104,7 +104,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
         Intent intent;
         switch (action) {
             case ACTION_LOGIN:
-                intent = new Intent(mActivity, TempActivity.class);
+                intent = new Intent(mActivity, EntranceActivity.class);
                 mActivity.startActivity(intent);
                 break;
         }

@@ -11,7 +11,7 @@ import ming.cloudmusic.R;
 /**
  * Created by Lhy on 2016/3/20.
  */
-public class TempActivity extends DefalutBaseActivity implements OnClickListener {
+public class EntranceActivity extends DefalutBaseActivity implements OnClickListener {
 
     private TextView tvLogin;
     private TextView tvRegister;
@@ -19,7 +19,7 @@ public class TempActivity extends DefalutBaseActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_temp);
+        setContentView(R.layout.activity_entrance);
 
         initView();
 
