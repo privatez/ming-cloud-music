@@ -291,6 +291,100 @@
     <!--暗蓝色 -->
     <color name="navy">#000080</color>
     <!--海军色 -->
-    <color name="black">#292421</color>
-    <!--象牙黑 -->
+
+    <color name="text_light_content">#999999</color>
+
+    <color name="red_light">#ffff4444</color>
+    <color name="theme_red_new">#F04042</color>
+
+    <color name="divider_grey">#3A3A3A</color>
+    <color name="divider_grey_light">#DCDCDC</color>
+
+    <color name="black_light">#171717</color>
+    <color name="black">#000000</color>
+    <color name="black_pressed">#242424</color>
+
+    <color name="red_pressed">#bd3535</color>
+
+
+    <color name="grey_new">#dddddd</color>
+    <color name="grey_lighter">#f6f6f6</color>
+    <color name="grey">#858585</color>
+    <color name="grey_pressed">#d9d9d9</color>
+
+    <!-- 背景色 -->
+    <color name="bg_white_dark">#fafafa</color>
+    <color name="bg_orange_new">#ffc058</color>
+
+    <color name="text_black_new">#444444</color>
+
+    <!-- 字体颜色 -->
+    <color name="text_grey">#565656</color>
+    <color name="text_light">#999999</color>
+    <color name="text_lighter">#bbbbbb</color>
+    <color name="text_content_light">#696969</color>
+    <color name="text_content">#4a4a4a</color>
+
+    <color name="text_grey_light">#999999</color>
+
+    <color name="text_red">#ef4242</color>
+    <color name="text_red_pressed">#bd3535</color>
+    <color name="text_white">#fafafa</color>
+
+    <!-- 分隔线颜色 -->
+    <color name="divider_light">#ebebeb</color>
+
+    <!-- 待统一的颜色 -->
+
+    <!-- segmented control-->
+
+    <!--action sheet-->
+    <color name="transparent">#00000000</color>
+
+    <!-- holo colors -->
+    <color name="holo_green_light">#87d95e</color>
+
+    <!-- background color-->
+
+    <!--added by chenfei-->
+
+    <!--半透明黑色-->
+
+    <color name="bg_mission_red">#D63A3B</color>
+
+    <color name="while80Percentage">#dcffffff</color>
+    <color name="bg_tran">#80000000</color>
+
+    <!--浅蓝色-->
+    <!--黑色-->
+
+    <color name="grey_windchat_title">#717171</color>
+
+    <color name="pink_fbeded">#fbeded</color>
+
+
+    <color name="blue_light">#ff33b5e5</color>
+
+
+
+    <color name="text_order_grey">#9B9B9B</color>
+    <color name="text_black">#171717</color>
+
+    <color name="theme_light_grey">#f3f3f3</color>
+    <color name="bg_light_grey">#EAEAEA</color>
+    <color name="bg_pink">#feecec</color>
+    <color name="bg_black_light">#363636</color>
+    <color name="bg_grey">#EEEEEE</color>
+    <color name="background">#F5F2F2</color>
+    <color name="grey_border">#999999</color>
+    <color name="grey_line">#DDDDDD</color>
+    <color name="bg_grey_darker">#696969</color>
+    <color name="bg_pick_light">#f2f2f2</color>
+    <color name="text_grey_login">#A4A4A4</color>
+    <color name="text_grey_code">#776D6D</color>
+    <color name="text_code">#EAE5E5</color>
+    <color name="bg_guidepage">#80FFE2E2</color>
+
+    <color name="bg_login">#372F2F</color>
+    <color name="grey_dark_new">#e4e4e4</color>
 </resources>

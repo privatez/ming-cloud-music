@@ -42,4 +42,9 @@ public abstract class DefaultBaseFragment extends Fragment implements OnViewCrea
         ToastUtils.showShort(mContext, "返回");
     }
 
+    protected void refreshBackGround(View backGround, View content) {
+        backGround.setVisibility(View.GONE);
+        content.setVisibility(View.VISIBLE);
+    }
+
 }

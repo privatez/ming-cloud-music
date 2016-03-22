@@ -34,6 +34,8 @@ public class HistoryFragment extends DefaultBaseFragment implements View.OnClick
     private RelativeLayout rlPlayall;
     private TextView tvMusicsCount;
     private ListView lvMusics;
+    private View llContent;
+    private View llCommonBg;
 
     private List<DbMusic> mHistoryMusics;
     private CommonAdapter<DbMusic> mAdapter;
@@ -62,6 +64,8 @@ public class HistoryFragment extends DefaultBaseFragment implements View.OnClick
         rlPlayall = (RelativeLayout) view.findViewById(R.id.rl_playall);
         tvMusicsCount = (TextView) view.findViewById(R.id.tv_musics_count);
         lvMusics = (ListView) view.findViewById(R.id.lv_musics);
+        llContent = view.findViewById(R.id.ll_content);
+        llCommonBg = view.findViewById(R.id.ll_common_bg);
 
         tvBack.setText("最近播放");
         tvEvent.setText("清空");
@@ -73,6 +77,7 @@ public class HistoryFragment extends DefaultBaseFragment implements View.OnClick
     public void initData() {
         mHistoryMusics = new ArrayList<>();
         mHistoryMusics.addAll(MusicDao.getDefaultDao().getHistoryMusics());
+        refreshBackGround(llCommonBg, llContent);
         setAdapter();
 
         EventBus.getDefault().register(this);
@@ -108,7 +113,7 @@ public class HistoryFragment extends DefaultBaseFragment implements View.OnClick
     private void clearHistoryMusics() {
         LogUtils.log("开始清空");
         MusicDao.getDefaultDao().clearHistoryMusic();
-        MusicDao.getDefaultDao().getHistoryMusics();
+        refreshBackGround(llCommonBg, llContent);
         mAdapter.notifyDataSetChanged();
     }
 

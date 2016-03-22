@@ -74,7 +74,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
         mDrawer.findViewById(R.id.ll_menu_time).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_night).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_setting).setOnClickListener(MenuDrawerHelper.this);
-        mDrawer.findViewById(R.id.ll_menu_exit).setOnClickListener(MenuDrawerHelper.this);
+        mDrawer.findViewById(R.id.tv_exit).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.tv_login).setOnClickListener(MenuDrawerHelper.this);
 
 

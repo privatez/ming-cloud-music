@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="TopActionBar">
+        <attr name="titleText" format="string" />
+        <attr name="menuText" format="string" />
+    </declare-styleable>
+
+</resources>

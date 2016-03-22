@@ -2,54 +2,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dan_hui"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <include layout="@layout/common_actionbar" />
 
-    <RelativeLayout
-        android:id="@+id/rl_playall"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/padding_small"
-        android:paddingLeft="@dimen/padding_medium"
-        android:paddingTop="@dimen/padding_small">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/iv_default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/lay_icn_play" />
+        <LinearLayout
+            android:id="@+id/ll_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/tv_default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_toRightOf="@+id/iv_default"
-            android:text="播放全部"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_large" />
+            <RelativeLayout
+                android:id="@+id/rl_playall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_medium">
 
-        <TextView
-            android:id="@+id/tv_musics_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/tv_default"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/tv_default"
-            android:text="(共0首)"
-            android:textSize="@dimen/text_normal" />
+                <ImageView
+                    android:id="@+id/iv_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/lay_icn_play" />
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_medium"
+                    android:layout_toRightOf="@+id/iv_default"
+                    android:text="播放全部"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_large" />
 
-    <View style="@style/Line" />
+                <TextView
+                    android:id="@+id/tv_musics_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/tv_default"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/tv_default"
+                    android:text="(共0首)"
+                    android:textSize="@dimen/text_normal" />
 
-    <ListView
-        android:id="@+id/lv_musics"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@null" />
+            </RelativeLayout>
+
+            <View style="@style/Line" />
+
+            <ListView
+                android:id="@+id/lv_musics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null" />
+
+        </LinearLayout>
+
+        <include layout="@layout/common_background" />
+
+    </FrameLayout>
 
 </LinearLayout>

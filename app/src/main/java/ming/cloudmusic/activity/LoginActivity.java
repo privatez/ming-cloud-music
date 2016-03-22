@@ -3,10 +3,8 @@ package ming.cloudmusic.activity;
 import android.os.Bundle;
 import android.view.View;
 
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.SaveListener;
-import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.util.ToastUtils;
 
@@ -18,7 +16,7 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bmob.initialize(this, Constant.BMOB_ID);
+
         BmobUser user = new BmobUser();
         user.setUsername("lh1y");
         user.setPassword("123456");

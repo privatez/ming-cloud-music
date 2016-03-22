@@ -6,8 +6,10 @@ import org.xutils.x;
 
 import java.util.ArrayList;
 
+import cn.bmob.v3.Bmob;
 import ming.cloudmusic.model.DbMusic;
 import ming.cloudmusic.db.MusicDao;
+import ming.cloudmusic.util.Constant;
 
 public class MusicPlayerApplication extends Application {
 
@@ -76,6 +78,9 @@ public class MusicPlayerApplication extends Application {
         //初始化xUtil
         x.Ext.init(this);
         x.Ext.setDebug(true);
+
+        Bmob.initialize(this, Constant.BMOB_ID);
+
         MusicDao dao = MusicDao.getDefaultDao();
 
         dao.findMobleMusic(getContentResolver());
