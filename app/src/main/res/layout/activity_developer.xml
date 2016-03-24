@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <ming.cloudmusic.view.TopActionBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        custom:titleText="开发者模式" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="版本号"
+            android:textColor="@color/text_content_light"
+            android:textSize="@dimen/text_medium" />
+
+        <EditText
+            android:id="@+id/et_version_code"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:background="@drawable/shape_version_code"
+            android:inputType="number"
+            android:textColor="@color/red_light"
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:id="@+id/tv_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="@drawable/actionbar_bg"
+            android:paddingBottom="@dimen/padding_small"
+            android:paddingLeft="@dimen/padding_medium"
+            android:paddingRight="@dimen/padding_medium"
+            android:paddingTop="@dimen/padding_small"
+            android:text="上传文件..."
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_small" />
+
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            android:id="@+id/pb_upload"
+            style="@style/NumberProgressBar_Default"
+            android:layout_marginLeft="@dimen/margin_normal" />
+
+    </LinearLayout>
+
+    <include layout="@layout/include_common_interval_view" />
+
+    <TextView
+        style="@style/TtileWhiteBase"
+        android:text="备注" />
+
+    <View style="@style/Line" />
+
+    <EditText
+        android:id="@+id/et_remark"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_version_code"
+        android:gravity="start"
+        android:hint="输入备注..."
+        android:padding="@dimen/padding_small"
+        android:textSize="@dimen/text_small" />
+
+    <TextView
+        android:id="@+id/tv_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
+        android:background="@drawable/actionbar_bg"
+        android:gravity="center"
+        android:padding="@dimen/padding_medium"
+        android:text="发布"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_normal" />
+
+</LinearLayout>

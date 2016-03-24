@@ -27,16 +27,7 @@
 -keep class cn.bmob.v3.** {*;}
 
 # 保证继承自BmobObject、BmobUser类的JavaBean不被混淆
--keep class com.example.bmobexample.bean.BankCard{*;}
--keep class com.example.bmobexample.bean.GameScore{*;}
--keep class com.example.bmobexample.bean.MyUser{*;}
--keep class com.example.bmobexample.bean.Person{*;}
-
--keep class com.example.bmobexample.file.Movie{*;}
--keep class com.example.bmobexample.file.Song{*;}
-
--keep class com.example.bmobexample.relation.Post{*;}
--keep class com.example.bmobexample.relation.Comment{*;}
+-keep class ming.cloudmusic.model.AppUpdate{*;}
 
 # 如果你使用了okhttp、okio的包，请添加以下混淆代码
 -dontwarn com.squareup.okhttp.**

@@ -8,6 +8,7 @@ import android.view.View;
 import net.simonvt.menudrawer.MenuDrawer;
 
 import ming.cloudmusic.R;
+import ming.cloudmusic.activity.AboutAppActivity;
 import ming.cloudmusic.activity.EntranceActivity;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.SharedPrefsUtil;
@@ -31,6 +32,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
 
     private static final int ACTION_DEFAULT = 0;
     private static final int ACTION_LOGIN = 1;
+    private static final int ACTION_SETTING = 2;
 
 
     private MenuDrawer mDrawer;
@@ -107,6 +109,10 @@ public class MenuDrawerHelper implements View.OnClickListener {
                 intent = new Intent(mActivity, EntranceActivity.class);
                 mActivity.startActivity(intent);
                 break;
+            case ACTION_SETTING:
+                intent = new Intent(mActivity, AboutAppActivity.class);
+                mActivity.startActivity(intent);
+                break;
         }
         mAction = ACTION_DEFAULT;
     }
@@ -116,6 +122,10 @@ public class MenuDrawerHelper implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.tv_login:
                 mAction = ACTION_LOGIN;
+                toggleMenu();
+                break;
+            case R.id.ll_menu_setting:
+                mAction = ACTION_SETTING;
                 toggleMenu();
                 break;
             case R.id.ll_menu_exit:
