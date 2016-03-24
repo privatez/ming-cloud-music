@@ -3,11 +3,13 @@ package ming.cloudmusic.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.SaveListener;
 import ming.cloudmusic.R;
+import ming.cloudmusic.util.LogUtils;
+import ming.cloudmusic.util.ToastUtils;
 
 /**
  * Created by Lhy on 2016/3/20.
@@ -16,12 +18,10 @@ public class RegisterActivity extends DefalutBaseActivity implements View.OnClic
 
     private TextView tvBack;
     private TextView tvSubmit;
-    private LinearLayout llViewAccount;
-    private ImageView ivLineAcconut;
-    private LinearLayout llViewPassword;
-    private ImageView ivLinePassword;
     private EditText etAccount;
     private EditText etPassword;
+    private View vAccount;
+    private View vPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +37,10 @@ public class RegisterActivity extends DefalutBaseActivity implements View.OnClic
 
         tvBack = (TextView) findViewById(R.id.tv_back);
         tvSubmit = (TextView) findViewById(R.id.tv_submit);
-        llViewAccount = (LinearLayout) findViewById(R.id.ll_view_account);
-        ivLineAcconut = (ImageView) findViewById(R.id.iv_line_acconut);
-        llViewPassword = (LinearLayout) findViewById(R.id.ll_view_password);
-        ivLinePassword = (ImageView) findViewById(R.id.iv_line_password);
         etAccount = (EditText) findViewById(R.id.et_account);
         etPassword = (EditText) findViewById(R.id.et_password);
+        vAccount = findViewById(R.id.v_account);
+        vPassword = findViewById(R.id.v_password);
 
         tvBack.setText("注册用户");
         tvBack.setOnClickListener(this);
@@ -57,9 +55,34 @@ public class RegisterActivity extends DefalutBaseActivity implements View.OnClic
 
     }
 
+    private boolean canRegister() {
+
+        if (etAccount.getText().toString().trim().length() == 0) {
+            ToastUtils.showShort(mContext, "请设置用户名");
+            return false;
+        }
+
+        if (etPassword.getText().toString().trim().length() == 0) {
+            ToastUtils.showShort(mContext, "请设置密码");
+            return false;
+        }
+
+        if (etPassword.getText().toString().trim().length() < 6) {
+            ToastUtils.showShort(mContext, "密码最少6位");
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.tv_submit:
+                if (canRegister())
+                    register(etAccount.getText().toString().trim(), etPassword.getText().toString().trim());
+                break;
+        }
     }
 
     @Override
@@ -67,22 +90,39 @@ public class RegisterActivity extends DefalutBaseActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.et_account:
                 if (hasFocus) {
-                    llViewAccount.setVisibility(View.GONE);
-                    ivLineAcconut.setVisibility(View.VISIBLE);
+                    vAccount.setBackgroundColor(getResColor(R.color.grey));
                 } else {
-                    llViewAccount.setVisibility(View.VISIBLE);
-                    ivLineAcconut.setVisibility(View.GONE);
+                    vAccount.setBackgroundColor(getResColor(R.color.grey_new));
                 }
                 break;
             case R.id.et_password:
                 if (hasFocus) {
-                    llViewPassword.setVisibility(View.GONE);
-                    ivLinePassword.setVisibility(View.VISIBLE);
+                    vPassword.setBackgroundColor(getResColor(R.color.grey));
                 } else {
-                    llViewPassword.setVisibility(View.VISIBLE);
-                    ivLinePassword.setVisibility(View.GONE);
+                    vPassword.setBackgroundColor(getResColor(R.color.grey_new));
                 }
                 break;
         }
     }
+
+    private void register(String username, String password) {
+        BmobUser bu = new BmobUser();
+        bu.setUsername(username);
+        bu.setPassword(password);
+        bu.signUp(this, new SaveListener() {
+            @Override
+            public void onSuccess() {
+                ToastUtils.showShort(mContext, "注册成功");
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+                if (code == 202 && msg.contains("taken"))
+                    ToastUtils.showShort(mContext, "用户名已被注册");
+                else
+                    LogUtils.log("注册失败+code:" + code + "....msg:" + msg);
+            }
+        });
+    }
+
 }

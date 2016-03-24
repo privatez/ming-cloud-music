@@ -74,7 +74,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
         mDrawer.findViewById(R.id.ll_menu_time).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_night).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_setting).setOnClickListener(MenuDrawerHelper.this);
-        mDrawer.findViewById(R.id.tv_exit).setOnClickListener(MenuDrawerHelper.this);
+        mDrawer.findViewById(R.id.ll_menu_exit).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.tv_login).setOnClickListener(MenuDrawerHelper.this);
 
 
@@ -117,6 +117,9 @@ public class MenuDrawerHelper implements View.OnClickListener {
             case R.id.tv_login:
                 mAction = ACTION_LOGIN;
                 toggleMenu();
+                break;
+            case R.id.ll_menu_exit:
+                System.exit(0);
                 break;
         }
     }

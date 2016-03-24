@@ -2,7 +2,9 @@ package ming.cloudmusic.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 
 import java.util.HashMap;
 
@@ -37,6 +39,15 @@ public abstract class DefalutBaseActivity extends Activity implements OnViewCrea
 
     protected void postEventMsgHasExtra(String msg, HashMap mExtras) {
         EventUtil.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtil.KEY);
+    }
+
+    protected int getResColor(int color) {
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= 23) {
+            return ContextCompat.getColor(mContext, color);
+        } else {
+            return getResources().getColor(color);
+        }
     }
 
 }

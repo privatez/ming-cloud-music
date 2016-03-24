@@ -22,13 +22,6 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity.CloudMusicMainActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-
-        </activity>
-
-        <activity
             android:name=".activity.LaunchActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -43,12 +36,20 @@
 
         <activity
             android:name=".activity.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysVisible" />
 
         <activity
             android:name=".activity.RegisterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
+            android:name=".activity.CloudMusicMainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <activity
             android:name=".activity.MusicPlayActivity"

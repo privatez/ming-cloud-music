@@ -23,7 +23,7 @@
         android:gravity="center"
         android:paddingBottom="@dimen/padding_normal"
         android:paddingTop="@dimen/padding_normal"
-        android:text="手机号登录"
+        android:text="登录"
         android:textColor="@drawable/selector_login_text" />
 
     <TextView

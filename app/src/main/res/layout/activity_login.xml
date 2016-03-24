@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_normal"
             android:background="@color/white"
-            android:hint="设置登录用户名，最多12位"
+            android:hint="请输入用户名"
             android:maxLength="12"
             android:textColor="@color/text_content_light"
             android:textColorHint="@color/grey"
@@ -69,7 +69,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_normal"
             android:background="@color/white"
-            android:hint="设置登录密码，6－12位"
+            android:hint="请输入密码"
+            android:inputType="textPassword"
+            android:maxLength="12"
             android:textColor="@color/text_content_light"
             android:textColorHint="@color/grey"
             android:textCursorDrawable="@drawable/shape_input_cursor"
@@ -94,7 +96,7 @@
         android:background="@drawable/actionbar_bg"
         android:gravity="center"
         android:padding="@dimen/padding_medium"
-        android:text="注册"
+        android:text="登录"
         android:textColor="@color/white"
         android:textSize="@dimen/text_medium" />
 

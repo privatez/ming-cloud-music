@@ -15,7 +15,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="160dp"
                 android:background="@drawable/topinfo_ban_bg"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
@@ -23,7 +23,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="25dp"
                     android:text="登录网易云音乐"
                     android:textColor="@color/whitesmoke"
                     android:textSize="@dimen/text_medium" />
@@ -32,7 +32,7 @@
                     android:id="@+id/tv_login"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="55dp"
                     android:background="@drawable/start_btn_right"
                     android:paddingBottom="@dimen/padding_small"
                     android:paddingLeft="50dp"
@@ -112,40 +112,5 @@
         </LinearLayout>
 
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
-        <TextView
-            android:id="@+id/tv_setting"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="@dimen/padding_medium"
-            android:text="设置"
-            android:textColor="@color/text_black_new"
-            android:textSize="@dimen/text_normal" />
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="15dp"
-            android:layout_gravity="center_vertical"
-            android:background="@color/grey_new" />
-
-        <TextView
-            android:id="@+id/tv_exit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="@dimen/padding_medium"
-            android:text="退出应用"
-            android:textColor="@color/text_black_new"
-            android:textSize="@dimen/text_normal" />
-
-    </LinearLayout>
 
 </RelativeLayout>

@@ -1,41 +1,54 @@
 package ming.cloudmusic.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.listener.SaveListener;
-import ming.cloudmusic.util.LogUtils;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.LogInListener;
+import ming.cloudmusic.R;
+import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.ToastUtils;
 
 /**
- * Created by Lhy on 2016/3/19.
+ * Created by Lhy on 2016/3/20.
  */
-public class LoginActivity extends DefalutBaseActivity implements View.OnClickListener {
+public class LoginActivity extends DefalutBaseActivity implements View.OnClickListener, View.OnFocusChangeListener {
+
+    private TextView tvBack;
+    private TextView tvSubmit;
+    private EditText etAccount;
+    private EditText etPassword;
+    private View vAccount;
+    private View vPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
-        BmobUser user = new BmobUser();
-        user.setUsername("lh1y");
-        user.setPassword("123456");
-        user.signUp(this, new SaveListener() {
-            @Override
-            public void onSuccess() {
-                LogUtils.log("插入数据成功");
-                ToastUtils.showShort(mContext, "插入数据成功");
-            }
+        initView();
 
-            @Override
-            public void onFailure(int i, String s) {
-                LogUtils.log("插入数据失败：" + s);
-            }
-        });
     }
 
     @Override
     public void initView() {
+
+        tvBack = (TextView) findViewById(R.id.tv_back);
+        tvSubmit = (TextView) findViewById(R.id.tv_submit);
+        etAccount = (EditText) findViewById(R.id.et_account);
+        etPassword = (EditText) findViewById(R.id.et_password);
+        vAccount = findViewById(R.id.v_account);
+        vPassword = findViewById(R.id.v_password);
+
+        tvBack.setText("登录");
+        tvBack.setOnClickListener(this);
+        tvSubmit.setOnClickListener(this);
+        etAccount.setOnFocusChangeListener(this);
+        etPassword.setOnFocusChangeListener(this);
 
     }
 
@@ -44,8 +57,65 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
 
     }
 
+    private boolean canRegister() {
+
+        if (etAccount.getText().toString().trim().length() == 0) {
+            ToastUtils.showShort(mContext, "请输入用户名");
+            return false;
+        }
+
+        if (etPassword.getText().toString().trim().length() == 0) {
+            ToastUtils.showShort(mContext, "请输入密码");
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.tv_submit:
+                if (canRegister())
+                    login(etAccount.getText().toString().trim(), etPassword.getText().toString().trim());
+                break;
+        }
     }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        switch (v.getId()) {
+            case R.id.et_account:
+                if (hasFocus) {
+                    vAccount.setBackgroundColor(getResColor(R.color.grey));
+                } else {
+                    vAccount.setBackgroundColor(getResColor(R.color.grey_new));
+                }
+                break;
+            case R.id.et_password:
+                if (hasFocus) {
+                    vPassword.setBackgroundColor(getResColor(R.color.grey));
+                } else {
+                    vPassword.setBackgroundColor(getResColor(R.color.grey_new));
+                }
+                break;
+        }
+    }
+
+    private void login(final String username, String password) {
+        BmobUser.loginByAccount(this, username, password, new LogInListener<BmobUser>() {
+
+            @Override
+            public void done(BmobUser user, BmobException e) {
+                if (user != null) {
+                    mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.ISLOGGED, true);
+                    mSharedPrefs.setStringSP(Constant.SharedPrefrence.USER_ID, user.getObjectId());
+                    ToastUtils.showShort(mContext, "登录成功");
+                    startActivity(new Intent(mContext, CloudMusicMainActivity.class));
+                } else
+                    ToastUtils.showShort(mContext, "用户名或密码不正确");
+            }
+        });
+    }
+
 }
