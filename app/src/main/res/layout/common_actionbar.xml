@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:padding="@dimen/padding_medium"
-        android:onClick="onBackView"
         android:src="@drawable/ic_common_back" />
 
     <TextView

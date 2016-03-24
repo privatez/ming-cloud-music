@@ -11,7 +11,6 @@ import java.util.HashMap;
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.SharedPrefsUtil;
-import ming.cloudmusic.util.ToastUtils;
 import ming.cloudmusic.view.OnViewCreateListener;
 
 /**
@@ -36,10 +35,6 @@ public abstract class DefaultBaseFragment extends Fragment implements OnViewCrea
 
     protected void postEventMsgHasExtra(String msg, HashMap mExtras) {
         EventUtil.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtil.KEY);
-    }
-
-    public void onBackView() {
-        ToastUtils.showShort(mContext, "返回");
     }
 
     protected void refreshBackGround(View backGround, View content) {

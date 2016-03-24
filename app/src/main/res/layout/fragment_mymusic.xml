@@ -3,7 +3,7 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dan_hui"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="本地音乐"
-                android:textColor="@color/black"
+                android:textColor="@color/bg_login"
                 android:textSize="@dimen/text_medium" />
 
             <TextView
