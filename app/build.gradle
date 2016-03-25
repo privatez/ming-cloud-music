@@ -13,7 +13,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -27,18 +27,6 @@ android {
             storePassword "ntandroid"
             keyAlias "nt.android"
             keyPassword "ntandroid"
-        }
-    }
-
-    buildTypes {
-        debug {
-            signingConfig signingConfigs.myConfig
-        }
-
-        release {
-            signingConfig signingConfigs.myConfig
-            minifyEnabled true
-            proguardFile file('proguard.txt')
         }
     }
 

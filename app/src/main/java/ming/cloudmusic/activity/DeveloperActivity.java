@@ -1,6 +1,7 @@
 package ming.cloudmusic.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,7 +15,6 @@ import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import ming.cloudmusic.R;
 import ming.cloudmusic.model.AppUpdate;
-import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.util.ToastUtils;
 
@@ -64,7 +64,10 @@ public class DeveloperActivity extends DefalutBaseActivity implements View.OnCli
                 uploadApk(etVersionCode.getText().toString().trim());
                 break;
             case R.id.tv_submit:
-                uploadUpdateInfo();
+                if (etVersionCode.getText().toString().trim().length() > 0)
+                    uploadUpdateInfo(Integer.parseInt(etVersionCode.getText().toString().trim()));
+                else
+                    ToastUtils.showShort(mContext, "请先输入版本号");
                 break;
         }
     }
@@ -88,7 +91,6 @@ public class DeveloperActivity extends DefalutBaseActivity implements View.OnCli
                 tvUpload.setText("上传成功..");
                 mApkUrl = bmobFile.getFileUrl(mContext);
                 ToastUtils.showShort(mContext, "上传成功...");
-                //LogUtils.log("上传成功" + mApkUrl);
             }
 
             @Override
@@ -106,18 +108,23 @@ public class DeveloperActivity extends DefalutBaseActivity implements View.OnCli
         });
     }
 
-    private void uploadUpdateInfo() {
+    private void uploadUpdateInfo(final int versionCode) {
+
+        if (TextUtils.isEmpty(mApkUrl)) {
+            ToastUtils.showShort(mContext, "请先上传apk");
+            return;
+        }
+
         tvSubmit.setEnabled(false);
         AppUpdate app = new AppUpdate();
-        app.setVersionCode(Integer.parseInt(etVersionCode.getText().toString().trim()));
-        app.setVersionName(CustomUtils.getVersionName(mContext));
+        app.setVersionCode(versionCode);
         app.setChangeLog(etRemark.getText().toString().trim());
         app.setUrl(mApkUrl);
         app.save(mContext, new SaveListener() {
             @Override
             public void onSuccess() {
                 tvSubmit.setEnabled(true);
-                ToastUtils.showLong(mContext, CustomUtils.getVersionName(mContext) + " 发布成功");
+                ToastUtils.showLong(mContext, "版本 " + versionCode + " 发布成功");
             }
 
             @Override

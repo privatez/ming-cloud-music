@@ -8,7 +8,6 @@ import cn.bmob.v3.BmobObject;
 public class AppUpdate extends BmobObject {
 
     private int versionCode;
-    private String versionName;
     private String changeLog;
     private String url;
 
@@ -18,14 +17,6 @@ public class AppUpdate extends BmobObject {
 
     public void setVersionCode(int versionCode) {
         this.versionCode = versionCode;
-    }
-
-    public String getVersionName() {
-        return versionName;
-    }
-
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
     }
 
     public String getChangeLog() {
@@ -48,7 +39,6 @@ public class AppUpdate extends BmobObject {
     public String toString() {
         return "AppUpdate{" +
                 "versionCode=" + versionCode +
-                ", versionName='" + versionName + '\'' +
                 ", changeLog='" + changeLog + '\'' +
                 ", url='" + url + '\'' +
                 '}';
