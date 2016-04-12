@@ -1,8 +1,12 @@
 package ming.cloudmusic.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+
+import java.util.List;
 
 /**
  * Created by lihaiye on 16/3/24.
@@ -54,6 +58,21 @@ public class CustomUtils {
         } else {
             SystemUtils.showToast(context, "请检查您的手机是否有拨号应用");
         }*/
+    }
+
+    /**
+     * 检查是否存在相应的Intent
+     *
+     * @param context
+     * @param intent
+     * @return
+     */
+    public static boolean isIntentAvailable(Context context, Intent intent) {
+        PackageManager pm = context.getPackageManager();
+        List<ResolveInfo> list = pm.queryIntentActivities(intent,
+                PackageManager.MATCH_DEFAULT_ONLY);
+
+        return list.size() > 0;
     }
 
 }

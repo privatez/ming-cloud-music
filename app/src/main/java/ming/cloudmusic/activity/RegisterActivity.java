@@ -5,9 +5,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.SaveListener;
 import ming.cloudmusic.R;
+import ming.cloudmusic.model.User;
 import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.util.ToastUtils;
 
@@ -106,10 +106,10 @@ public class RegisterActivity extends DefalutBaseActivity implements View.OnClic
     }
 
     private void register(String username, String password) {
-        BmobUser bu = new BmobUser();
-        bu.setUsername(username);
-        bu.setPassword(password);
-        bu.signUp(this, new SaveListener() {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.signUp(this, new SaveListener() {
             @Override
             public void onSuccess() {
                 ToastUtils.showShort(mContext, "注册成功");

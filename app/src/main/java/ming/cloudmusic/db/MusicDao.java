@@ -10,7 +10,6 @@ import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +36,7 @@ public class MusicDao {
     private MusicDao() {
         mDaoConfig = new DbManager.DaoConfig()
                 .setDbName("music.db")
-                .setDbDir(new File("/sdcard/cloudmusic"))
+                /*.setDbDir(new File("/sdcard/cloudmusic"))*/
                 .setDbVersion(2)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override

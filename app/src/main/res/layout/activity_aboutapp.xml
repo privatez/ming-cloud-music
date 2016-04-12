@@ -32,6 +32,8 @@
 
     </LinearLayout>
 
+    <View style="@style/Line" />
+
     <TextView
         android:id="@+id/tv_update"
         android:layout_width="match_parent"
@@ -41,6 +43,52 @@
         android:text="新版更新"
         android:textColor="@color/text_content_light"
         android:textSize="@dimen/text_normal" />
+
+    <LinearLayout
+        android:id="@+id/ll_upload_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            style="@style/Line"
+            android:layout_marginLeft="@dimen/margin_medium" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium"
+            android:text="上传音乐"
+            android:textColor="@color/text_content_light"
+            android:textSize="@dimen/text_normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_upload_apk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            style="@style/Line"
+            android:layout_marginLeft="@dimen/margin_medium" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_medium"
+            android:text="发布新版本"
+            android:textColor="@color/text_content_light"
+            android:textSize="@dimen/text_normal" />
+
+    </LinearLayout>
+
+    <View style="@style/Line" />
 
     <RelativeLayout
         android:layout_width="match_parent"

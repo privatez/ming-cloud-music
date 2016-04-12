@@ -11,6 +11,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import ming.cloudmusic.R;
 import ming.cloudmusic.model.AppUpdate;
+import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.util.ToastUtils;
@@ -22,9 +23,7 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
 
     private static final int MAX_CLICK = 5;
 
-    private TextView tvVersion;
-    private TextView tvUpdate;
-    private TextView tvDeveloper;
+    private TextView mTvUpdate;
 
     private int mClickCount;
     private long mLastClickTime;
@@ -40,18 +39,27 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
 
     @Override
     public void initView() {
-        tvVersion = (TextView) findViewById(R.id.tv_version);
-        tvUpdate = (TextView) findViewById(R.id.tv_update);
-        tvDeveloper = (TextView) findViewById(R.id.tv_developer);
+        TextView tvVersion = (TextView) findViewById(R.id.tv_version);
+        mTvUpdate = (TextView) findViewById(R.id.tv_update);
 
-        tvUpdate.setOnClickListener(this);
-        tvDeveloper.setOnClickListener(this);
+        boolean isAdmin = mSharedPrefs.getBooleanSP(Constant.SharedPrefrence.ISADMIN, false);
 
+        if (isAdmin) {
+            findViewById(R.id.ll_upload_music).setVisibility(View.VISIBLE);
+            findViewById(R.id.ll_upload_apk).setVisibility(View.VISIBLE);
+        }
+
+        findViewById(R.id.tv_update).setOnClickListener(this);
+        findViewById(R.id.tv_developer).setOnClickListener(this);
+        findViewById(R.id.ll_upload_music).setOnClickListener(this);
+        findViewById(R.id.ll_upload_apk).setOnClickListener(this);
+
+        tvVersion.setText("当前版本 " + CustomUtils.getVersionName(mContext));
     }
 
     @Override
     public void initData() {
-        tvVersion.setText("当前版本 " + CustomUtils.getVersionName(mContext));
+
     }
 
     @Override
@@ -61,20 +69,23 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
                 checkUpdate();
                 break;
             case R.id.tv_developer:
-                goDeveloper();
+                jumpToDeveloper();
+                break;
+            case R.id.ll_upload_apk:
+                startActivity(new Intent(mContext, DeveloperActivity.class));
                 break;
         }
     }
 
     private void checkUpdate() {
-        tvUpdate.setEnabled(false);
+        mTvUpdate.setEnabled(false);
         BmobQuery<AppUpdate> query = new BmobQuery<>();
         query.addWhereGreaterThan("versionCode", CustomUtils.getVersionCode(mContext));
         query.order("-updatedAt");
         query.findObjects(this, new FindListener<AppUpdate>() {
             @Override
             public void onSuccess(List<AppUpdate> result) {
-                tvUpdate.setEnabled(true);
+                mTvUpdate.setEnabled(true);
                 if (result != null && result.size() > 0) {
                     updateApk(result.get(0));
                 } else {
@@ -84,13 +95,13 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
 
             @Override
             public void onError(int code, String msg) {
-                tvUpdate.setEnabled(true);
+                mTvUpdate.setEnabled(true);
                 LogUtils.log("复合与查询失败：" + code + ",msg:" + msg);
             }
         });
     }
 
-    private void goDeveloper() {
+    private void jumpToDeveloper() {
 
         mClickCount++;
 

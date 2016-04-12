@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
 import ming.cloudmusic.R;
+import ming.cloudmusic.model.User;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.ToastUtils;
 
@@ -103,13 +103,14 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
     }
 
     private void login(final String username, String password) {
-        BmobUser.loginByAccount(this, username, password, new LogInListener<BmobUser>() {
+        User.loginByAccount(this, username, password, new LogInListener<User>() {
 
             @Override
-            public void done(BmobUser user, BmobException e) {
+            public void done(User user, BmobException e) {
                 if (user != null) {
                     mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.ISLOGGED, true);
                     mSharedPrefs.setStringSP(Constant.SharedPrefrence.USER_ID, user.getObjectId());
+                    mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.ISADMIN, user.isAdmin());
                     ToastUtils.showShort(mContext, "登录成功");
                     startActivity(new Intent(mContext, CloudMusicMainActivity.class));
                 } else

@@ -25,6 +25,7 @@ public class Constant {
 
         public static final String ISLOGGED = "logged";
         public static final String USER_ID = "userid";
+        public static final String ISADMIN = "admin";
         public static final String PLAYINT_MODE = "playing_mode";
         public static final String PLAYING_POSITION = "playing_position";
         public static final String PLAYING_DURATION = "playing_duration";

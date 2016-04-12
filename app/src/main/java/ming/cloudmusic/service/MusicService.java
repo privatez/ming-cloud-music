@@ -14,13 +14,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ming.cloudmusic.MusicPlayerApplication;
 import ming.cloudmusic.db.MusicDao;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.model.DbMusic;
+import ming.cloudmusic.util.MusicsManager;
 
 public class MusicService extends Service {
 
@@ -50,7 +50,7 @@ public class MusicService extends Service {
 
     private boolean isRunning;
 
-    private MusicPlayerApplication app;
+    private MusicsManager mMusicsManager;
     private HashMap mExtras;
 
     @Override
@@ -62,7 +62,7 @@ public class MusicService extends Service {
     public void onCreate() {
         super.onCreate();
         mExtras = new HashMap<>();
-        app = (MusicPlayerApplication) getApplication();
+        mMusicsManager = MusicsManager.getInstance();
         EventBus.getDefault().register(this);
         new InnerAsyncTask().execute();
 
@@ -89,8 +89,8 @@ public class MusicService extends Service {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            mPlayingMusic = app.getOnPlayMusicByFlag(mPlayingPosition);
-            musicsSize = app.getOnPlaySize();
+            mPlayingMusic = mMusicsManager.getOnPlayMusicByPosition(mPlayingPosition);
+            musicsSize = mMusicsManager.getPlayingMusicsSize();
             return null;
         }
 
@@ -258,7 +258,7 @@ public class MusicService extends Service {
     }
 
     private void random() {
-        int num = app.getNumByRandom(mPlayingPosition);
+        int num = mMusicsManager.getPositionByRandom(mPlayingPosition);
         mPlayingPosition = num;
         mPlayingPoint = 0;
         play();
@@ -276,7 +276,7 @@ public class MusicService extends Service {
     }
 
     private void play() {
-        mPlayingMusic = app.getOnPlayMusicByFlag(mPlayingPosition);
+        mPlayingMusic = mMusicsManager.getOnPlayMusicByPosition(mPlayingPosition);
         if (mPlayingMusic == null) {
             return;
         }
