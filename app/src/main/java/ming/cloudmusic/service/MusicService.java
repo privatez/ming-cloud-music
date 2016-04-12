@@ -80,7 +80,6 @@ public class MusicService extends Service {
         }
     }
 
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_NOT_STICKY;

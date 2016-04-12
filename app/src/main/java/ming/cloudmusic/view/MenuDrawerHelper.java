@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 
 import net.simonvt.menudrawer.MenuDrawer;
 
@@ -29,11 +30,12 @@ public class MenuDrawerHelper implements View.OnClickListener {
      */
     private static final float MENU_WINDOW_SCALE = 0.85f;
 
-
     private static final int ACTION_DEFAULT = 0;
     private static final int ACTION_LOGIN = 1;
     private static final int ACTION_SETTING = 2;
 
+    private TextView tvMenuTitle;
+    private TextView tvMenuLogin;
 
     private MenuDrawer mDrawer;
 
@@ -73,19 +75,34 @@ public class MenuDrawerHelper implements View.OnClickListener {
 
         mDrawer.setOnInterceptMoveEventListener(mListener);
 
+        tvMenuTitle = (TextView) mDrawer.findViewById(R.id.tv_menu_title);
+        tvMenuLogin = (TextView) mDrawer.findViewById(R.id.tv_menu_login);
+
         mDrawer.findViewById(R.id.ll_menu_time).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_night).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_setting).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_exit).setOnClickListener(MenuDrawerHelper.this);
-        mDrawer.findViewById(R.id.tv_login).setOnClickListener(MenuDrawerHelper.this);
+        tvMenuLogin.setOnClickListener(MenuDrawerHelper.this);
 
+        if (mSharedPrefs.getBooleanSP(Constant.SharedPrefrence.AS_USER_LOGGED, false)) {
+            tvMenuTitle.setText(mSharedPrefs.getStringSP(Constant.SharedPrefrence.USER_NAME, ""));
+            tvMenuLogin.setVisibility(View.GONE);
+        }
 
         mDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
             @Override
             public void onDrawerStateChange(int oldState, int newState) {
                 //android.util.Log.d("lhy","oldState:"+oldState+".....newState:"+newState);
+                if (oldState == MenuDrawer.STATE_CLOSED) {
+                    if (mSharedPrefs.getBooleanSP(Constant.SharedPrefrence.AS_USER_LOGGED, false)) {
+                        tvMenuTitle.setText(mSharedPrefs.getStringSP(Constant.SharedPrefrence.USER_NAME, ""));
+                        tvMenuLogin.setVisibility(View.GONE);
+                    }
+                }
+
                 if (newState == MenuDrawer.STATE_OPEN) {
                     //TODO 数据请求
+
                 }
 
                 if (newState == MenuDrawer.STATE_CLOSED) {
@@ -120,7 +137,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_login:
+            case R.id.tv_menu_login:
                 mAction = ACTION_LOGIN;
                 toggleMenu();
                 break;
@@ -137,7 +154,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
     /*private void exit() {
         SystemUtils.showToast(mActivity, "退出登录成功");
         mSharedPrefs.clearAll();
-        Server.resetServerApi();
+        BombServer.resetServerApi();
         Intent intent = new Intent();
         intent.setAction(Constant.LOGIN_ACTION);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -1,10 +1,12 @@
 package ming.cloudmusic;
 
 import android.app.Application;
+import android.content.Intent;
 
 import org.xutils.x;
 
 import cn.bmob.v3.Bmob;
+import ming.cloudmusic.service.MusicService;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.MusicsManager;
 
@@ -14,6 +16,7 @@ public class MusicPlayerApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        startService(new Intent(getApplicationContext(), MusicService.class));
         //初始化xUtil
         x.Ext.init(this);
         x.Ext.setDebug(true);

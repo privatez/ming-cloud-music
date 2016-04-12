@@ -23,6 +23,7 @@ public class Constant {
     public static class SharedPrefrence {
         public static final String SHARED_NAME = "cloud_music";
 
+        public static final String USER_NAME = "username";
         public static final String USER_ID = "userid";
         public static final String ISADMIN = "admin";
         public static final String PLAYINT_MODE = "playing_mode";

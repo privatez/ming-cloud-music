@@ -1,4 +1,4 @@
-package ming.cloudmusic.db;
+package ming.cloudmusic.server;
 
 import android.content.Context;
 
@@ -10,7 +10,9 @@ import ming.cloudmusic.util.CustomUtils;
 /**
  * Created by Lhy on 2016/4/10.
  */
-public class Server {
+public class BombServer {
+
+    public static final int COED_NETWORK_ERROR = 9016;
 
     public static void checkUpdate(Context context, FindListener<AppUpdate> findListener) {
         BmobQuery<AppUpdate> query = new BmobQuery<>();
@@ -18,4 +20,5 @@ public class Server {
         query.order("-updatedAt");
         query.findObjects(context, findListener);
     }
+
 }

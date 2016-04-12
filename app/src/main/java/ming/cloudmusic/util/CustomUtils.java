@@ -1,5 +1,6 @@
 package ming.cloudmusic.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -15,6 +16,7 @@ public class CustomUtils {
 
     /**
      * get version name
+     *
      * @param context
      * @return
      */
@@ -59,6 +61,17 @@ public class CustomUtils {
                 PackageManager.MATCH_DEFAULT_ONLY);
 
         return list.size() > 0;
+    }
+
+    public static void startFileManager(Activity activity, int requestCode) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (CustomUtils.isIntentAvailable(activity, intent)) {
+            activity.startActivityForResult(Intent.createChooser(intent, "请选择文件!"), requestCode);
+        } else {
+            ToastUtils.showShort(activity, "请安装文件管理器");
+        }
     }
 
 }

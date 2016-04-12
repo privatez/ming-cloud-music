@@ -51,7 +51,7 @@
             android:paddingLeft="@dimen/padding_medium"
             android:paddingRight="@dimen/padding_medium"
             android:paddingTop="@dimen/padding_small"
-            android:text="上传文件..."
+            android:text="选取文件..."
             android:textColor="@color/white"
             android:textSize="@dimen/text_small" />
 

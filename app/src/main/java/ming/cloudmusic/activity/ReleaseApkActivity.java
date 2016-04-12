@@ -1,7 +1,6 @@
 package ming.cloudmusic.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,6 +15,7 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import ming.cloudmusic.R;
+import ming.cloudmusic.server.BombServer;
 import ming.cloudmusic.model.AppUpdate;
 import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.LogUtils;
@@ -24,9 +24,9 @@ import ming.cloudmusic.util.ToastUtils;
 /**
  * Created by Lhy on 2016/3/24.
  */
-public class DeveloperActivity extends DefalutBaseActivity implements View.OnClickListener {
+public class ReleaseApkActivity extends DefalutBaseActivity implements View.OnClickListener {
 
-    private static final int FILE_SELECT_CODE = 0X111;
+    private static final int REQ_FILE_MANAGER = 1;
 
     private TextView tvUpload;
     private NumberProgressBar pbUpload;
@@ -39,7 +39,7 @@ public class DeveloperActivity extends DefalutBaseActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_developer);
+        setContentView(R.layout.activity_release_apk);
 
         initView();
     }
@@ -48,9 +48,8 @@ public class DeveloperActivity extends DefalutBaseActivity implements View.OnCli
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == FILE_SELECT_CODE) {
-                Uri uri = data.getData();
-                LogUtils.log(uri.getPath());
+            if (requestCode == REQ_FILE_MANAGER) {
+                uploadApk(data.getData().getPath());
             }
         }
     }
@@ -76,8 +75,12 @@ public class DeveloperActivity extends DefalutBaseActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_upload:
-                startFileManager();
-                //uploadApk(etVersionCode.getText().toString().trim());
+                if (etVersionCode.getText().toString().length() == 0) {
+                    ToastUtils.showShort(mContext, "请先输入版本号");
+                } else {
+                    tvUpload.setEnabled(false);
+                    CustomUtils.startFileManager(this, REQ_FILE_MANAGER);
+                }
                 break;
             case R.id.tv_submit:
                 if (etVersionCode.getText().toString().trim().length() > 0)
@@ -88,34 +91,14 @@ public class DeveloperActivity extends DefalutBaseActivity implements View.OnCli
         }
     }
 
-    private void startFileManager() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        if (CustomUtils.isIntentAvailable(mContext, intent)) {
-            startActivityForResult(Intent.createChooser(intent, "请选择文件!"), FILE_SELECT_CODE);
-        } else {
-            ToastUtils.showShort(mContext, "请安装文件管理器");
-        }
-    }
-
-    private void uploadApk(String versionCode) {
-        if (etVersionCode.getText().toString().length() == 0) {
-            ToastUtils.showShort(mContext, "请先输入版本号");
-            return;
-        }
-
+    private void uploadApk(String apkPath) {
         ToastUtils.showShort(mContext, "正在上传...");
-        tvUpload.setText("正在上传..");
-        tvUpload.setEnabled(false);
 
-        String picPath = "sdcard/cloudmusic/cloud-music-" + versionCode + ".apk";
-        final BmobFile bmobFile = new BmobFile(new File(picPath));
+        final BmobFile bmobFile = new BmobFile(new File(apkPath));
         bmobFile.uploadblock(mContext, new UploadFileListener() {
 
             @Override
             public void onSuccess() {
-                tvUpload.setText("上传成功..");
                 mApkUrl = bmobFile.getFileUrl(mContext);
                 ToastUtils.showShort(mContext, "上传成功...");
             }
@@ -128,8 +111,12 @@ public class DeveloperActivity extends DefalutBaseActivity implements View.OnCli
 
             @Override
             public void onFailure(int code, String msg) {
-                tvUpload.setText("上传文件..");
                 tvUpload.setEnabled(true);
+                if (code == BombServer.COED_NETWORK_ERROR) {
+                    ToastUtils.showShort(mContext, "网络异常，上传失败...");
+                } else {
+                    ToastUtils.showShort(mContext, "上传失败...");
+                }
                 LogUtils.log("code:" + code + "....msg:" + msg);
             }
         });

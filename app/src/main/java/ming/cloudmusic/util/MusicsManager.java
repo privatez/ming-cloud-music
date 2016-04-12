@@ -15,8 +15,8 @@ public class MusicsManager {
 
     private static final int MAX_RANDOM = 5;
 
-    private ArrayList<DbMusic> mLocalMusics;
-    private ArrayList<DbMusic> mPlayingMusics;
+    private List<DbMusic> mLocalMusics;
+    private List<DbMusic> mPlayingMusics;
 
     private List<Integer> mPlayedMusicPositions;
 
@@ -28,7 +28,6 @@ public class MusicsManager {
 
     public static MusicsManager getInstance() {
         if (sMusicsManager == null) {
-
             synchronized (MusicsManager.class) {
                 if (sMusicsManager == null) {
                     sMusicsManager = new MusicsManager();
@@ -43,7 +42,7 @@ public class MusicsManager {
 
         dao.findMobleMusic(context.getApplicationContext().getContentResolver());
 
-        mLocalMusics = dao.getDbMusics();
+        mLocalMusics = dao.getInAppDbMusics();
         mPlayingMusics = dao.getPlayingMusics();
     }
 
@@ -59,9 +58,10 @@ public class MusicsManager {
         do {
             newPosition = (int) (Math.random() * playingMusicsSize);
         } while (newPosition == oldPosition || mPlayedMusicPositions.contains(newPosition));
-
-        LogUtils.log((playingMusicsSize <= MAX_RANDOM ? playingMusicsSize - 1 : MAX_RANDOM) + ":MAX_RANDOM");
-        if (playingMusicsSize >= (playingMusicsSize <= MAX_RANDOM ? playingMusicsSize - 1 : MAX_RANDOM)) {
+       /* LogUtils.log("playingMusicsSize:" + playingMusicsSize);
+        LogUtils.log("newPosition:" + newPosition);
+        LogUtils.log((playingMusicsSize <= MAX_RANDOM ? playingMusicsSize - 1 : MAX_RANDOM) + ":MAX_RANDOM");*/
+        if (mPlayedMusicPositions.size() >= (playingMusicsSize <= MAX_RANDOM ? playingMusicsSize - 1 : MAX_RANDOM)) {
             mPlayedMusicPositions.remove(0);
         }
         mPlayedMusicPositions.add(newPosition);
@@ -85,23 +85,23 @@ public class MusicsManager {
         return mPlayingMusics.get(position);
     }
 
-    public ArrayList<DbMusic> getmPlayingMusics() {
+    public List<DbMusic> getmPlayingMusics() {
 
         return mPlayingMusics;
     }
 
-    public void setmPlayingMusics(ArrayList<DbMusic> mPlayingMusics) {
+    public void setmPlayingMusics(List<DbMusic> mPlayingMusics) {
         this.mPlayingMusics = mPlayingMusics;
 
     }
 
 
-    public ArrayList<DbMusic> getmLocalMusics() {
+    public List<DbMusic> getmLocalMusics() {
 
         return mLocalMusics;
     }
 
-    public void setmLocalMusics(ArrayList<DbMusic> mLocalMusics) {
+    public void setmLocalMusics(List<DbMusic> mLocalMusics) {
         this.mLocalMusics = mLocalMusics;
     }
 

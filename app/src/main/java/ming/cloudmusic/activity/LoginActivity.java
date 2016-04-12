@@ -112,6 +112,7 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
                 if (user != null) {
                     mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.AS_USER_LOGGED, true);
                     mSharedPrefs.setStringSP(Constant.SharedPrefrence.USER_ID, user.getObjectId());
+                    mSharedPrefs.setStringSP(Constant.SharedPrefrence.USER_NAME, user.getUsername());
                     mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.ISADMIN, user.isAdmin());
                     ToastUtils.showShort(mContext, "登录成功");
                     startActivity(new Intent(mContext, CloudMusicMainActivity.class));
