@@ -7,9 +7,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 import ming.cloudmusic.R;
+import ming.cloudmusic.db.Server;
 import ming.cloudmusic.model.AppUpdate;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.CustomUtils;
@@ -79,10 +79,8 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
 
     private void checkUpdate() {
         mTvUpdate.setEnabled(false);
-        BmobQuery<AppUpdate> query = new BmobQuery<>();
-        query.addWhereGreaterThan("versionCode", CustomUtils.getVersionCode(mContext));
-        query.order("-updatedAt");
-        query.findObjects(this, new FindListener<AppUpdate>() {
+
+        FindListener findListener = new FindListener<AppUpdate>() {
             @Override
             public void onSuccess(List<AppUpdate> result) {
                 mTvUpdate.setEnabled(true);
@@ -98,7 +96,8 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
                 mTvUpdate.setEnabled(true);
                 LogUtils.log("复合与查询失败：" + code + ",msg:" + msg);
             }
-        });
+        };
+        Server.checkUpdate(mContext, findListener);
     }
 
     private void jumpToDeveloper() {

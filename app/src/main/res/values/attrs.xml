@@ -3,7 +3,7 @@
 
     <declare-styleable name="TopActionBar">
         <attr name="titleText" format="string" />
-        <attr name="menuText" format="string" />
+        <attr name="rightText" format="string" />
     </declare-styleable>
 
 </resources>

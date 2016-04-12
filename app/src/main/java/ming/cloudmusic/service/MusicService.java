@@ -11,7 +11,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import ming.cloudmusic.db.MusicDao;
@@ -24,10 +23,13 @@ import ming.cloudmusic.util.MusicsManager;
 
 public class MusicService extends Service {
 
+    private static final int PLAYMODE_SINGLE = 0;
+    private static final int PLAYMODE_RAMDOM = 1;
+    private static final int PLAYMODE_ALL = 2;
+
     private MediaPlayer mPlayer;
 
     private DbMusic mPlayingMusic;
-    private ArrayList<DbMusic> historyMusics;
 
     /**
      * 播放模式
@@ -46,7 +48,7 @@ public class MusicService extends Service {
     /**
      * 播放进度
      */
-    private int mPlayingPoint;
+    private int mPlayingProgress;
 
     private boolean isRunning;
 
@@ -65,7 +67,6 @@ public class MusicService extends Service {
         mMusicsManager = MusicsManager.getInstance();
         EventBus.getDefault().register(this);
         new InnerAsyncTask().execute();
-
     }
 
     @Override
@@ -97,7 +98,6 @@ public class MusicService extends Service {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            historyMusics = new ArrayList<>();
 
             mPlayer = new MediaPlayer();
             isRunning = true;
@@ -155,7 +155,7 @@ public class MusicService extends Service {
                 break;
             case KeyEvent.KEY_BAR_CHANGE:
                 int num = (int) event.getExtras().get(Event.Extra.EXTRA_BAR_CHANGE);
-                mPlayingPoint = num * mPlayer.getDuration() / 100;
+                mPlayingProgress = num * mPlayer.getDuration() / 100;
                 play();
                 break;
             case KeyEvent.KEY_GET_PLAYINGMUSIC:
@@ -172,8 +172,8 @@ public class MusicService extends Service {
 
     public void changePlayMode() {
         mPlayingMode++;
-        if (mPlayingMode > 2) {
-            mPlayingMode = 0;
+        if (mPlayingMode > PLAYMODE_ALL) {
+            mPlayingMode = PLAYMODE_SINGLE;
         }
 
         mExtras.put(Event.Extra.EXTRA_PLAY_MODE, mPlayingMode);
@@ -207,45 +207,41 @@ public class MusicService extends Service {
     }
 
     public void right() {
-        if (mPlayingMode == 1) {
+        if (mPlayingMode == PLAYMODE_RAMDOM) {
             random();
         } else {
             mPlayingPosition++;
             if (mPlayingPosition == musicsSize) {
                 mPlayingPosition = 0;
             }
-            mPlayingPoint = 0;
+            mPlayingProgress = 0;
             play();
         }
     }
 
     public void left() {
-        if (mPlayingMode == 1) {
+        if (mPlayingMode == PLAYMODE_RAMDOM) {
             random();
         } else {
             mPlayingPosition--;
             if (mPlayingPosition < 0) {
                 mPlayingPosition = musicsSize - 1;
             }
-            mPlayingPoint = 0;
+            mPlayingProgress = 0;
             play();
         }
     }
 
     public void next() {
-        historyMusics.clear();
-        //historyMusics.add(mPlayingMusic);
-        mPlayingMusic.setIsHistroy(DbMusic.ISHISTORY);
-        mPlayingMusic.setPlayedTime(System.currentTimeMillis());
-        MusicDao.getDefaultDao().insertHistoryMusics(mPlayingMusic);
+        MusicDao.getDefaultDao().insertHistoryMusics(mPlayingMusic, mPlayingPosition);
         switch (mPlayingMode) {
-            case 0:
+            case PLAYMODE_SINGLE:
                 single();
                 break;
-            case 1:
+            case PLAYMODE_RAMDOM:
                 random();
                 break;
-            case 2:
+            case PLAYMODE_ALL:
                 all();
                 break;
         }
@@ -253,25 +249,25 @@ public class MusicService extends Service {
 
     private void all() {
         mPlayingPosition++;
-        mPlayingPoint = 0;
+        mPlayingProgress = 0;
         play();
     }
 
     private void random() {
         int num = mMusicsManager.getPositionByRandom(mPlayingPosition);
         mPlayingPosition = num;
-        mPlayingPoint = 0;
+        mPlayingProgress = 0;
         play();
     }
 
     private void single() {
-        mPlayingPoint = 0;
+        mPlayingProgress = 0;
         play();
     }
 
     private void pause() {
         mPlayer.stop();
-        mPlayingPoint = mPlayer.getCurrentPosition();
+        mPlayingProgress = mPlayer.getCurrentPosition();
         postEventMsg(ServiceEvent.SERVICE_PAUSE);
     }
 
@@ -284,9 +280,9 @@ public class MusicService extends Service {
             mPlayer.reset();
             mPlayer.setDataSource(mPlayingMusic.getPath());
             mPlayer.prepare();
-            mPlayer.seekTo(mPlayingPoint);
+            mPlayer.seekTo(mPlayingProgress);
             mPlayer.start();
-            mPlayingPoint = 0;
+            mPlayingProgress = 0;
             sendMusicInfo();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

@@ -57,14 +57,14 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
 
     }
 
-    private boolean canRegister() {
+    private boolean canRegister(String account,String password) {
 
-        if (etAccount.getText().toString().trim().length() == 0) {
+        if (account.length() == 0) {
             ToastUtils.showShort(mContext, "请输入用户名");
             return false;
         }
 
-        if (etPassword.getText().toString().trim().length() == 0) {
+        if (password.length() == 0) {
             ToastUtils.showShort(mContext, "请输入密码");
             return false;
         }
@@ -76,8 +76,10 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_submit:
-                if (canRegister())
-                    login(etAccount.getText().toString().trim(), etPassword.getText().toString().trim());
+                String account = etAccount.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+                if (canRegister(account, password))
+                    login(account, password);
                 break;
         }
     }
@@ -108,7 +110,7 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
             @Override
             public void done(User user, BmobException e) {
                 if (user != null) {
-                    mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.ISLOGGED, true);
+                    mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.AS_USER_LOGGED, true);
                     mSharedPrefs.setStringSP(Constant.SharedPrefrence.USER_ID, user.getObjectId());
                     mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.ISADMIN, user.isAdmin());
                     ToastUtils.showShort(mContext, "登录成功");

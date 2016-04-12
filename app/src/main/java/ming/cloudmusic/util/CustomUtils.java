@@ -47,20 +47,6 @@ public class CustomUtils {
     }
 
     /**
-     * 跳转到拨号页面
-     * @param context
-     * @param tel
-     */
-    public static void makeCall(Context context, String tel) {
-        /*Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + tel));
-        if (isIntentAvailable(context, intent)) {
-            context.startActivity(intent);
-        } else {
-            SystemUtils.showToast(context, "请检查您的手机是否有拨号应用");
-        }*/
-    }
-
-    /**
      * 检查是否存在相应的Intent
      *
      * @param context

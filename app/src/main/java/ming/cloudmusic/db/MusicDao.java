@@ -22,12 +22,20 @@ import ming.cloudmusic.util.LogUtils;
 public class MusicDao {
 
     private SQLiteDatabase db;
+    /**
+     * 数据库名字
+     */
+    private static final String DB_NAME = "music.db";
 
     /**
-     * 地址
+     * 数据库地址
      */
-    private static String path;
+    private static final String DB_PATH = "/sdcard/cloudmusic";
 
+    /**
+     * 数据库版本
+     */
+    private static final int DB_VERSION = 2;
 
     private DbManager.DaoConfig mDaoConfig;
 
@@ -35,9 +43,9 @@ public class MusicDao {
 
     private MusicDao() {
         mDaoConfig = new DbManager.DaoConfig()
-                .setDbName("music.db")
-                /*.setDbDir(new File("/sdcard/cloudmusic"))*/
-                .setDbVersion(2)
+                .setDbName(DB_NAME)
+                //.setDbDir(new File(DB_PATH))
+                .setDbVersion(DB_VERSION)
                 .setDbOpenListener(new DbManager.DbOpenListener() {
                     @Override
                     public void onDbOpened(DbManager db) {
@@ -74,7 +82,6 @@ public class MusicDao {
         DbManager db = x.getDb(mDaoConfig);
 
         try {
-
             for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
                 long id = (c.getLong(c.getColumnIndex(Audio.Media._ID)));
                 String title = (c.getString(c.getColumnIndex(Audio.Media.TITLE)));
@@ -93,7 +100,7 @@ public class MusicDao {
                 dbMusic.setArtlist(artlist);
                 dbMusic.setAlbum(album);
                 dbMusic.setDuration(duration);
-                dbMusic.setIsPlaying(DbMusic.ISPLAYING);
+                dbMusic.setPlaySequence(c.getPosition());
 
                 int num = path.lastIndexOf("/");
                 dbMusic.setShortPath(path.substring(0, num));
@@ -138,8 +145,8 @@ public class MusicDao {
      *
      * @return
      */
-    public ArrayList<DbMusic> getDbMusics() {
-        ArrayList<DbMusic> musics = new ArrayList<>();
+    public List<DbMusic> getInAppDbMusics() {
+        List<DbMusic> musics = new ArrayList<>();
         DbManager db = x.getDb(mDaoConfig);
         try {
             musics.addAll(db.findAll(DbMusic.class));
@@ -160,13 +167,14 @@ public class MusicDao {
      *
      * @return ArrayList<Music>
      */
-    public ArrayList<DbMusic> getPlayingMusics() {
+    public List<DbMusic> getPlayingMusics() {
 
-        ArrayList<DbMusic> musics = new ArrayList();
+        List<DbMusic> musics = new ArrayList();
 
         DbManager db = x.getDb(mDaoConfig);
         try {
-            musics.addAll(db.selector(DbMusic.class).where("isPlaying", "=", DbMusic.ISPLAYING).findAll());
+            musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_PLAY_SEQUENCE, ">",
+                    DbMusic.DEFAULT_PLAY_SEQUENCE).findAll());
         } catch (java.io.IOException e) {
             e.printStackTrace();
         } finally {
@@ -185,7 +193,7 @@ public class MusicDao {
      * @return musics.size() - Flag
      */
 
-    public int insertPlayingMusics(ArrayList<DbMusic> musics) {
+    public int insertPlayingMusics(List<DbMusic> musics) {
 
         int Flag = 0;
 
@@ -213,13 +221,14 @@ public class MusicDao {
      *
      * @return
      */
-    public ArrayList<DbMusic> getHistoryMusics() {
+    public List<DbMusic> getHistoryMusics() {
 
-        ArrayList<DbMusic> musics = new ArrayList();
+        List<DbMusic> musics = new ArrayList();
 
         DbManager db = x.getDb(mDaoConfig);
         try {
-            musics.addAll(db.selector(DbMusic.class).where("isHistroy", "=", DbMusic.ISHISTORY).orderBy("playedTime", true).findAll());
+            musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_HISTORY_SEQUENCE, ">",
+                    DbMusic.DEFAULT_HISTORY_SEQUENCE).orderBy(DbMusic.COLUMN_HISTORY_SEQUENCE, true).findAll());
         } catch (java.io.IOException e) {
             LogUtils.log("获取历史音乐Excetion：" + e.getMessage());
         } finally {
@@ -232,8 +241,9 @@ public class MusicDao {
     }
 
 
-    public void insertHistoryMusics(DbMusic music) {
-
+    public void insertHistoryMusics(DbMusic music, int playingPosition) {
+        music.setHistroySequence(playingPosition);
+        music.setPlayedTime(System.currentTimeMillis());
         DbManager db = x.getDb(mDaoConfig);
         try {
             db.update(music);
@@ -251,9 +261,10 @@ public class MusicDao {
     public void clearHistoryMusic() {
         DbManager db = x.getDb(mDaoConfig);
         try {
-            List<DbMusic> musics = (db.selector(DbMusic.class).where("isHistroy", "=", DbMusic.ISHISTORY).findAll());
+            List<DbMusic> musics = (db.selector(DbMusic.class).where(DbMusic.COLUMN_HISTORY_SEQUENCE,
+                    ">", DbMusic.DEFAULT_HISTORY_SEQUENCE).findAll());
             for (DbMusic music : musics) {
-                music.setIsHistroy(DbMusic.DEFAULT_VALUE);
+                music.setHistroySequence(DbMusic.DEFAULT_HISTORY_SEQUENCE);
                 db.update(music);
             }
         } catch (java.io.IOException e) {
@@ -271,7 +282,7 @@ public class MusicDao {
     public ArrayList<Map<String, String>> groupByArtlist() {
         ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
         Map<String, String> map;
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
+        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
         String sql = "select * from(select artlist,count(artlist) "
                 + "as number from localmusic_info group by artlist)as temp "
                 + "order by number desc";
@@ -295,7 +306,7 @@ public class MusicDao {
     public ArrayList<Map<String, String>> groupByFilePath() {
         ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
         Map<String, String> map;
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
+        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
         String sql = "select * from(select data,count(data)"
                 + "as number from localmusic_groupbyfile group by data)"
                 + "as temp order by number desc";
@@ -320,7 +331,7 @@ public class MusicDao {
         ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
         Map<String, String> map;
         DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
+        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
         String sql = "select * from(select album,artlist,count(album)"
                 + "as number from localmusic_info group by album)"
                 + "as temp order by number desc";
@@ -349,7 +360,7 @@ public class MusicDao {
     public ArrayList<DbMusic> getMusicByTag(String key, String value) {
         ArrayList<DbMusic> musics = new ArrayList<DbMusic>();
         DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
+        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
 
         String table = "localmusic_info";
         String[] columns = {"*"};
@@ -380,7 +391,7 @@ public class MusicDao {
     public ArrayList<DbMusic> getMusicByFile(String value) {
         ArrayList<DbMusic> musics = new ArrayList<DbMusic>();
         DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
+        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
 
         String table = "localmusic_groupbyfile";
         String[] columns = {"*"};
@@ -418,7 +429,7 @@ public class MusicDao {
     public ArrayList<DbMusic> findMusicByUser(String value) {
         ArrayList<DbMusic> musics = new ArrayList<DbMusic>();
         DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(path + "/cloudmusic.db", null);
+        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
 
         String table = "localmusic_groupbyfile";
         String[] columns = {"*"};

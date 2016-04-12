@@ -9,11 +9,13 @@ import org.xutils.db.annotation.Table;
 @Table(name = "DbMusic")
 public class DbMusic implements Parcelable {
 
-    public static final int ISPLAYING = 1;
+    public static final String COLUMN_PLAY_SEQUENCE = "playSequence";
 
-    public static final int ISHISTORY = 31;
+    public static final String COLUMN_HISTORY_SEQUENCE = "histroySequence";
 
-    public static final int DEFAULT_VALUE = 0;
+    public static final int DEFAULT_PLAY_SEQUENCE = -1;
+
+    public static final int DEFAULT_HISTORY_SEQUENCE = -1;
 
     @Column(name = "id", isId = true)
     private long id;
@@ -46,11 +48,11 @@ public class DbMusic implements Parcelable {
     @Column(name = "duration")
     private int duration;
 
-    @Column(name = "isPlaying")
-    private int isPlaying;
+    @Column(name = "playSequence")
+    private int playSequence;
 
-    @Column(name = "isHistroy")
-    private int isHistroy;
+    @Column(name = "histroySequence")
+    private int histroySequence;
 
     @Column(name = "playedTime")
     private long playedTime;
@@ -119,20 +121,20 @@ public class DbMusic implements Parcelable {
         this.duration = duration;
     }
 
-    public int getIsPlaying() {
-        return isPlaying;
+    public int getPlaySequence() {
+        return playSequence;
     }
 
-    public void setIsPlaying(int isPlaying) {
-        this.isPlaying = isPlaying;
+    public void setPlaySequence(int playSequence) {
+        this.playSequence = playSequence;
     }
 
-    public int getIsHistroy() {
-        return isHistroy;
+    public int getHistroySequence() {
+        return histroySequence;
     }
 
-    public void setIsHistroy(int isHistroy) {
-        this.isHistroy = isHistroy;
+    public void setHistroySequence(int histroySequence) {
+        this.histroySequence = histroySequence;
     }
 
     public long getPlayedTime() {
@@ -154,8 +156,8 @@ public class DbMusic implements Parcelable {
                 ", artlist='" + artlist + '\'' +
                 ", album='" + album + '\'' +
                 ", duration=" + duration +
-                ", isPlaying=" + isPlaying +
-                ", isHistroy=" + isHistroy +
+                ", playSequence=" + playSequence +
+                ", histroySequence=" + histroySequence +
                 ", playedTime=" + playedTime +
                 '}';
     }
@@ -175,8 +177,8 @@ public class DbMusic implements Parcelable {
         dest.writeString(this.artlist);
         dest.writeString(this.album);
         dest.writeInt(this.duration);
-        dest.writeInt(this.isPlaying);
-        dest.writeInt(this.isHistroy);
+        dest.writeInt(this.playSequence);
+        dest.writeInt(this.histroySequence);
         dest.writeLong(this.playedTime);
     }
 
@@ -192,8 +194,8 @@ public class DbMusic implements Parcelable {
         this.artlist = in.readString();
         this.album = in.readString();
         this.duration = in.readInt();
-        this.isPlaying = in.readInt();
-        this.isHistroy = in.readInt();
+        this.playSequence = in.readInt();
+        this.histroySequence = in.readInt();
         this.playedTime = in.readLong();
     }
 

@@ -23,12 +23,14 @@ public class Constant {
     public static class SharedPrefrence {
         public static final String SHARED_NAME = "cloud_music";
 
-        public static final String ISLOGGED = "logged";
         public static final String USER_ID = "userid";
         public static final String ISADMIN = "admin";
         public static final String PLAYINT_MODE = "playing_mode";
         public static final String PLAYING_POSITION = "playing_position";
         public static final String PLAYING_DURATION = "playing_duration";
+
+        public static final String AS_VISITOR_LOGGED = "visitor_logged";
+        public static final String AS_USER_LOGGED = "user_logged";
     }
 
 }

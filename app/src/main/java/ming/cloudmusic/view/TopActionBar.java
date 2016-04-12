@@ -18,8 +18,8 @@ import ming.cloudmusic.R;
  */
 public class TopActionBar extends RelativeLayout {
 
-    private TextView tv_title;
-    private TextView tv_right;
+    private TextView tvTitle;
+    private TextView tvRight;
 
     private Context mContext;
 
@@ -41,21 +41,21 @@ public class TopActionBar extends RelativeLayout {
 
 
     private void initView(Context context, AttributeSet attrs) {
-        LayoutInflater.from(context).inflate(R.layout.activity_top_bar, this);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_right = (TextView) findViewById(R.id.tv_right);
+        LayoutInflater.from(context).inflate(R.layout.common_top_bar, this);
+        tvTitle = (TextView) findViewById(R.id.tv_title);
+        tvRight = (TextView) findViewById(R.id.tv_right);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TopActionBar);
         String titleValue = typedArray.getString(R.styleable.TopActionBar_titleText);
-        String rightValue = typedArray.getString(R.styleable.TopActionBar_menuText);
-        tv_title.setText(titleValue);
+        String rightValue = typedArray.getString(R.styleable.TopActionBar_rightText);
+        tvTitle.setText(titleValue);
         if (rightValue != null && rightValue.length() > 0) {
-            tv_right.setText(rightValue);
-            tv_right.setVisibility(View.VISIBLE);
+            tvRight.setText(rightValue);
+            tvRight.setVisibility(View.VISIBLE);
         } else {
-            tv_right.setVisibility(View.GONE);
+            tvRight.setVisibility(View.GONE);
         }
         typedArray.recycle();
-        tv_title.setOnClickListener(new OnClickListener() {
+        findViewById(R.id.iv_back).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 doBack(mContext);
@@ -64,7 +64,7 @@ public class TopActionBar extends RelativeLayout {
     }
 
 
-    private void doBack(final Context context) {
+    private void doBack(Context context) {
         Class c = context.getClass();
         try {
             Method method = c.getMethod("onBackPressed");
@@ -80,15 +80,19 @@ public class TopActionBar extends RelativeLayout {
 
 
     public void setOnRightClickListener(OnClickListener listener) {
-        tv_right.setOnClickListener(listener);
+        tvRight.setOnClickListener(listener);
     }
 
     public void setRightVisibility(int visibility) {
-        tv_right.setVisibility(visibility);
+        tvRight.setVisibility(visibility);
     }
 
     public void setRightText(String text) {
-        tv_right.setText(text);
+        tvRight.setText(text);
+    }
+
+    public void serTitleText(String text) {
+        tvTitle.setText(text);
     }
 
 }

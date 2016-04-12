@@ -40,9 +40,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
     private boolean mIsPlaying;
 
-    public MusicPlayActivity() {
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +83,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     }
 
     private void setListener() {
-
         tvPlayNext.setOnClickListener(this);
         tvPlayPrev.setOnClickListener(this);
         tvPlayorpasue.setOnClickListener(this);
@@ -95,7 +91,15 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         tvPlayBack.setOnClickListener(this);
 
         seekBar.setOnSeekBarChangeListener(this);
+    }
 
+    private void refreshView(HashMap data) {
+        mPlayingMusic = (int) data.get(Event.Extra.EXTRA_PLAYING_POSITION);
+        tvPlaytitleTitle.setText(data.get(Event.Extra.EXTRA_PLAYING_TITLE).toString());
+        tvPlaytitleArt.setText(data.get(Event.Extra.EXTRA_PLAYING_ART).toString());
+        tvPlaytime.setText(DateSDF.getSDF(data.get(Event.Extra.EXTRA_PLAYING_POINT)).toString());
+        tvAlltime.setText(DateSDF.getSDF(data.get(Event.Extra.EXTRA_PLAYING_DURATION)).toString());
+        duration = (int) data.get(Event.Extra.EXTRA_PLAYING_DURATION);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -122,7 +126,9 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
                 setPlayModeIcon((int) data.get(Event.Extra.EXTRA_PLAY_MODE));
                 break;
             case ServiceEvent.SERVICE_POST_PLAYINGMUSIC:
-                setListener();
+                if (!tvPlayNext.hasOnClickListeners()) {
+                    setListener();
+                }
                 refreshView(event.getExtras());
                 break;
         }
@@ -188,15 +194,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         mExtras.put(Event.Extra.EXTRA_BAR_CHANGE, seekBar.getProgress());
         postEventMsgHasExtra(KeyEvent.KEY_BAR_CHANGE, mExtras);
 
-    }
-
-    private void refreshView(HashMap data) {
-        mPlayingMusic = (int) data.get(Event.Extra.EXTRA_PLAYING_POSITION);
-        tvPlaytitleTitle.setText(data.get(Event.Extra.EXTRA_PLAYING_TITLE).toString());
-        tvPlaytitleArt.setText(data.get(Event.Extra.EXTRA_PLAYING_ART).toString());
-        tvPlaytime.setText(DateSDF.getSDF(data.get(Event.Extra.EXTRA_PLAYING_POINT)).toString());
-        tvAlltime.setText(DateSDF.getSDF(data.get(Event.Extra.EXTRA_PLAYING_DURATION)).toString());
-        duration = (int) data.get(Event.Extra.EXTRA_PLAYING_DURATION);
     }
 
 }

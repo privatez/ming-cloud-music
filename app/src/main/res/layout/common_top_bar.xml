@@ -5,20 +5,23 @@
     android:background="@drawable/actionbar_bg"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/padding_medium"
+        android:src="@drawable/ic_common_back" />
+
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:drawableLeft="@drawable/ic_common_back"
-        android:drawablePadding="20dp"
-        android:gravity="center"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_toRightOf="@+id/iv_back"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_large" />
+        android:textSize="@dimen/text_medium" />
 
     <TextView
         android:id="@+id/tv_right"
@@ -26,10 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:drawablePadding="10dp"
         android:gravity="center"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:padding="@dimen/padding_medium"
         android:textColor="@color/white"
         android:textSize="@dimen/text_medium" />
 
