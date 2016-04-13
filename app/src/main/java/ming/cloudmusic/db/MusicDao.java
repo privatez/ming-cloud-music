@@ -256,6 +256,30 @@ public class MusicDao {
         return musics;
     }
 
+    /**
+     * 获取全部的历史播放歌曲总数
+     *
+     * @return
+     */
+    public long getHistoryMusicsCount() {
+
+        long count = 0;
+
+        DbManager db = x.getDb(mDaoConfig);
+        try {
+            count = (db.selector(DbMusic.class).where(DbMusic.COLUMN_HISTORY_SEQUENCE, ">",
+                    DbMusic.DEFAULT_HISTORY_SEQUENCE).orderBy(DbMusic.COLUMN_HISTORY_SEQUENCE, true).count());
+        } catch (java.io.IOException e) {
+            LogUtils.log("获取全部的历史播放歌曲总数Excetion：" + e.getMessage());
+        } finally {
+            close(db);
+        }
+
+        //LogUtils.log("获取历史音乐：" + musics.toString());
+
+        return count;
+    }
+
 
     public void insertHistoryMusics(DbMusic music, int playingPosition) {
         music.setHistroySequence(playingPosition);

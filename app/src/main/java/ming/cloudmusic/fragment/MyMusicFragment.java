@@ -8,8 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Map;
+
 import ming.cloudmusic.R;
 import ming.cloudmusic.event.model.KeyEvent;
+import ming.cloudmusic.util.MusicsManager;
 
 /**
  * Created by Lhy on 2016/3/19.
@@ -38,6 +41,7 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
         super.onViewCreated(view, savedInstanceState);
 
         initView();
+        initData();
     }
 
     @Override
@@ -63,7 +67,9 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
 
     @Override
     public void initData() {
-
+        Map<String,String> map = MusicsManager.getInstance().getMusicsCount();
+        tvLocalmusicNum.setText("(" + map.get(MusicsManager.KEY_LOCALMUSICS_COUNT) + ")");
+        tvHistoryNum.setText("(" + map.get(MusicsManager.KEY_HISTORYMUSICS_COUNT) + ")");
     }
 
     @Override
@@ -84,7 +90,6 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
             case R.id.rl_myart:
                 postEventMsg(KeyEvent.ACTION_ARTLIST);
                 break;
-
         }
     }
 

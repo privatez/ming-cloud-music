@@ -40,4 +40,16 @@
         android:text="注册"
         android:textColor="@drawable/selector_login_text" />
 
+    <TextView
+        android:id="@+id/tv_visitor_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:drawablePadding="@dimen/padding_normal"
+        android:drawableRight="@drawable/login_guest_arr"
+        android:padding="@dimen/padding_medium"
+        android:text="游客登录"
+        android:textColor="@color/text_content"
+        android:textSize="@dimen/text_normal" />
+
 </LinearLayout>

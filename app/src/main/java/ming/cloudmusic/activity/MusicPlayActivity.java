@@ -12,12 +12,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import ming.cloudmusic.R;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
+import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.DateSDF;
 
 public class MusicPlayActivity extends DefalutBaseActivity implements OnClickListener, OnSeekBarChangeListener {
@@ -93,20 +94,21 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         seekBar.setOnSeekBarChangeListener(this);
     }
 
-    private void refreshView(HashMap data) {
+    private void refreshView(Map data) {
         mPlayingMusic = (int) data.get(Event.Extra.PLAYING_POSITION);
         tvPlaytitleTitle.setText(data.get(Event.Extra.PLAYING_TITLE).toString());
         tvPlaytitleArt.setText(data.get(Event.Extra.PLAYING_ART).toString());
         tvPlaytime.setText(DateSDF.getSDF(data.get(Event.Extra.PLAYING_POINT)).toString());
         tvAlltime.setText(DateSDF.getSDF(data.get(Event.Extra.PLAYING_DURATION)).toString());
         duration = (int) data.get(Event.Extra.PLAYING_DURATION);
+        setPlayModeIcon((int) data.get(Event.Extra.PLAY_MODE));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ServiceEvent event) {
 
         String msg = event.getMsg();
-        HashMap data = event.getExtras();
+        Map data = event.getExtras();
 
         switch (msg) {
             case ServiceEvent.SERVICE_PLAY:
@@ -140,13 +142,13 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
     private void setPlayModeIcon(int mode) {
         switch (mode) {
-            case 0:
+            case Constant.PlayMode.SINGLE:
                 tvPlayMode.setBackgroundResource(R.drawable.play_icn_one);
                 break;
-            case 1:
+            case Constant.PlayMode.RAMDOM:
                 tvPlayMode.setBackgroundResource(R.drawable.play_icn_shuffle);
                 break;
-            case 2:
+            case Constant.PlayMode.ALL:
                 tvPlayMode.setBackgroundResource(R.drawable.play_icn_loop);
                 break;
         }

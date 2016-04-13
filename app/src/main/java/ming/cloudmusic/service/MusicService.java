@@ -20,13 +20,11 @@ import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.model.DbMusic;
+import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.MusicsManager;
+import ming.cloudmusic.util.SharedPrefsUtil;
 
 public class MusicService extends Service {
-
-    private static final int PLAYMODE_SINGLE = 0;
-    private static final int PLAYMODE_RAMDOM = 1;
-    private static final int PLAYMODE_ALL = 2;
 
     private MediaPlayer mPlayer;
 
@@ -53,6 +51,7 @@ public class MusicService extends Service {
 
     private boolean isRunning;
 
+    private SharedPrefsUtil mSharedPrefsUtil;
     private MusicsManager mMusicsManager;
     private HashMap mExtras;
 
@@ -67,6 +66,9 @@ public class MusicService extends Service {
         mExtras = new HashMap<>();
         mMusicsManager = MusicsManager.getInstance();
         EventBus.getDefault().register(this);
+        mSharedPrefsUtil = new SharedPrefsUtil(getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
+        mPlayingPosition = mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYING_POSITION, 0);
+        mPlayingMode = mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYINT_MODE, 0);
         new InnerAsyncTask().execute();
     }
 
@@ -143,11 +145,11 @@ public class MusicService extends Service {
                 break;
             case KeyEvent.PREVIOUS:
                 pause();
-                right();
+                left();
                 break;
             case KeyEvent.NEXT:
                 pause();
-                left();
+                right();
                 break;
             case KeyEvent.PLAY_MODE:
                 changePlayMode();
@@ -170,24 +172,18 @@ public class MusicService extends Service {
                 mPlayingPosition = (int) event.getExtras().get(Event.Extra.PLAY_BY_POSITION);
                 play();
                 break;
-            /*else if (INTENT_ACTION_CLICKPLAY.equals(action)) {
-                long songId = intent.getLongExtra(INTENT_ACTION_CLICKPLAY_DATA,
-						0);
-				mPlayingPosition = app.getOnPlayMusicById(songId);
-				play();
-			}*/
         }
     }
 
     public void changePlayMode() {
         mPlayingMode++;
-        if (mPlayingMode > PLAYMODE_ALL) {
-            mPlayingMode = PLAYMODE_SINGLE;
+        if (mPlayingMode > Constant.PlayMode.ALL) {
+            mPlayingMode = Constant.PlayMode.SINGLE;
         }
 
         mExtras.put(Event.Extra.PLAY_MODE, mPlayingMode);
         postEventMsgHasExtra(ServiceEvent.SERVICE_PLAY_MODE, mExtras);
-
+        mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYINT_MODE, mPlayingMode);
     }
 
     public void sendMusicInfo() {
@@ -198,6 +194,7 @@ public class MusicService extends Service {
             mExtras.put(Event.Extra.PLAYING_TITLE, mPlayingMusic.getTitle());
             mExtras.put(Event.Extra.PLAYING_ART, mPlayingMusic.getArtlist());
             mExtras.put(Event.Extra.PLAYING_DURATION, mPlayingMusic.getDuration());
+            mExtras.put(Event.Extra.PLAY_MODE, mPlayingMode);
 
             if (mPlayer.isPlaying()) {
                 mExtras.put(Event.Extra.PLAYING_POINT, mPlayer.getCurrentPosition());
@@ -216,7 +213,7 @@ public class MusicService extends Service {
     }
 
     public void right() {
-        if (mPlayingMode == PLAYMODE_RAMDOM) {
+        if (mPlayingMode == Constant.PlayMode.RAMDOM) {
             random();
         } else {
             mPlayingPosition++;
@@ -229,7 +226,7 @@ public class MusicService extends Service {
     }
 
     public void left() {
-        if (mPlayingMode == PLAYMODE_RAMDOM) {
+        if (mPlayingMode == Constant.PlayMode.RAMDOM) {
             random();
         } else {
             mPlayingPosition--;
@@ -244,13 +241,13 @@ public class MusicService extends Service {
     public void next() {
         MusicDao.getDefaultDao().insertHistoryMusics(mPlayingMusic, mPlayingPosition);
         switch (mPlayingMode) {
-            case PLAYMODE_SINGLE:
+            case Constant.PlayMode.SINGLE:
                 single();
                 break;
-            case PLAYMODE_RAMDOM:
+            case Constant.PlayMode.RAMDOM:
                 random();
                 break;
-            case PLAYMODE_ALL:
+            case Constant.PlayMode.ALL:
                 all();
                 break;
         }
@@ -281,6 +278,7 @@ public class MusicService extends Service {
     }
 
     private void play() {
+        mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYING_POSITION, mPlayingPosition);
         mPlayingMusic = mMusicsManager.getOnPlayMusicByPosition(mPlayingPosition);
         if (mPlayingMusic == null) {
             return;

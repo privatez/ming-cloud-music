@@ -34,4 +34,10 @@ public class Constant {
         public static final String AS_USER_LOGGED = "user_logged";
     }
 
+    public static class PlayMode {
+        public static final int SINGLE = 0;
+        public static final int RAMDOM = 1;
+        public static final int ALL = 2;
+    }
+
 }

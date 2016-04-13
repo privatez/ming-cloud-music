@@ -18,6 +18,9 @@ import ming.cloudmusic.model.DbMusic;
  */
 public class MusicsManager {
 
+    public static final String KEY_LOCALMUSICS_COUNT = "localmusics";
+    public static final String KEY_HISTORYMUSICS_COUNT = "historymusics";
+
     private static final int MAX_RANDOM = 5;
 
     private List<DbMusic> mLocalMusics;
@@ -92,6 +95,14 @@ public class MusicsManager {
         }
 
         dao.updateDbMusics(mLocalMusics);
+    }
+
+    public Map<String,String> getMusicsCount() {
+        Map<String, String> map = new HashMap<>();
+        map.put(KEY_LOCALMUSICS_COUNT,String.valueOf(getmLocalMusics().size()));
+        map.put(KEY_HISTORYMUSICS_COUNT,String.valueOf(dao.getHistoryMusicsCount()));
+
+        return map;
     }
 
     public int getPlayingMusicsSize() {
