@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dan_hui"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -61,6 +61,7 @@
     <View
         android:id="@+id/v_line"
         style="@style/Line"
-        android:layout_marginLeft="@dimen/margin_medium" />
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium" />
 
 </LinearLayout>

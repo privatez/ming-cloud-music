@@ -70,19 +70,19 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_menu:
-                postEventMsg(KeyEvent.KEY_TOGGLE_MENU);
+                postEventMsg(KeyEvent.TOGGLE_MENU);
                 break;
             case R.id.rl_localmusic:
-                postEventMsg(KeyEvent.KEY_ACTION_LOCALMUSIC);
+                postEventMsg(KeyEvent.ACTION_LOCALMUSIC);
                 break;
             case R.id.rl_history:
-                postEventMsg(KeyEvent.KEY_ACTION_HISTORYMUSIC);
+                postEventMsg(KeyEvent.ACTION_HISTORYMUSIC);
                 break;
             case R.id.rl_dld:
-                postEventMsg(KeyEvent.KEY_ACTION_DLD);
+                postEventMsg(KeyEvent.ACTION_DLD);
                 break;
             case R.id.rl_myart:
-                postEventMsg(KeyEvent.KEY_ACTION_ARTLIST);
+                postEventMsg(KeyEvent.ACTION_ARTLIST);
                 break;
 
         }

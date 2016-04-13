@@ -7,19 +7,21 @@ public class Event {
 
     public static class Extra {
 
-        public static final String EXTRA_PLAY_MODE = "EXTRA_PLAY_MODE";
+        public static final String PLAY_MODE = "play_mode";
 
-        public static final String EXTRA_BAR_CHANGE = "EXTRA_BAR_CHANGE";
+        public static final String BAR_CHANGE = "bar_change";
 
-        public static final String EXTRA_PLAYING_POSITION = "EXTRA_PLAYING_POSITION";
+        public static final String PLAYING_POSITION = "playing_position";
 
-        public static final String EXTRA_PLAYING_TITLE = "EXTRA_PLAYING_TITLE";
+        public static final String PLAYING_TITLE = "title";
 
-        public static final String EXTRA_PLAYING_ART = "EXTRA_PLAYING_ART";
+        public static final String PLAYING_ART = "art";
 
-        public static final String EXTRA_PLAYING_DURATION = "EXTRA_PLAYING_DURATION";
+        public static final String PLAYING_DURATION = "durantion";
 
-        public static final String EXTRA_PLAYING_POINT = "EXTRA_PLAYING_POINT";
+        public static final String PLAYING_POINT = "point";
+
+        public static final String PLAY_BY_POSITION = "play_by_position";
 
     }
 

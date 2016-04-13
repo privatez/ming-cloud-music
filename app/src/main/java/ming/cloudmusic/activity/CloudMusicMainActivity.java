@@ -89,13 +89,13 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
 
         EventBus.getDefault().register(this);
 
-        postEventMsg(KeyEvent.KEY_GET_PLAYINGMUSIC);
+        postEventMsg(KeyEvent.GET_PLAYINGMUSIC);
     }
 
     private void refreshView(HashMap data) {
         rlPlaybar.setVisibility(View.VISIBLE);
-        tvPlaybarTitle.setText(data.get(Event.Extra.EXTRA_PLAYING_TITLE).toString());
-        tvPlaybarArt.setText(data.get(Event.Extra.EXTRA_PLAYING_ART).toString());
+        tvPlaybarTitle.setText(data.get(Event.Extra.PLAYING_TITLE).toString());
+        tvPlaybarArt.setText(data.get(Event.Extra.PLAYING_ART).toString());
     }
 
     private void switchContent(Fragment oldFragment, Fragment newFragment) {
@@ -118,10 +118,10 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(KeyEvent event) {
         switch (event.getMsg()) {
-            case KeyEvent.KEY_TOGGLE_MENU:
+            case KeyEvent.TOGGLE_MENU:
                 mDrawerHelper.toggleMenu();
                 break;
-            case KeyEvent.KEY_ACTION_HISTORYMUSIC:
+            case KeyEvent.ACTION_HISTORYMUSIC:
                 switchContent(mMyMusicFragment, mHistoryFragment);
                 break;
         }
@@ -140,7 +140,7 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
                 ivPlaybarPlayorpause.setImageResource(R.drawable.playbar_btn_play);
                 break;
             case ServiceEvent.SERVICE_BAR_CHANGE:
-               /* int currentPosition = (int) data.get(Event.Extra.EXTRA_BAR_CHANGE);
+               /* int currentPosition = (int) data.get(Event.Extra.BAR_CHANGE);
                 if (duration > 0) {
                     tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());
                     seekBar.setProgress(currentPosition * 100 / duration);
@@ -156,10 +156,10 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_playbar_next:
-                postEventMsg(KeyEvent.KEY_NEXT);
+                postEventMsg(KeyEvent.NEXT);
                 break;
             case R.id.iv_playbar_playorpause:
-                postEventMsg(KeyEvent.KEY_PLAY_OR_PAUSE);
+                postEventMsg(KeyEvent.PLAY_OR_PAUSE);
                 break;
         }
     }
@@ -174,10 +174,10 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
             } else if (e.getAction() == MotionEvent.ACTION_UP) {
                 if (e.getX() - startX > 100) {
                     //滑动 下一首
-                    postEventMsg(KeyEvent.KEY_NEXT);
+                    postEventMsg(KeyEvent.NEXT);
                 } else if (e.getX() - startX < -100) {
                     //滑动 上一首
-                    postEventMsg(KeyEvent.KEY_PREVIOUS);
+                    postEventMsg(KeyEvent.PREVIOUS);
                 } else if (e.getX() == startX) {
                     //长按 进入播放界面
                     mContent.startActivity(new Intent(mContext, MusicPlayActivity.class));

@@ -49,7 +49,7 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
 
         EventBus.getDefault().register(this);
 
-        postEventMsg(KeyEvent.KEY_GET_PLAYINGMUSIC);
+        postEventMsg(KeyEvent.GET_PLAYINGMUSIC);
 
     }
 
@@ -94,12 +94,12 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     }
 
     private void refreshView(HashMap data) {
-        mPlayingMusic = (int) data.get(Event.Extra.EXTRA_PLAYING_POSITION);
-        tvPlaytitleTitle.setText(data.get(Event.Extra.EXTRA_PLAYING_TITLE).toString());
-        tvPlaytitleArt.setText(data.get(Event.Extra.EXTRA_PLAYING_ART).toString());
-        tvPlaytime.setText(DateSDF.getSDF(data.get(Event.Extra.EXTRA_PLAYING_POINT)).toString());
-        tvAlltime.setText(DateSDF.getSDF(data.get(Event.Extra.EXTRA_PLAYING_DURATION)).toString());
-        duration = (int) data.get(Event.Extra.EXTRA_PLAYING_DURATION);
+        mPlayingMusic = (int) data.get(Event.Extra.PLAYING_POSITION);
+        tvPlaytitleTitle.setText(data.get(Event.Extra.PLAYING_TITLE).toString());
+        tvPlaytitleArt.setText(data.get(Event.Extra.PLAYING_ART).toString());
+        tvPlaytime.setText(DateSDF.getSDF(data.get(Event.Extra.PLAYING_POINT)).toString());
+        tvAlltime.setText(DateSDF.getSDF(data.get(Event.Extra.PLAYING_DURATION)).toString());
+        duration = (int) data.get(Event.Extra.PLAYING_DURATION);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -116,14 +116,14 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
                 tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_play);
                 break;
             case ServiceEvent.SERVICE_BAR_CHANGE:
-                int currentPosition = (int) data.get(Event.Extra.EXTRA_BAR_CHANGE);
+                int currentPosition = (int) data.get(Event.Extra.BAR_CHANGE);
                 if (duration > 0) {
                     tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());
                     seekBar.setProgress(currentPosition * 100 / duration);
                 }
                 break;
             case ServiceEvent.SERVICE_PLAY_MODE:
-                setPlayModeIcon((int) data.get(Event.Extra.EXTRA_PLAY_MODE));
+                setPlayModeIcon((int) data.get(Event.Extra.PLAY_MODE));
                 break;
             case ServiceEvent.SERVICE_POST_PLAYINGMUSIC:
                 if (!tvPlayNext.hasOnClickListeners()) {
@@ -157,16 +157,16 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         Intent intent;
         switch (v.getId()) {
             case R.id.tv_play_playorpasue:
-                postEventMsg(KeyEvent.KEY_PLAY_OR_PAUSE);
+                postEventMsg(KeyEvent.PLAY_OR_PAUSE);
                 break;
             case R.id.tv_play_next:
-                postEventMsg(KeyEvent.KEY_NEXT);
+                postEventMsg(KeyEvent.NEXT);
                 break;
             case R.id.tv_play_prev:
-                postEventMsg(KeyEvent.KEY_PREVIOUS);
+                postEventMsg(KeyEvent.PREVIOUS);
                 break;
             case R.id.tv_play_mode:
-                postEventMsg(KeyEvent.KEY_PLAY_MODE);
+                postEventMsg(KeyEvent.PLAY_MODE);
                 break;
             case R.id.tv_play_back:
                 finish();
@@ -191,8 +191,8 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
-        mExtras.put(Event.Extra.EXTRA_BAR_CHANGE, seekBar.getProgress());
-        postEventMsgHasExtra(KeyEvent.KEY_BAR_CHANGE, mExtras);
+        mExtras.put(Event.Extra.BAR_CHANGE, seekBar.getProgress());
+        postEventMsgHasExtra(KeyEvent.BAR_CHANGE, mExtras);
 
     }
 

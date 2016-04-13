@@ -162,6 +162,22 @@ public class MusicDao {
         return musics;
     }
 
+    public void updateDbMusics(List<DbMusic> musics) {
+
+        DbManager db = x.getDb(mDaoConfig);
+
+        for (DbMusic music : musics) {
+            try {
+                db.update(music);
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
+
+        close(db);
+    }
+
+
     /**
      * 获取正在播放的音乐列表
      *
@@ -235,7 +251,7 @@ public class MusicDao {
             close(db);
         }
 
-        LogUtils.log("获取历史音乐：" + musics.toString());
+        //LogUtils.log("获取历史音乐：" + musics.toString());
 
         return musics;
     }
@@ -255,23 +271,6 @@ public class MusicDao {
 
         //EventUtil.getDefault().postEventMsg(DataEvent.HISTORYMUSICS_CHANGGE);
 
-    }
-
-
-    public void clearHistoryMusic() {
-        DbManager db = x.getDb(mDaoConfig);
-        try {
-            List<DbMusic> musics = (db.selector(DbMusic.class).where(DbMusic.COLUMN_HISTORY_SEQUENCE,
-                    ">", DbMusic.DEFAULT_HISTORY_SEQUENCE).findAll());
-            for (DbMusic music : musics) {
-                music.setHistroySequence(DbMusic.DEFAULT_HISTORY_SEQUENCE);
-                db.update(music);
-            }
-        } catch (java.io.IOException e) {
-            LogUtils.log("清空历史音乐Excetion：" + e.getMessage());
-        } finally {
-            close(db);
-        }
     }
 
     /**

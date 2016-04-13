@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import ming.cloudmusic.db.MusicDao;
 import ming.cloudmusic.event.Event;
@@ -119,9 +120,8 @@ public class MusicService extends Service {
             try {
                 while (isRunning) {
                     if (mPlayer.isPlaying()) {
-                        mExtras.clear();
-                        mExtras.put(Event.Extra.EXTRA_BAR_CHANGE, mPlayer.getCurrentPosition());
-                        postEventMsgHasExtra(ServiceEvent.SERVICE_BAR_CHANGE);
+                        mExtras.put(Event.Extra.BAR_CHANGE, mPlayer.getCurrentPosition());
+                        postEventMsgHasExtra(ServiceEvent.SERVICE_BAR_CHANGE, mExtras);
                         Thread.sleep(1000);
                     }
                 }
@@ -135,30 +135,40 @@ public class MusicService extends Service {
     public void onEventMainThread(KeyEvent event) {
         String msg = event.getMsg();
         switch (msg) {
-            case KeyEvent.KEY_PLAY_OR_PAUSE:
+            case KeyEvent.PLAY_OR_PAUSE:
                 if (mPlayer.isPlaying())
                     pause();
                 else
                     play();
                 break;
-            case KeyEvent.KEY_PREVIOUS:
+            case KeyEvent.PREVIOUS:
                 pause();
                 right();
                 break;
-            case KeyEvent.KEY_NEXT:
+            case KeyEvent.NEXT:
                 pause();
                 left();
                 break;
-            case KeyEvent.KEY_PLAY_MODE:
+            case KeyEvent.PLAY_MODE:
                 changePlayMode();
                 break;
-            case KeyEvent.KEY_BAR_CHANGE:
-                int num = (int) event.getExtras().get(Event.Extra.EXTRA_BAR_CHANGE);
+            case KeyEvent.BAR_CHANGE:
+                int num = (int) event.getExtras().get(Event.Extra.BAR_CHANGE);
                 mPlayingProgress = num * mPlayer.getDuration() / 100;
                 play();
                 break;
-            case KeyEvent.KEY_GET_PLAYINGMUSIC:
+            case KeyEvent.GET_PLAYINGMUSIC:
                 sendMusicInfo();
+                break;
+            case KeyEvent.PLAY_ALL:
+                pause();
+                mPlayingPosition = 0;
+                play();
+                break;
+            case KeyEvent.PLAY_BY_POSITION:
+                pause();
+                mPlayingPosition = (int) event.getExtras().get(Event.Extra.PLAY_BY_POSITION);
+                play();
                 break;
             /*else if (INTENT_ACTION_CLICKPLAY.equals(action)) {
                 long songId = intent.getLongExtra(INTENT_ACTION_CLICKPLAY_DATA,
@@ -175,8 +185,8 @@ public class MusicService extends Service {
             mPlayingMode = PLAYMODE_SINGLE;
         }
 
-        mExtras.put(Event.Extra.EXTRA_PLAY_MODE, mPlayingMode);
-        postEventMsgHasExtra(ServiceEvent.SERVICE_PLAY_MODE);
+        mExtras.put(Event.Extra.PLAY_MODE, mPlayingMode);
+        postEventMsgHasExtra(ServiceEvent.SERVICE_PLAY_MODE, mExtras);
 
     }
 
@@ -184,17 +194,17 @@ public class MusicService extends Service {
 
         if (mPlayingMusic != null) {
 
-            mExtras.put(Event.Extra.EXTRA_PLAYING_POSITION, mPlayingPosition);
-            mExtras.put(Event.Extra.EXTRA_PLAYING_TITLE, mPlayingMusic.getTitle());
-            mExtras.put(Event.Extra.EXTRA_PLAYING_ART, mPlayingMusic.getArtlist());
-            mExtras.put(Event.Extra.EXTRA_PLAYING_DURATION, mPlayingMusic.getDuration());
+            mExtras.put(Event.Extra.PLAYING_POSITION, mPlayingPosition);
+            mExtras.put(Event.Extra.PLAYING_TITLE, mPlayingMusic.getTitle());
+            mExtras.put(Event.Extra.PLAYING_ART, mPlayingMusic.getArtlist());
+            mExtras.put(Event.Extra.PLAYING_DURATION, mPlayingMusic.getDuration());
 
             if (mPlayer.isPlaying()) {
-                mExtras.put(Event.Extra.EXTRA_PLAYING_POINT, mPlayer.getCurrentPosition());
+                mExtras.put(Event.Extra.PLAYING_POINT, mPlayer.getCurrentPosition());
                 postEventMsg(ServiceEvent.SERVICE_PLAY);
                 //LogUtils.log("SERVICE_PLAY");
             } else {
-                mExtras.put(Event.Extra.EXTRA_PLAYING_POINT, 0);
+                mExtras.put(Event.Extra.PLAYING_POINT, 0);
                 postEventMsg(ServiceEvent.SERVICE_PAUSE);
                 //LogUtils.log("SERVICE_PAUSE");
             }
@@ -202,7 +212,7 @@ public class MusicService extends Service {
         } else {
             return;
         }
-        postEventMsgHasExtra(ServiceEvent.SERVICE_POST_PLAYINGMUSIC);
+        postEventMsgHasExtra(ServiceEvent.SERVICE_POST_PLAYINGMUSIC, mExtras);
     }
 
     public void right() {
@@ -298,8 +308,8 @@ public class MusicService extends Service {
         EventUtil.getDefault().postEventMsg(msg, EventUtil.SER);
     }
 
-    private void postEventMsgHasExtra(String msg) {
-        EventUtil.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtil.SER);
+    private void postEventMsgHasExtra(String msg, Map extars) {
+        EventUtil.getDefault().postEventMsgHasExtra(msg, extars, EventUtil.SER);
     }
 
 }

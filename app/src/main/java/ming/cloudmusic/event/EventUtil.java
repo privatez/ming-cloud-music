@@ -2,7 +2,7 @@ package ming.cloudmusic.event;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
@@ -50,7 +50,7 @@ public class EventUtil {
         postEventMsgHasExtra(msg, null, eventType);
     }
 
-    public void postEventMsgHasExtra(String msg, HashMap extras, String eventType) {
+    public void postEventMsgHasExtra(String msg, Map extras, String eventType) {
         switch (eventType) {
             case SER:
                 mSerEvent = mEventPool.getServiceEvent();

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,15 +23,15 @@ import ming.cloudmusic.adapter.ViewHolder;
 import ming.cloudmusic.db.MusicDao;
 import ming.cloudmusic.event.model.DataEvent;
 import ming.cloudmusic.model.DbMusic;
-import ming.cloudmusic.util.LogUtils;
+import ming.cloudmusic.util.MusicsManager;
+import ming.cloudmusic.view.TopActionBar;
 
 /**
  * Created by Lhy on 2016/3/19.
  */
-public class HistoryFragment extends DefaultBaseFragment implements View.OnClickListener {
+public class HistoryFragment extends DefaultBaseFragment implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    private TextView tvBack;
-    private TextView tvEvent;
+    private TopActionBar tbTopbar;
     private RelativeLayout rlPlayall;
     private TextView tvMusicsCount;
     private ListView lvMusics;
@@ -59,24 +60,24 @@ public class HistoryFragment extends DefaultBaseFragment implements View.OnClick
     public void initView() {
         View view = getView();
         lvMusics = (ListView) view.findViewById(R.id.lv_musics);
-        tvBack = (TextView) view.findViewById(R.id.tv_back);
-        tvEvent = (TextView) view.findViewById(R.id.tv_event);
+        tbTopbar = (TopActionBar) view.findViewById(R.id.tb_topbar);
         rlPlayall = (RelativeLayout) view.findViewById(R.id.rl_playall);
         tvMusicsCount = (TextView) view.findViewById(R.id.tv_musics_count);
         lvMusics = (ListView) view.findViewById(R.id.lv_musics);
         llContent = view.findViewById(R.id.ll_content);
         llCommonBg = view.findViewById(R.id.ll_common_bg);
 
-        tvBack.setText("最近播放");
-        tvEvent.setText("清空");
-        tvEvent.setVisibility(View.VISIBLE);
-        tvEvent.setOnClickListener(this);
+        tbTopbar.setOnRightClickListener(this);
+        rlPlayall.setOnClickListener(this);
+
+        lvMusics.setOnItemClickListener(this);
     }
 
     @Override
     public void initData() {
         mHistoryMusics = new ArrayList<>();
         mHistoryMusics.addAll(MusicDao.getDefaultDao().getHistoryMusics());
+        tvMusicsCount.setText("(共" + mHistoryMusics.size() + "首)");
         refreshBackGround(llCommonBg, llContent);
         setAdapter();
 
@@ -103,18 +104,21 @@ public class HistoryFragment extends DefaultBaseFragment implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_event:
+            case R.id.tv_right:
                 clearHistoryMusics();
+                break;
+            case R.id.rl_playall:
+                MusicsManager.getInstance().playAllMusic(mHistoryMusics);
                 break;
         }
     }
 
-
     private void clearHistoryMusics() {
-        LogUtils.log("开始清空");
-        MusicDao.getDefaultDao().clearHistoryMusic();
-        refreshBackGround(llCommonBg, llContent);
+        MusicsManager.getInstance().clearHistroyMusics();
+        mHistoryMusics.clear();
         mAdapter.notifyDataSetChanged();
+        tvMusicsCount.setText("(共" + mHistoryMusics.size() + "首)");
+        refreshBackGround(llCommonBg, llContent);
     }
 
     private void setAdapter() {
@@ -126,4 +130,10 @@ public class HistoryFragment extends DefaultBaseFragment implements View.OnClick
             }
         });
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MusicsManager.getInstance().playMusicByPosition(mHistoryMusics, position);
+    }
+
 }
