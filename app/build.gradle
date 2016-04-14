@@ -11,23 +11,9 @@ android {
         versionCode 1
         versionName " v1.0.0"
     }
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+
     compileOptions {
         encoding "UTF-8"
-    }
-
-    signingConfigs {
-        myConfig {
-            storeFile file("nt.keystore")
-            storePassword "ntandroid"
-            keyAlias "nt.android"
-            keyPassword "ntandroid"
-        }
     }
 
     android.applicationVariants.all { variant ->
@@ -56,10 +42,6 @@ android {
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
-}
-
-repositories {
-    jcenter()
 }
 
 dependencies {
