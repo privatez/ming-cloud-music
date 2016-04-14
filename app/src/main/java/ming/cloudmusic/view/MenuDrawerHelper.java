@@ -1,18 +1,31 @@
 package ming.cloudmusic.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import net.simonvt.menudrawer.MenuDrawer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ming.cloudmusic.R;
 import ming.cloudmusic.activity.AboutAppActivity;
 import ming.cloudmusic.activity.EntranceActivity;
+import ming.cloudmusic.adapter.CommonAdapter;
+import ming.cloudmusic.adapter.ViewHolder;
+import ming.cloudmusic.service.ExitService;
 import ming.cloudmusic.util.Constant;
+import ming.cloudmusic.util.DateSDF;
 import ming.cloudmusic.util.SharedPrefsUtil;
+import ming.cloudmusic.util.ToastUtils;
 
 
 /**
@@ -33,11 +46,15 @@ public class MenuDrawerHelper implements View.OnClickListener {
     private static final int ACTION_DEFAULT = 0;
     private static final int ACTION_LOGIN = 1;
     private static final int ACTION_SETTING = 2;
+    private static final int ACTION_TIMINGPLAY = 3;
 
     private TextView tvMenuTitle;
     private TextView tvMenuLogin;
+    private TextView tvMenuTime;
 
     private MenuDrawer mDrawer;
+    private AlertDialog.Builder builder;
+    private AlertDialog dialog;
 
     private Activity mActivity;
 
@@ -45,13 +62,18 @@ public class MenuDrawerHelper implements View.OnClickListener {
 
     private MenuDrawer.OnInterceptMoveEventListener mListener;
 
+    private List<String> mExitTime;
+    private CommonAdapter<String> mExitAdapter;
+
     private int mAction = ACTION_DEFAULT;
+    private int mCheckPosition;
 
     public MenuDrawerHelper(Activity activity, MenuDrawer.OnInterceptMoveEventListener listener) {
         mActivity = activity;
         mSharedPrefs = new SharedPrefsUtil(mActivity.getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
         mListener = listener;
         initMenu();
+        initExitAdapter();
     }
 
     private void initMenu() {
@@ -77,6 +99,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
 
         tvMenuTitle = (TextView) mDrawer.findViewById(R.id.tv_menu_title);
         tvMenuLogin = (TextView) mDrawer.findViewById(R.id.tv_menu_login);
+        tvMenuTime = (TextView) mDrawer.findViewById(R.id.tv_menu_time);
 
         mDrawer.findViewById(R.id.ll_menu_time).setOnClickListener(MenuDrawerHelper.this);
         mDrawer.findViewById(R.id.ll_menu_night).setOnClickListener(MenuDrawerHelper.this);
@@ -118,7 +141,6 @@ public class MenuDrawerHelper implements View.OnClickListener {
 
     }
 
-
     private void checkAction(int action) {
         Intent intent;
         switch (action) {
@@ -129,6 +151,10 @@ public class MenuDrawerHelper implements View.OnClickListener {
             case ACTION_SETTING:
                 intent = new Intent(mActivity, AboutAppActivity.class);
                 mActivity.startActivity(intent);
+                break;
+            case ACTION_TIMINGPLAY:
+                initDialog();
+                dialog = builder.show();
                 break;
         }
         mAction = ACTION_DEFAULT;
@@ -143,6 +169,10 @@ public class MenuDrawerHelper implements View.OnClickListener {
                 break;
             case R.id.ll_menu_setting:
                 mAction = ACTION_SETTING;
+                toggleMenu();
+                break;
+            case R.id.ll_menu_time:
+                mAction = ACTION_TIMINGPLAY;
                 toggleMenu();
                 break;
             case R.id.ll_menu_exit:
@@ -160,6 +190,60 @@ public class MenuDrawerHelper implements View.OnClickListener {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         mActivity.checkAction(intent);
     }*/
+
+    private void initDialog() {
+        builder = new AlertDialog.Builder(mActivity);
+        View view = null;
+        if (view == null) {
+            view = LayoutInflater.from(mActivity).inflate(
+                    R.layout.dialog_exittime, null);
+            ListView listView = (ListView) view.findViewById(R.id.lv_exittime);
+            listView.setAdapter(mExitAdapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    mCheckPosition = position;
+                    Intent service = new Intent(mActivity, ExitService.class);
+                    service.putExtra(ExitService.EXTRA_TIME, Constant.TimingPlay.getTime(position));
+                    service.putExtra(ExitService.EXTRA_CHECK_POSITION, position);
+                    mActivity.startService(service);
+                    if (position != 0) {
+                        ToastUtils.showShort(mActivity, "设置成功，将于" + mExitTime.get(position) + "关闭");
+                    } else {
+                        ToastUtils.showShort(mActivity, "定时播放已取消");
+                    }
+                    dialog.dismiss();
+                }
+            });
+            builder.setView(view);
+        }
+    }
+
+    private void initExitAdapter() {
+        mExitTime = new ArrayList<>();
+
+        for (int i = 0; i < Constant.TimingPlay.getSize(); i++) {
+            mExitTime.add(Constant.TimingPlay.getTimeText(i));
+        }
+
+        mExitAdapter = new CommonAdapter<String>(mActivity, mExitTime, R.layout.item_exitime_normal) {
+            @Override
+            public void convert(ViewHolder holder, String item) {
+                ImageView ivCheck = holder.getView(R.id.iv_check);
+                holder.setText(R.id.tv_time, item);
+                if (holder.getPosition() == mCheckPosition) {
+                    ivCheck.setVisibility(View.VISIBLE);
+                } else {
+                    ivCheck.setVisibility(View.GONE);
+                }
+            }
+        };
+    }
+
+    public void setTimeText(long time, int position) {
+        tvMenuTime.setText(DateSDF.getSDF(time).toString());
+        mCheckPosition = position;
+    }
 
     /**
      * 获取屏幕宽度

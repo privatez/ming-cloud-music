@@ -33,4 +33,6 @@ public class KeyEvent extends BaseEvent {
 
     public static final String ACTION_ARTLIST = "artlist";
 
+    public static final String POST_MILLISUNTILFINISHED = "millisUntilFinished";
+
 }

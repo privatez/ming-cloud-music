@@ -23,6 +23,10 @@ public class Event {
 
         public static final String PLAY_BY_POSITION = "play_by_position";
 
+        public static final String TIMINGPLAY_TIME = "timing_time";
+
+        public static final String TIMINGPLAY_CHECK_POSITION = "check_position";
+
     }
 
 

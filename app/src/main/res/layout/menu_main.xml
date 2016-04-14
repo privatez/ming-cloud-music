@@ -74,9 +74,10 @@
 
                 <TextView
                     android:id="@+id/tv_menu_time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp" />
+                    android:layout_marginRight="15dp"
+                    android:gravity="right" />
 
             </LinearLayout>
 

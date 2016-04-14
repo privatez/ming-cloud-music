@@ -124,6 +124,10 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
             case KeyEvent.ACTION_HISTORYMUSIC:
                 switchContent(mMyMusicFragment, mHistoryFragment);
                 break;
+            case KeyEvent.POST_MILLISUNTILFINISHED:
+                mDrawerHelper.setTimeText((Long) event.getExtras().get(Event.Extra.TIMINGPLAY_TIME),
+                        (int) event.getExtras().get(Event.Extra.TIMINGPLAY_CHECK_POSITION));
+                break;
         }
     }
 

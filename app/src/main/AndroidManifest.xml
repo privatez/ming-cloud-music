@@ -65,6 +65,8 @@
 
         <service android:name=".service.MusicService" />
 
+        <service android:name=".service.ExitService" />
+
 
     </application>
 
