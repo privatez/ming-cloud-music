@@ -1,11 +1,15 @@
 package ming.cloudmusic.util;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.view.Gravity;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.util.List;
 
@@ -72,6 +76,60 @@ public class CustomUtils {
         } else {
             ToastUtils.showShort(activity, "请安装文件管理器");
         }
+    }
+
+    /**
+     * 创建弹框
+     * 宽度为match_parent，停留在底部
+     *
+     * @param context
+     * @param layout
+     * @param animation
+     * @param showSoftInput
+     * @param gravity
+     * @return
+     */
+    public static AlertDialog createDialog(Context context, int layout, int animation, boolean showSoftInput, int gravity) {
+        AlertDialog dialog = new AlertDialog.Builder(context).create();
+        dialog.show();
+        dialog.setContentView(layout);
+        Window window = dialog.getWindow();
+        if (showSoftInput) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = gravity;
+
+        window.setAttributes(lp);
+        window.setWindowAnimations(animation);
+
+        return dialog;
+    }
+
+    /**
+     * 创建弹框
+     * 宽度为match_parent，停留在底部
+     *
+     * @param context
+     * @param layout
+     * @return
+     */
+    public static AlertDialog createCenterDialog(Context context, int layout) {
+        AlertDialog dialog = new AlertDialog.Builder(context).create();
+        dialog.show();
+        dialog.setContentView(layout);
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.gravity = Gravity.CENTER;
+
+        window.setAttributes(lp);
+
+        return dialog;
     }
 
 }

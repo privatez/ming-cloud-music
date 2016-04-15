@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -23,6 +22,7 @@ import ming.cloudmusic.adapter.CommonAdapter;
 import ming.cloudmusic.adapter.ViewHolder;
 import ming.cloudmusic.service.ExitService;
 import ming.cloudmusic.util.Constant;
+import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.DateSDF;
 import ming.cloudmusic.util.SharedPrefsUtil;
 import ming.cloudmusic.util.ToastUtils;
@@ -53,8 +53,6 @@ public class MenuDrawerHelper implements View.OnClickListener {
     private TextView tvMenuTime;
 
     private MenuDrawer mDrawer;
-    private AlertDialog.Builder builder;
-    private AlertDialog dialog;
 
     private Activity mActivity;
 
@@ -153,8 +151,8 @@ public class MenuDrawerHelper implements View.OnClickListener {
                 mActivity.startActivity(intent);
                 break;
             case ACTION_TIMINGPLAY:
-                initDialog();
-                dialog = builder.show();
+                showTimingPlayDialog();
+                //dialog = builder.show();
                 break;
         }
         mAction = ACTION_DEFAULT;
@@ -191,32 +189,26 @@ public class MenuDrawerHelper implements View.OnClickListener {
         mActivity.checkAction(intent);
     }*/
 
-    private void initDialog() {
-        builder = new AlertDialog.Builder(mActivity);
-        View view = null;
-        if (view == null) {
-            view = LayoutInflater.from(mActivity).inflate(
-                    R.layout.dialog_exittime, null);
-            ListView listView = (ListView) view.findViewById(R.id.lv_exittime);
-            listView.setAdapter(mExitAdapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    mCheckPosition = position;
-                    Intent service = new Intent(mActivity, ExitService.class);
-                    service.putExtra(ExitService.EXTRA_TIME, Constant.TimingPlay.getTime(position));
-                    service.putExtra(ExitService.EXTRA_CHECK_POSITION, position);
-                    mActivity.startService(service);
-                    if (position != 0) {
-                        ToastUtils.showShort(mActivity, "设置成功，将于" + mExitTime.get(position) + "关闭");
-                    } else {
-                        ToastUtils.showShort(mActivity, "定时播放已取消");
-                    }
-                    dialog.dismiss();
+    private void showTimingPlayDialog() {
+        final AlertDialog dialog = CustomUtils.createCenterDialog(mActivity, R.layout.dialog_exittime);
+        ListView listView = (ListView) dialog.findViewById(R.id.lv_exittime);
+        listView.setAdapter(mExitAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mCheckPosition = position;
+                Intent service = new Intent(mActivity, ExitService.class);
+                service.putExtra(ExitService.EXTRA_TIME, Constant.TimingPlay.getTime(position));
+                service.putExtra(ExitService.EXTRA_CHECK_POSITION, position);
+                mActivity.startService(service);
+                if (position != 0) {
+                    ToastUtils.showShort(mActivity, "设置成功，将于" + mExitTime.get(position) + "关闭");
+                } else {
+                    ToastUtils.showShort(mActivity, "定时停止播放已取消");
                 }
-            });
-            builder.setView(view);
-        }
+                dialog.dismiss();
+            }
+        });
     }
 
     private void initExitAdapter() {
@@ -241,8 +233,13 @@ public class MenuDrawerHelper implements View.OnClickListener {
     }
 
     public void setTimeText(long time, int position) {
-        tvMenuTime.setText(DateSDF.getSDF(time).toString());
-        mCheckPosition = position;
+        if (time == 0) {
+            tvMenuTime.setText("");
+            mCheckPosition = 0;
+        } else {
+            tvMenuTime.setText(DateSDF.getSDF(time).toString());
+            mCheckPosition = position;
+        }
     }
 
     /**

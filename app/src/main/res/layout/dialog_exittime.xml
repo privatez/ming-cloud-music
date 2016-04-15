@@ -2,25 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:paddingLeft="40dp"
+    android:paddingRight="40dp"
+    android:paddingTop="80dp">
 
-    <TextView
-        android:id="@+id/tv_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:padding="@dimen/padding_medium"
-        android:text="定时播放"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_large" />
-
-    <ListView
-        android:id="@+id/lv_exittime"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_text"
-        android:divider="@null"
-        android:paddingBottom="@dimen/padding_medium" />
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/padding_medium"
+            android:text="定时停止播放"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium" />
+
+        <ListView
+            android:id="@+id/lv_exittime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:listSelector="@color/transparent"
+            android:paddingBottom="@dimen/padding_medium" />
+
+    </LinearLayout>
 
 </RelativeLayout>

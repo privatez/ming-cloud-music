@@ -59,12 +59,16 @@ public class ExitService extends Service {
         if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
         }
+
+        if (millisInFuture == 0) {
+            postData(millisInFuture);
+            return;
+        }
+
         mCountDownTimer = new CountDownTimer(millisInFuture, INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                mExtra.put(Event.Extra.TIMINGPLAY_TIME, millisUntilFinished);
-                mExtra.put(Event.Extra.TIMINGPLAY_CHECK_POSITION, mCheckPosition);
-                EventUtil.getDefault().postEventMsgHasExtra(KeyEvent.POST_MILLISUNTILFINISHED, mExtra, EventUtil.KEY);
+                postData(millisUntilFinished);
             }
 
             @Override
@@ -72,5 +76,11 @@ public class ExitService extends Service {
                 System.exit(0);
             }
         }.start();
+    }
+
+    private void postData(long millisUntilFinished) {
+        mExtra.put(Event.Extra.TIMINGPLAY_TIME, millisUntilFinished);
+        mExtra.put(Event.Extra.TIMINGPLAY_CHECK_POSITION, mCheckPosition);
+        EventUtil.getDefault().postEventMsgHasExtra(KeyEvent.POST_MILLISUNTILFINISHED, mExtra, EventUtil.KEY);
     }
 }

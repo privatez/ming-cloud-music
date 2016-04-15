@@ -70,7 +70,7 @@
 
                 <TextView
                     style="@style/Menu.Text"
-                    android:text="定时播放" />
+                    android:text="定时停止播放" />
 
                 <TextView
                     android:id="@+id/tv_menu_time"
