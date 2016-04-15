@@ -25,6 +25,7 @@ import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.fragment.HistoryFragment;
 import ming.cloudmusic.fragment.MyMusicFragment;
+import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.view.MenuDrawerHelper;
 
 public class CloudMusicMainActivity extends DefalutBaseActivity implements View.OnClickListener, OnTouchListener {
@@ -99,13 +100,16 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
     }
 
     private void switchContent(Fragment oldFragment, Fragment newFragment) {
-        if (mContent != newFragment) {
-            mContent = newFragment;
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            if (!newFragment.isAdded())
-                transaction.hide(oldFragment).add(R.id.ll_content, newFragment).commit();
-            else
-                transaction.hide(oldFragment).show(newFragment).commit();
+        mContent = newFragment;
+        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(
+                R.animator.fragment_slide_left_enter, R.animator.fragment_slide_left_exit,
+                R.animator.fragment_slide_right_enter, R.animator.fragment_slide_right_exit);
+        if (!newFragment.isAdded()) {
+            LogUtils.log("添加");
+            transaction.hide(oldFragment).add(R.id.fl_content, newFragment).addToBackStack(newFragment.getClass().getSimpleName()).commit();
+        } else {
+            LogUtils.log("!没有添加.....");
+            transaction.hide(oldFragment).show(newFragment).addToBackStack(newFragment.getClass().getSimpleName()).commit();
         }
     }
 
@@ -184,7 +188,7 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
                     postEventMsg(KeyEvent.PREVIOUS);
                 } else if (e.getX() == startX) {
                     //长按 进入播放界面
-                    mContent.startActivity(new Intent(mContext, MusicPlayActivity.class));
+                    mContext.startActivity(new Intent(mContext, MusicPlayActivity.class));
                 }
             }
         }
@@ -193,10 +197,14 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
 
     @Override
     public void onBackPressed() {
-        if (mDrawerHelper.isMenuOpened())
-            mDrawerHelper.closeMenu();
-        else
-            super.onBackPressed();
+        if (getFragmentManager().getBackStackEntryCount() < 2) {
+            if (mDrawerHelper.isMenuOpened())
+                mDrawerHelper.closeMenu();
+            else
+               finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 
 }
