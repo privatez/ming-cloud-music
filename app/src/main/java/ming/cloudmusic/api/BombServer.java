@@ -1,4 +1,4 @@
-package ming.cloudmusic.server;
+package ming.cloudmusic.api;
 
 import android.content.Context;
 

@@ -15,7 +15,7 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import ming.cloudmusic.R;
-import ming.cloudmusic.server.BombServer;
+import ming.cloudmusic.api.BombServer;
 import ming.cloudmusic.model.AppUpdate;
 import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.LogUtils;
