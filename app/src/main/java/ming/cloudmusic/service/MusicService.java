@@ -169,6 +169,7 @@ public class MusicService extends Service {
                 break;
             case KeyEvent.PLAY_BY_POSITION:
                 pause();
+                mPlayingProgress = 0;
                 mPlayingPosition = (int) event.getExtras().get(Event.Extra.PLAY_BY_POSITION);
                 play();
                 break;
@@ -272,7 +273,9 @@ public class MusicService extends Service {
     }
 
     private void pause() {
-        mPlayer.stop();
+        if(mPlayer.isPlaying()) {
+            mPlayer.stop();
+        }
         mPlayingProgress = mPlayer.getCurrentPosition();
         postEventMsg(ServiceEvent.SERVICE_PAUSE);
     }

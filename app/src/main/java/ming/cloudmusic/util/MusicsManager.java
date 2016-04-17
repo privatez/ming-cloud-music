@@ -34,6 +34,8 @@ public class MusicsManager {
 
     private Map mExtras;
 
+    private SharedPrefsUtil mSharedPrefsUtil;
+
     private MusicsManager() {
         mPlayedMusicPositions = new ArrayList<>();
         mExtras = new HashMap<>();
@@ -52,31 +54,54 @@ public class MusicsManager {
     }
 
     public void init(final Context context) {
-        new Runnable(){
+        new Runnable() {
             @Override
             public void run() {
                 dao.findMobleMusic(context.getApplicationContext().getContentResolver());
             }
         }.run();
 
+        mSharedPrefsUtil = new SharedPrefsUtil(context.getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
 
         mLocalMusics = dao.getInAppDbMusics();
         mPlayingMusics = dao.getPlayingMusics();
     }
 
+    /**
+     * 播放全部音乐
+     *
+     * @param dbMusics
+     */
     public void playAllMusic(List<DbMusic> dbMusics) {
         updateDbMusics(dbMusics);
         postEventMsg(KeyEvent.PLAY_ALL);
     }
 
+    /**
+     * 播放单独一首歌
+     *
+     * @param dbMusics
+     * @param position
+     */
     public void playMusicByPosition(List<DbMusic> dbMusics, int position) {
+        long id = mPlayingMusics.get(getPlayingPosition()).getId();
         updateDbMusics(dbMusics);
-        mExtras.clear();
-        mExtras.put(Event.Extra.PLAY_BY_POSITION, position);
-        postEventMsgHasExtra(KeyEvent.PLAY_BY_POSITION, mExtras);
+        if (id != (dbMusics.get(position).getId())) {
+            mExtras.clear();
+            mExtras.put(Event.Extra.PLAY_BY_POSITION, position);
+            postEventMsgHasExtra(KeyEvent.PLAY_BY_POSITION, mExtras);
+        }
     }
 
+    /**
+     * 更新数据库
+     *
+     * @param dbMusics
+     */
     private void updateDbMusics(List<DbMusic> dbMusics) {
+        if (mPlayingMusics.containsAll(dbMusics)) {
+            return;
+        }
         mPlayingMusics.clear();
         mPlayingMusics.addAll(dbMusics);
 
@@ -103,10 +128,10 @@ public class MusicsManager {
         dao.updateDbMusics(mLocalMusics);
     }
 
-    public Map<String,String> getMusicsCount() {
+    public Map<String, String> getMusicsCount() {
         Map<String, String> map = new HashMap<>();
-        map.put(KEY_LOCALMUSICS_COUNT,String.valueOf(getLocalMusics().size()));
-        map.put(KEY_HISTORYMUSICS_COUNT,String.valueOf(dao.getHistoryMusicsCount()));
+        map.put(KEY_LOCALMUSICS_COUNT, String.valueOf(getLocalMusics().size()));
+        map.put(KEY_HISTORYMUSICS_COUNT, String.valueOf(dao.getHistoryMusicsCount()));
 
         return map;
     }
@@ -150,6 +175,22 @@ public class MusicsManager {
         return mPlayingMusics.get(position);
     }
 
+    public List<DbMusic> searchLocalMusic(String msg) {
+
+        return dao.searchLocalMusic(msg);
+    }
+
+    public boolean isPlaying(long id) {
+        if (id == mPlayingMusics.get(getPlayingPosition()).getId()) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getPlayingPosition() {
+        return mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYING_POSITION, 0);
+    }
+
     public List<DbMusic> getPlayingMusics() {
 
         return mPlayingMusics;
@@ -159,7 +200,6 @@ public class MusicsManager {
         this.mPlayingMusics = mPlayingMusics;
 
     }
-
 
     public List<DbMusic> getLocalMusics() {
 

@@ -83,6 +83,7 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
                 break;
             case R.id.iv_search:
                 Intent intent = new Intent(mContext, SearchMusicActivity.class);
+                intent.putExtra(SearchMusicActivity.EXTAR_SEARCHTYPE, SearchMusicActivity.SEARCH_LOCALMUSIC);
                 mContext.startActivity(intent);
                 break;
             case R.id.rl_localmusic:

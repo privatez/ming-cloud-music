@@ -5,20 +5,53 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@drawable/actionbar_bg"
-        android:gravity="center_vertical">
+        android:background="@drawable/actionbar_bg">
 
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:padding="@dimen/padding_medium"
             android:src="@drawable/actionbar_back" />
 
-    </LinearLayout>
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_back"
+            android:background="@drawable/actionbar_bg"
+            android:hint="搜索本地音乐"
+            android:padding="@dimen/padding_normal"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/text_medium" />
+
+        <ImageView
+            android:id="@+id/iv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:padding="@dimen/padding_medium"
+            android:src="@drawable/actionbar_delete"
+            android:visibility="invisible" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@+id/et_search"
+            android:layout_below="@+id/et_search"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:background="@color/white" />
+
+    </RelativeLayout>
 
     <ming.cloudmusic.view.MusicListView
         android:id="@+id/mlv_search"

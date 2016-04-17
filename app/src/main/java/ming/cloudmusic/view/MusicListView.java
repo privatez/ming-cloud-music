@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,6 +35,8 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
     private TextView tvHint;
 
     private Context mContext;
+
+    private MusicsManager mMusicsManager;
 
     private CommonAdapter<DbMusic> mAdapter;
     private List<DbMusic> mMusicList;
@@ -90,6 +93,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
 
     private void initData() {
         mMusicList = new ArrayList<>();
+        mMusicsManager = mMusicsManager.getInstance();
         setAdapter();
     }
 
@@ -103,21 +107,36 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
     }
 
     private void setAdapter() {
-        lvMusics.setAdapter(mAdapter = new CommonAdapter<DbMusic>(mContext, mMusicList, R.layout.item_localmusic_allmusic_music) {
+        lvMusics.setAdapter(mAdapter = new CommonAdapter<DbMusic>(mContext, mMusicList, R.layout.item_musiclist_common) {
             @Override
             public void convert(ViewHolder holder, DbMusic item) {
+                ImageView ivTag = holder.getView(R.id.iv_tag);
+                ImageView ivPlaying = holder.getView(R.id.iv_playing);
                 holder.setText(R.id.tv_title, item.getTitle());
                 holder.setText(R.id.tv_art, item.getArtlist());
                 if (mOnMenuClickListener != null) {
                     holder.getView(R.id.iv_menu).setOnClickListener(mOnMenuClickListener);
                 }
-                //TODO
+
+                if (item.isLocalMusic()) {
+                    ivTag.setImageResource(R.drawable.list_icn_mobile);
+                } else {
+                    ivTag.setImageResource(R.drawable.list_icn_dld_ok);
+                }
+
+                if (mMusicsManager.isPlaying(mMusicList.get(holder.getPosition()).getId())) {
+                    ivPlaying.setVisibility(VISIBLE);
+                } else {
+                    ivPlaying.setVisibility(GONE);
+                }
             }
         });
+
         lvMusics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MusicsManager.getInstance().playMusicByPosition(mMusicList, position);
+                mMusicsManager.playMusicByPosition(mMusicList, position);
+                mAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -128,6 +147,10 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         } else {
             mOnDataLoadedHint = getResources().getString(R.string.onDataLoadedHint);
         }
+    }
+
+    public void setOnHintClickListener(OnClickListener listener) {
+        tvHint.setOnClickListener(listener);
     }
 
     public void setPlayAllVisibility(int visibility) {

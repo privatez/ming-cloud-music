@@ -12,6 +12,11 @@ public class DbMusic implements Parcelable {
     /**
      * path 列
      */
+    public static final String COLUMN_NAME= "name";
+
+    /**
+     * path 列
+     */
     public static final String COLUMN_PATH = "path";
 
     /**

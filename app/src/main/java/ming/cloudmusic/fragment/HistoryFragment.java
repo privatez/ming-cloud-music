@@ -122,7 +122,7 @@ public class HistoryFragment extends DefaultBaseFragment implements View.OnClick
     }
 
     private void setAdapter() {
-        lvMusics.setAdapter(mAdapter = new CommonAdapter<DbMusic>(mContext, mHistoryMusics, R.layout.item_localmusic_allmusic_music) {
+        lvMusics.setAdapter(mAdapter = new CommonAdapter<DbMusic>(mContext, mHistoryMusics, R.layout.item_musiclist_common) {
             @Override
             public void convert(ViewHolder holder, DbMusic item) {
                 holder.setText(R.id.tv_title, item.getTitle());

@@ -222,7 +222,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
             mExitTime.add(Constant.TimingPlay.getTimeText(i));
         }
 
-        mExitAdapter = new CommonAdapter<String>(mActivity, mExitTime, R.layout.item_exitime_normal) {
+        mExitAdapter = new CommonAdapter<String>(mActivity, mExitTime, R.layout.item_exitime) {
             @Override
             public void convert(ViewHolder holder, String item) {
                 ImageView ivCheck = holder.getView(R.id.iv_check);

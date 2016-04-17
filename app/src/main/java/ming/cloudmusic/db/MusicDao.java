@@ -200,7 +200,7 @@ public class MusicDao {
             close(db);
         }
 
-        //LogUtils.log("播放中的音乐：" + musics.toString());
+        LogUtils.log("播放中的音乐：" + musics.toString());
 
         return musics;
     }
@@ -298,6 +298,20 @@ public class MusicDao {
 
         //EventUtil.getDefault().postEventMsg(DataEvent.HISTORYMUSICS_CHANGGE);
 
+    }
+
+    public List<DbMusic> searchLocalMusic(String msg) {
+        List<DbMusic> musics = new ArrayList<>();
+        DbManager db = x.getDb(mDaoConfig);
+        try {
+            musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_NAME, "like", "%"+msg+"%").findAll());
+        } catch (java.io.IOException e) {
+            LogUtils.log("搜索本地音乐Excetion：" + e.getMessage());
+        } finally {
+            close(db);
+        }
+        LogUtils.log(musics.toString());
+        return musics;
     }
 
     /**

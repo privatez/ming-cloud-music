@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/padding_small"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingRight="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_small">
+
+        <ImageView
+            android:id="@+id/iv_playing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:src="@drawable/list_icn_playing"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="平凡之路"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_medium" />
+
+            <ImageView
+                android:id="@+id/iv_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_title"
+                android:layout_below="@+id/tv_title"
+                android:layout_marginTop="@dimen/margin_ssmall"
+                android:src="@drawable/list_icn_mobile" />
+
+            <TextView
+                android:id="@+id/tv_art"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/iv_tag"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_ssmall"
+                android:layout_toRightOf="@+id/iv_tag"
+                android:singleLine="true"
+                android:text="朴树"
+                android:textColor="@color/darkgray"
+                android:textSize="@dimen/text_normal" />
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:src="@drawable/list_icn_more" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v_line"
+        style="@style/Line"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium" />
+
+</LinearLayout>
