@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:padding="@dimen/padding_medium"
-        android:src="@drawable/ic_common_back" />
+        android:src="@drawable/actionbar_back" />
 
     <TextView
         android:id="@+id/tv_back"

@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/ic_common_back" />
+            android:background="@drawable/actionbar_back" />
 
         <TextView
             android:id="@+id/tv_playtitle_art"

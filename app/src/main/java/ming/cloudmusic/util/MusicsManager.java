@@ -105,7 +105,7 @@ public class MusicsManager {
 
     public Map<String,String> getMusicsCount() {
         Map<String, String> map = new HashMap<>();
-        map.put(KEY_LOCALMUSICS_COUNT,String.valueOf(getmLocalMusics().size()));
+        map.put(KEY_LOCALMUSICS_COUNT,String.valueOf(getLocalMusics().size()));
         map.put(KEY_HISTORYMUSICS_COUNT,String.valueOf(dao.getHistoryMusicsCount()));
 
         return map;
@@ -150,23 +150,23 @@ public class MusicsManager {
         return mPlayingMusics.get(position);
     }
 
-    public List<DbMusic> getmPlayingMusics() {
+    public List<DbMusic> getPlayingMusics() {
 
         return mPlayingMusics;
     }
 
-    public void setmPlayingMusics(List<DbMusic> mPlayingMusics) {
+    public void setPlayingMusics(List<DbMusic> mPlayingMusics) {
         this.mPlayingMusics = mPlayingMusics;
 
     }
 
 
-    public List<DbMusic> getmLocalMusics() {
+    public List<DbMusic> getLocalMusics() {
 
         return mLocalMusics;
     }
 
-    public void setmLocalMusics(List<DbMusic> mLocalMusics) {
+    public void setLocalMusics(List<DbMusic> mLocalMusics) {
         this.mLocalMusics = mLocalMusics;
     }
 

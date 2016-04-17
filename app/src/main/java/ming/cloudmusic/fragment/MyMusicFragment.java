@@ -1,5 +1,6 @@
 package ming.cloudmusic.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import java.util.Map;
 
 import ming.cloudmusic.R;
+import ming.cloudmusic.activity.SearchMusicActivity;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.util.MusicsManager;
 
@@ -63,6 +65,7 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
         rlHistory.setOnClickListener(this);
         rlDld.setOnClickListener(this);
         rlMyart.setOnClickListener(this);
+        view.findViewById(R.id.iv_search).setOnClickListener(this);
     }
 
     @Override
@@ -77,6 +80,10 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
         switch (v.getId()) {
             case R.id.iv_menu:
                 postEventMsg(KeyEvent.TOGGLE_MENU);
+                break;
+            case R.id.iv_search:
+                Intent intent = new Intent(mContext, SearchMusicActivity.class);
+                mContext.startActivity(intent);
                 break;
             case R.id.rl_localmusic:
                 postEventMsg(KeyEvent.ACTION_LOCALMUSIC);

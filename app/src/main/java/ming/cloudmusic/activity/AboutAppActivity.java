@@ -148,7 +148,7 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
 
     private void findMusicByPath(String musicPath) {
         MusicsManager musicsManager = MusicsManager.getInstance();
-        List<DbMusic> musics = musicsManager.getmLocalMusics();
+        List<DbMusic> musics = musicsManager.getLocalMusics();
         for (DbMusic music : musics) {
             if (musicPath.equals(music.getPath())) {
                 uploadMusic(music);

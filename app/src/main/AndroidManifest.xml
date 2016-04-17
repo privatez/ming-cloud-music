@@ -67,6 +67,10 @@
             android:name=".activity.ReleaseApkActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".activity.SearchMusicActivity"
+            android:screenOrientation="portrait" />
+
 
         <service android:name=".service.MusicService" />
 

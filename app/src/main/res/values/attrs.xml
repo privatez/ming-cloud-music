@@ -6,4 +6,9 @@
         <attr name="rightTextBtn" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="MusicListView">
+        <attr name="playAllGone" format="boolean" />
+        <attr name="dataLoadedHintText" format="string" />
+    </declare-styleable>
+
 </resources>
