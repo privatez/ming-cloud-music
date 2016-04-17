@@ -100,10 +100,13 @@ public class MusicDao {
                 dbMusic.setArtlist(artlist);
                 dbMusic.setAlbum(album);
                 dbMusic.setDuration(duration);
+                //TODO
                 dbMusic.setPlaySequence(c.getPosition());
+                dbMusic.setHistroySequence(DbMusic.DEFAULT_HISTORY_SEQUENCE);
+                dbMusic.setLocalMusic(true);
 
                 int num = path.lastIndexOf("/");
-                dbMusic.setShortPath(path.substring(0, num));
+                dbMusic.setFileNmae(path.substring(0, num));
 
                 if (!dbHasThisMusic(path)) {
                     db.save(dbMusic);
@@ -127,7 +130,7 @@ public class MusicDao {
     private boolean dbHasThisMusic(String path) {
         DbManager db = x.getDb(mDaoConfig);
         try {
-            DbMusic music = db.selector(DbMusic.class).where("path", "=", path).findFirst();
+            DbMusic music = db.selector(DbMusic.class).where(DbMusic.COLUMN_PATH, "=", path).findFirst();
             if (music == null) {
                 return false;
             } else {

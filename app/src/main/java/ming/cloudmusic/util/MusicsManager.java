@@ -51,8 +51,14 @@ public class MusicsManager {
         return sMusicsManager;
     }
 
-    public void init(Context context) {
-        dao.findMobleMusic(context.getApplicationContext().getContentResolver());
+    public void init(final Context context) {
+        new Runnable(){
+            @Override
+            public void run() {
+                dao.findMobleMusic(context.getApplicationContext().getContentResolver());
+            }
+        }.run();
+
 
         mLocalMusics = dao.getInAppDbMusics();
         mPlayingMusics = dao.getPlayingMusics();

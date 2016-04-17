@@ -307,7 +307,7 @@
     <color name="red_pressed">#bd3535</color>
 
 
-    <color name="grey_new">#dddddd</color>
+    <color name="grey_line">#dddddd</color>
     <color name="grey_lighter">#f6f6f6</color>
     <color name="grey">#858585</color>
     <color name="grey_pressed">#d9d9d9</color>
@@ -377,7 +377,6 @@
     <color name="bg_grey">#EEEEEE</color>
     <color name="background">#F5F2F2</color>
     <color name="grey_border">#999999</color>
-    <color name="grey_line">#DDDDDD</color>
     <color name="bg_grey_darker">#696969</color>
     <color name="bg_pick_light">#f2f2f2</color>
     <color name="text_grey_login">#A4A4A4</color>

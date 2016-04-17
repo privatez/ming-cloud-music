@@ -4,6 +4,8 @@ public class Constant {
 
     public static final String BMOB_ID = "4174572b5ca2f5ae15b7e2cbddf46ba8";
 
+    public static final String ACTION_LOGOUT = "ming.cloudmusic.entarnce";
+
     /**
      * KEY
      */

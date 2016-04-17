@@ -67,6 +67,12 @@ public class CustomUtils {
         return list.size() > 0;
     }
 
+    /**
+     * 开启文件管理器
+     *
+     * @param activity
+     * @param requestCode
+     */
     public static void startFileManager(Activity activity, int requestCode) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
@@ -111,7 +117,7 @@ public class CustomUtils {
 
     /**
      * 创建弹框
-     * 宽度为match_parent，停留在底部
+     * 宽度为match_parent，停留在中心
      *
      * @param context
      * @param layout
@@ -130,6 +136,21 @@ public class CustomUtils {
         window.setAttributes(lp);
 
         return dialog;
+    }
+
+    /**
+     * 退出登录
+     *
+     * @param context
+     */
+    public static void logout(Context context) {
+        SharedPrefsUtil sharedPrefs = new SharedPrefsUtil(context.getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
+        ToastUtils.showShort(context, "退出登录成功");
+        sharedPrefs.clearAll();
+        Intent intent = new Intent();
+        intent.setAction(Constant.ACTION_LOGOUT);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 }

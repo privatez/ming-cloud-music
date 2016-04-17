@@ -104,7 +104,7 @@ public class HistoryFragment extends DefaultBaseFragment implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_right:
+            case R.id.tv_text:
                 clearHistoryMusics();
                 break;
             case R.id.rl_playall:

@@ -10,7 +10,7 @@
         android:id="@+id/tb_topbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:rightText="清空"
+        app:rightTextBtn="清空"
         app:titleText="最近播放" />
 
     <FrameLayout

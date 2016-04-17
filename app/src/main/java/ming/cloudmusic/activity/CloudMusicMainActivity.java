@@ -197,13 +197,13 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() < 2) {
+        if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStack();
+        } else {
             if (mDrawerHelper.isMenuOpened())
                 mDrawerHelper.closeMenu();
             else
-               finish();
-        } else {
-            getFragmentManager().popBackStack();
+                finish();
         }
     }
 

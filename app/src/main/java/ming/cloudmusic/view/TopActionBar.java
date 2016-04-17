@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ public class TopActionBar extends RelativeLayout {
 
     private TextView tvTitle;
     private TextView tvRight;
+    private ImageView ivSearch;
+    private ImageView ivMore;
 
     private Context mContext;
 
@@ -39,14 +42,15 @@ public class TopActionBar extends RelativeLayout {
         initView(context, attrs);
     }
 
-
     private void initView(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.common_top_bar, this);
         tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvRight = (TextView) findViewById(R.id.tv_right);
+        tvRight = (TextView) findViewById(R.id.tv_text);
+        ivSearch = (ImageView) findViewById(R.id.iv_search);
+        ivMore = (ImageView) findViewById(R.id.iv_more);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.TopActionBar);
         String titleValue = typedArray.getString(R.styleable.TopActionBar_titleText);
-        String rightValue = typedArray.getString(R.styleable.TopActionBar_rightText);
+        String rightValue = typedArray.getString(R.styleable.TopActionBar_rightTextBtn);
         tvTitle.setText(titleValue);
         if (rightValue != null && rightValue.length() > 0) {
             tvRight.setText(rightValue);
@@ -63,7 +67,6 @@ public class TopActionBar extends RelativeLayout {
         });
     }
 
-
     private void doBack(Context context) {
         Class c = context.getClass();
         try {
@@ -78,9 +81,18 @@ public class TopActionBar extends RelativeLayout {
         }
     }
 
-
     public void setOnRightClickListener(OnClickListener listener) {
         tvRight.setOnClickListener(listener);
+    }
+
+    public void setOnSearchClickListener(OnClickListener listener) {
+        ivSearch.setVisibility(VISIBLE);
+        ivSearch.setOnClickListener(listener);
+    }
+
+    public void setOnMoreClickListener(OnClickListener listener) {
+        ivMore.setVisibility(VISIBLE);
+        ivMore.setOnClickListener(listener);
     }
 
     public void setRightVisibility(int visibility) {
@@ -91,7 +103,7 @@ public class TopActionBar extends RelativeLayout {
         tvRight.setText(text);
     }
 
-    public void serTitleText(String text) {
+    public void setTitleText(String text) {
         tvTitle.setText(text);
     }
 

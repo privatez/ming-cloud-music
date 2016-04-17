@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,10 +48,12 @@ public class MenuDrawerHelper implements View.OnClickListener {
     private static final int ACTION_LOGIN = 1;
     private static final int ACTION_SETTING = 2;
     private static final int ACTION_TIMINGPLAY = 3;
+    private static final int ACTION_LOGOUT = 4;
 
     private TextView tvMenuTitle;
     private TextView tvMenuLogin;
     private TextView tvMenuTime;
+    private LinearLayout llMenuLogout;
 
     private MenuDrawer mDrawer;
 
@@ -63,10 +66,11 @@ public class MenuDrawerHelper implements View.OnClickListener {
     private List<String> mExitTime;
     private CommonAdapter<String> mExitAdapter;
 
-    private int mAction = ACTION_DEFAULT;
+    private int mAction;
     private int mCheckPosition;
 
     public MenuDrawerHelper(Activity activity, MenuDrawer.OnInterceptMoveEventListener listener) {
+        mAction = ACTION_DEFAULT;
         mActivity = activity;
         mSharedPrefs = new SharedPrefsUtil(mActivity.getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
         mListener = listener;
@@ -98,32 +102,25 @@ public class MenuDrawerHelper implements View.OnClickListener {
         tvMenuTitle = (TextView) mDrawer.findViewById(R.id.tv_menu_title);
         tvMenuLogin = (TextView) mDrawer.findViewById(R.id.tv_menu_login);
         tvMenuTime = (TextView) mDrawer.findViewById(R.id.tv_menu_time);
+        llMenuLogout = (LinearLayout) mDrawer.findViewById(R.id.ll_menu_logout);
 
         mDrawer.findViewById(R.id.ll_menu_time).setOnClickListener(MenuDrawerHelper.this);
-        mDrawer.findViewById(R.id.ll_menu_night).setOnClickListener(MenuDrawerHelper.this);
-        mDrawer.findViewById(R.id.ll_menu_setting).setOnClickListener(MenuDrawerHelper.this);
-        mDrawer.findViewById(R.id.ll_menu_exit).setOnClickListener(MenuDrawerHelper.this);
+        mDrawer.findViewById(R.id.tv_menu_setting).setOnClickListener(MenuDrawerHelper.this);
+        mDrawer.findViewById(R.id.tv_menu_exit).setOnClickListener(MenuDrawerHelper.this);
+        llMenuLogout.setOnClickListener(this);
         tvMenuLogin.setOnClickListener(MenuDrawerHelper.this);
 
-        if (mSharedPrefs.getBooleanSP(Constant.SharedPrefrence.AS_USER_LOGGED, false)) {
-            tvMenuTitle.setText(mSharedPrefs.getStringSP(Constant.SharedPrefrence.USER_NAME, ""));
-            tvMenuLogin.setVisibility(View.GONE);
-        }
+        refreshViewByLoginStatus(mSharedPrefs.getBooleanSP(Constant.SharedPrefrence.AS_USER_LOGGED, false));
 
         mDrawer.setOnDrawerStateChangeListener(new MenuDrawer.OnDrawerStateChangeListener() {
             @Override
             public void onDrawerStateChange(int oldState, int newState) {
-                //android.util.Log.d("lhy","oldState:"+oldState+".....newState:"+newState);
                 if (oldState == MenuDrawer.STATE_CLOSED) {
-                    if (mSharedPrefs.getBooleanSP(Constant.SharedPrefrence.AS_USER_LOGGED, false)) {
-                        tvMenuTitle.setText(mSharedPrefs.getStringSP(Constant.SharedPrefrence.USER_NAME, ""));
-                        tvMenuLogin.setVisibility(View.GONE);
-                    }
+                    refreshViewByLoginStatus(mSharedPrefs.getBooleanSP(Constant.SharedPrefrence.AS_USER_LOGGED, false));
                 }
 
                 if (newState == MenuDrawer.STATE_OPEN) {
                     //TODO 数据请求
-
                 }
 
                 if (newState == MenuDrawer.STATE_CLOSED) {
@@ -139,6 +136,16 @@ public class MenuDrawerHelper implements View.OnClickListener {
 
     }
 
+    private void refreshViewByLoginStatus(boolean isLogin) {
+        if(isLogin) {
+            tvMenuTitle.setText(mSharedPrefs.getStringSP(Constant.SharedPrefrence.USER_NAME, ""));
+            tvMenuLogin.setVisibility(View.GONE);
+            llMenuLogout.setVisibility(View.VISIBLE);
+        } else {
+            llMenuLogout.setVisibility(View.GONE);
+        }
+    }
+
     private void checkAction(int action) {
         Intent intent;
         switch (action) {
@@ -146,13 +153,15 @@ public class MenuDrawerHelper implements View.OnClickListener {
                 intent = new Intent(mActivity, EntranceActivity.class);
                 mActivity.startActivity(intent);
                 break;
+            case ACTION_TIMINGPLAY:
+                showTimingPlayDialog();
+                break;
+            case ACTION_LOGOUT:
+                CustomUtils.logout(mActivity);
+                break;
             case ACTION_SETTING:
                 intent = new Intent(mActivity, AboutAppActivity.class);
                 mActivity.startActivity(intent);
-                break;
-            case ACTION_TIMINGPLAY:
-                showTimingPlayDialog();
-                //dialog = builder.show();
                 break;
         }
         mAction = ACTION_DEFAULT;
@@ -161,33 +170,28 @@ public class MenuDrawerHelper implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_menu_login:
-                mAction = ACTION_LOGIN;
-                toggleMenu();
-                break;
-            case R.id.ll_menu_setting:
-                mAction = ACTION_SETTING;
-                toggleMenu();
-                break;
             case R.id.ll_menu_time:
-                mAction = ACTION_TIMINGPLAY;
-                toggleMenu();
+                toggleMenuWithAction(ACTION_TIMINGPLAY);
                 break;
-            case R.id.ll_menu_exit:
+            case R.id.ll_menu_logout:
+                toggleMenuWithAction(ACTION_LOGOUT);
+                break;
+            case R.id.tv_menu_login:
+                toggleMenuWithAction(ACTION_LOGIN);
+                break;
+            case R.id.tv_menu_setting:
+                toggleMenuWithAction(ACTION_SETTING);
+                break;
+            case R.id.tv_menu_exit:
                 System.exit(0);
                 break;
         }
     }
 
-    /*private void exit() {
-        SystemUtils.showToast(mActivity, "退出登录成功");
-        mSharedPrefs.clearAll();
-        BombServer.resetServerApi();
-        Intent intent = new Intent();
-        intent.setAction(Constant.LOGIN_ACTION);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        mActivity.checkAction(intent);
-    }*/
+    private void toggleMenuWithAction(int action) {
+        mAction = action;
+        toggleMenu();
+    }
 
     private void showTimingPlayDialog() {
         final AlertDialog dialog = CustomUtils.createCenterDialog(mActivity, R.layout.dialog_exittime);

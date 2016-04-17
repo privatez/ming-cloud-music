@@ -31,7 +31,12 @@
 
         <activity
             android:name=".activity.EntranceActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="ming.cloudmusic.entarnce" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".activity.LoginActivity"

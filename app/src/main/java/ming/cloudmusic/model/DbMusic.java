@@ -9,53 +9,114 @@ import org.xutils.db.annotation.Table;
 @Table(name = "DbMusic")
 public class DbMusic implements Parcelable {
 
+    /**
+     * path 列
+     */
+    public static final String COLUMN_PATH = "path";
+
+    /**
+     * playSequence 列
+     */
     public static final String COLUMN_PLAY_SEQUENCE = "playSequence";
 
+    /**
+     * histroySequence 列
+     */
     public static final String COLUMN_HISTORY_SEQUENCE = "histroySequence";
 
+    /**
+     * 播放顺序默认值
+     */
     public static final int DEFAULT_PLAY_SEQUENCE = -1;
 
+    /**
+     * 历史顺序默认值
+     */
     public static final int DEFAULT_HISTORY_SEQUENCE = -1;
 
+
+    /**
+     * music id
+     */
     @Column(name = "id", isId = true)
     private long id;
 
 
+    /**
+     * music title
+     */
     @Column(name = "title")
     private String title;
 
 
+    /**
+     * music name
+     */
     @Column(name = "name")
     private String name;
 
 
+    /**
+     * musci local path
+     */
     @Column(name = "path")
     private String path;
 
 
-    @Column(name = "shortPath")
-    private String shortPath;
+    /**
+     * music local filename
+     */
+    @Column(name = "fileNmae")
+    private String fileNmae;
 
 
+    /**
+     * 发行公司
+     */
     @Column(name = "artlist")
     private String artlist;
 
 
+    /**
+     * 专辑
+     */
     @Column(name = "album")
     private String album;
 
 
+    /**
+     * 歌曲时长
+     */
     @Column(name = "duration")
     private int duration;
 
+
+    /**
+     * 播放顺序
+     */
     @Column(name = "playSequence")
     private int playSequence;
 
+
+    /**
+     * 历史顺序
+     */
     @Column(name = "histroySequence")
     private int histroySequence;
 
+
+    /**
+     * 现在播放的时间点
+     */
     @Column(name = "playedTime")
     private long playedTime;
+
+
+    /**
+     * 是否是本地音乐
+     */
+    @Column(name = "isLocalMusic")
+    private boolean isLocalMusic;
 
     public long getId() {
         return id;
@@ -89,12 +150,12 @@ public class DbMusic implements Parcelable {
         this.path = path;
     }
 
-    public String getShortPath() {
-        return shortPath;
+    public String getFileNmae() {
+        return fileNmae;
     }
 
-    public void setShortPath(String shortPath) {
-        this.shortPath = shortPath;
+    public void setFileNmae(String fileNmae) {
+        this.fileNmae = fileNmae;
     }
 
     public String getArtlist() {
@@ -145,6 +206,14 @@ public class DbMusic implements Parcelable {
         this.playedTime = playedTime;
     }
 
+    public boolean isLocalMusic() {
+        return isLocalMusic;
+    }
+
+    public void setLocalMusic(boolean localMusic) {
+        isLocalMusic = localMusic;
+    }
+
     @Override
     public String toString() {
         return "DbMusic{" +
@@ -152,15 +221,17 @@ public class DbMusic implements Parcelable {
                 ", title='" + title + '\'' +
                 ", name='" + name + '\'' +
                 ", path='" + path + '\'' +
-                ", shortPath='" + shortPath + '\'' +
+                ", fileNmae='" + fileNmae + '\'' +
                 ", artlist='" + artlist + '\'' +
                 ", album='" + album + '\'' +
                 ", duration=" + duration +
                 ", playSequence=" + playSequence +
                 ", histroySequence=" + histroySequence +
                 ", playedTime=" + playedTime +
+                ", isLocalMusic=" + isLocalMusic +
                 '}';
     }
+
 
     @Override
     public int describeContents() {
@@ -173,13 +244,14 @@ public class DbMusic implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.name);
         dest.writeString(this.path);
-        dest.writeString(this.shortPath);
+        dest.writeString(this.fileNmae);
         dest.writeString(this.artlist);
         dest.writeString(this.album);
         dest.writeInt(this.duration);
         dest.writeInt(this.playSequence);
         dest.writeInt(this.histroySequence);
         dest.writeLong(this.playedTime);
+        dest.writeByte(isLocalMusic ? (byte) 1 : (byte) 0);
     }
 
     public DbMusic() {
@@ -190,16 +262,17 @@ public class DbMusic implements Parcelable {
         this.title = in.readString();
         this.name = in.readString();
         this.path = in.readString();
-        this.shortPath = in.readString();
+        this.fileNmae = in.readString();
         this.artlist = in.readString();
         this.album = in.readString();
         this.duration = in.readInt();
         this.playSequence = in.readInt();
         this.histroySequence = in.readInt();
         this.playedTime = in.readLong();
+        this.isLocalMusic = in.readByte() != 0;
     }
 
-    public static final Creator<DbMusic> CREATOR = new Creator<DbMusic>() {
+    public static final Parcelable.Creator<DbMusic> CREATOR = new Parcelable.Creator<DbMusic>() {
         @Override
         public DbMusic createFromParcel(Parcel source) {
             return new DbMusic(source);

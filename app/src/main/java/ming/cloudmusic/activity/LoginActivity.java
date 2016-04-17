@@ -91,14 +91,14 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
                 if (hasFocus) {
                     vAccount.setBackgroundColor(getResColor(R.color.grey));
                 } else {
-                    vAccount.setBackgroundColor(getResColor(R.color.grey_new));
+                    vAccount.setBackgroundColor(getResColor(R.color.grey_line));
                 }
                 break;
             case R.id.et_password:
                 if (hasFocus) {
                     vPassword.setBackgroundColor(getResColor(R.color.grey));
                 } else {
-                    vPassword.setBackgroundColor(getResColor(R.color.grey_new));
+                    vPassword.setBackgroundColor(getResColor(R.color.grey_line));
                 }
                 break;
         }
