@@ -81,6 +81,6 @@ public class ExitService extends Service {
     private void postData(long millisUntilFinished) {
         mExtra.put(Event.Extra.TIMINGPLAY_TIME, millisUntilFinished);
         mExtra.put(Event.Extra.TIMINGPLAY_CHECK_POSITION, mCheckPosition);
-        EventUtil.getDefault().postEventMsgHasExtra(KeyEvent.POST_MILLISUNTILFINISHED, mExtra, EventUtil.KEY);
+        EventUtil.getDefault().postKeyEventHasExtra(KeyEvent.POST_MILLISUNTILFINISHED, mExtra);
     }
 }

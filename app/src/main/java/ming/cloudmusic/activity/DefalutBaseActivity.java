@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.util.Constant;
@@ -18,7 +19,7 @@ import ming.cloudmusic.view.OnViewCreateListener;
  */
 public abstract class DefalutBaseActivity extends Activity implements OnViewCreateListener {
 
-    protected HashMap mExtras;
+    protected Map mExtras;
 
     protected Context mContext;
 
@@ -33,12 +34,12 @@ public abstract class DefalutBaseActivity extends Activity implements OnViewCrea
 
     }
 
-    protected void postEventMsg(String msg) {
-        EventUtil.getDefault().postEventMsg(msg, EventUtil.KEY);
+    protected void postEventMsg(String eventMsg) {
+        EventUtil.getDefault().postKeyEvent(eventMsg);
     }
 
-    protected void postEventMsgHasExtra(String msg, HashMap mExtras) {
-        EventUtil.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtil.KEY);
+    protected void postEventMsgHasExtra(String eventMsg, Map extras) {
+        EventUtil.getDefault().postKeyEventHasExtra(eventMsg, extras);
     }
 
     protected int getResColor(int color) {

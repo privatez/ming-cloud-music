@@ -1,13 +1,14 @@
 package ming.cloudmusic.fragment;
 
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.util.Constant;
@@ -23,10 +24,13 @@ public abstract class DefaultBaseFragment extends Fragment implements OnViewCrea
 
     protected SharedPrefsUtil mSharedPrefsUtil;
 
+    protected Map mExtras;
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mContext = getActivity();
+        mExtras = new HashMap();
         mSharedPrefsUtil = new SharedPrefsUtil(mContext, Constant.SharedPrefrence.SHARED_NAME);
     }
 
@@ -38,8 +42,8 @@ public abstract class DefaultBaseFragment extends Fragment implements OnViewCrea
         getView().setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (getActivity().getFragmentManager().getBackStackEntryCount() > 1 && event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                    getActivity().getFragmentManager().popBackStack();
+                if (getActivity().getSupportFragmentManager().getBackStackEntryCount() > 1 && event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    getActivity().getSupportFragmentManager().popBackStack();
                     return true;
                 }
                 return false;
@@ -47,12 +51,12 @@ public abstract class DefaultBaseFragment extends Fragment implements OnViewCrea
         });
     }
 
-    protected void postEventMsg(String msg) {
-        EventUtil.getDefault().postEventMsg(msg, EventUtil.KEY);
+    protected void postEventMsg(String eventMsg) {
+        EventUtil.getDefault().postKeyEvent(eventMsg);
     }
 
-    protected void postEventMsgHasExtra(String msg, HashMap mExtras) {
-        EventUtil.getDefault().postEventMsgHasExtra(msg, mExtras, EventUtil.KEY);
+    protected void postEventMsgHasExtra(String eventMsg, Map extras) {
+        EventUtil.getDefault().postKeyEventHasExtra(eventMsg, extras);
     }
 
     protected void refreshBackGround(View backGround, View content) {

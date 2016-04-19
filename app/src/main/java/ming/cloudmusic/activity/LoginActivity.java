@@ -116,6 +116,7 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
                     mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.ISADMIN, user.isAdmin());
                     ToastUtils.showShort(mContext, "登录成功");
                     startActivity(new Intent(mContext, CloudMusicMainActivity.class));
+                    finish();
                 } else
                     ToastUtils.showShort(mContext, "用户名或密码不正确");
             }

@@ -34,7 +34,7 @@
         <RadioButton
             android:id="@+id/rb_art"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/selector_localmusic_bg"
             android:button="@null"
@@ -46,7 +46,7 @@
         <RadioButton
             android:id="@+id/rb_album"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/selector_localmusic_bg"
             android:button="@null"
@@ -58,7 +58,7 @@
         <RadioButton
             android:id="@+id/rb_file"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/selector_localmusic_bg"
             android:button="@null"

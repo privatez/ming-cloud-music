@@ -113,6 +113,7 @@ public class RegisterActivity extends DefalutBaseActivity implements View.OnClic
             @Override
             public void onSuccess() {
                 ToastUtils.showShort(mContext, "注册成功");
+                finish();
             }
 
             @Override

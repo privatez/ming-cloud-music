@@ -12,16 +12,13 @@ import ming.cloudmusic.event.model.ServiceEvent;
  */
 public class EventUtil {
 
-    public static final String KEY = "KEY";
-
-    public static final String SER = "SER";
+    private static final String EVENTTYPE_KEY = "EVENTTYPE_KEY";
+    private static final String EVENTTYPE_SER = "SER";
 
     private KeyEvent mKeyEvent;
-
     private ServiceEvent mSerEvent;
 
     private EventPool mEventPool;
-
     private static EventUtil mEventUtil;
 
     private EventUtil() {
@@ -40,19 +37,35 @@ public class EventUtil {
         return mEventUtil;
     }
 
+    public void postKeyEvent(String eventMsg) {
+        postEventMsg(eventMsg, EVENTTYPE_KEY);
+    }
+
+    public void postKeyEventHasExtra(String eventMsg, Map extras) {
+        postEventMsgHasExtra(eventMsg, extras, EVENTTYPE_KEY);
+    }
+
+    public void postSerEvent(String eventMsg) {
+        postEventMsg(eventMsg, EVENTTYPE_SER);
+    }
+
+    public void postSerEventHasExtra(String eventMsg, Map extras) {
+        postEventMsgHasExtra(eventMsg, extras, EVENTTYPE_SER);
+    }
+
     /**
      * 发送Event
      *
-     * @param msg
-     * @param eventType   Event种类
+     * @param eventMsg
+     * @param eventType Event种类
      */
-    public void postEventMsg(String msg, String eventType) {
-        postEventMsgHasExtra(msg, null, eventType);
+    private void postEventMsg(String eventMsg, String eventType) {
+        postEventMsgHasExtra(eventMsg, null, eventType);
     }
 
-    public void postEventMsgHasExtra(String msg, Map extras, String eventType) {
+    private void postEventMsgHasExtra(String msg, Map extras, String eventType) {
         switch (eventType) {
-            case SER:
+            case EVENTTYPE_SER:
                 mSerEvent = mEventPool.getServiceEvent();
                 if (mSerEvent != null) {
                     mSerEvent.setMsg(msg);
@@ -62,7 +75,7 @@ public class EventUtil {
                     EventBus.getDefault().post(mSerEvent);
                 }
                 break;
-            case KEY:
+            case EVENTTYPE_KEY:
                 mKeyEvent = mEventPool.getKeyEvent();
                 if (mKeyEvent != null) {
                     mKeyEvent.setMsg(msg);

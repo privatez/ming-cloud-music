@@ -53,7 +53,7 @@ public class MusicService extends Service {
 
     private SharedPrefsUtil mSharedPrefsUtil;
     private MusicsManager mMusicsManager;
-    private HashMap mExtras;
+    private Map mExtras;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -281,8 +281,9 @@ public class MusicService extends Service {
     }
 
     private void play() {
-        mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYING_POSITION, mPlayingPosition);
         mPlayingMusic = mMusicsManager.getOnPlayMusicByPosition(mPlayingPosition);
+        mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYING_POSITION, mPlayingPosition);
+        mSharedPrefsUtil.setLongSP(Constant.SharedPrefrence.PLAYING_ID,mPlayingMusic.getId());
         if (mPlayingMusic == null) {
             return;
         }
@@ -305,12 +306,12 @@ public class MusicService extends Service {
         }
     }
 
-    private void postEventMsg(String msg) {
-        EventUtil.getDefault().postEventMsg(msg, EventUtil.SER);
+    private void postEventMsg(String eventMsg) {
+        EventUtil.getDefault().postSerEvent(eventMsg);
     }
 
-    private void postEventMsgHasExtra(String msg, Map extars) {
-        EventUtil.getDefault().postEventMsgHasExtra(msg, extars, EventUtil.SER);
+    private void postEventMsgHasExtra(String eventMsg, Map extars) {
+        EventUtil.getDefault().postSerEventHasExtra(eventMsg, extars);
     }
 
 }

@@ -18,6 +18,8 @@ import ming.cloudmusic.model.DbMusic;
  */
 public class MusicsManager {
 
+    private static final long DEFAULT_PLAYINGID = -1;
+
     public static final String KEY_LOCALMUSICS_COUNT = "localmusics";
     public static final String KEY_HISTORYMUSICS_COUNT = "historymusics";
 
@@ -180,11 +182,20 @@ public class MusicsManager {
         return dao.searchLocalMusic(msg);
     }
 
-    public boolean isPlaying(long id) {
-        if (id == mPlayingMusics.get(getPlayingPosition()).getId()) {
+    public boolean isMusicPlaying(long id) {
+        long playingId = getPlayingMusicId();
+        if (playingId == DEFAULT_PLAYINGID) {
+            return false;
+        }
+
+        if (playingId == id) {
             return true;
         }
         return false;
+    }
+
+    public long getPlayingMusicId() {
+        return mSharedPrefsUtil.getLongSP(Constant.SharedPrefrence.PLAYING_ID, DEFAULT_PLAYINGID);
     }
 
     public int getPlayingPosition() {
@@ -210,12 +221,12 @@ public class MusicsManager {
         this.mLocalMusics = mLocalMusics;
     }
 
-    private void postEventMsg(String msg) {
-        EventUtil.getDefault().postEventMsg(msg, EventUtil.KEY);
+    private void postEventMsg(String eventMsg) {
+        EventUtil.getDefault().postKeyEvent(eventMsg);
     }
 
-    private void postEventMsgHasExtra(String msg, Map extars) {
-        EventUtil.getDefault().postEventMsgHasExtra(msg, extars, EventUtil.KEY);
+    private void postEventMsgHasExtra(String eventMsg, Map extars) {
+        EventUtil.getDefault().postKeyEventHasExtra(eventMsg, extars);
     }
 
 }

@@ -7,11 +7,16 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +24,7 @@ import java.util.List;
 import ming.cloudmusic.R;
 import ming.cloudmusic.adapter.CommonAdapter;
 import ming.cloudmusic.adapter.ViewHolder;
+import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.model.DbMusic;
 import ming.cloudmusic.util.MusicsManager;
 
@@ -95,6 +101,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         mMusicList = new ArrayList<>();
         mMusicsManager = mMusicsManager.getInstance();
         setAdapter();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -102,6 +109,17 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.rl_playall:
                 MusicsManager.getInstance().playAllMusic(mMusicList);
+                mAdapter.notifyDataSetChanged();
+                break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ServiceEvent event) {
+        String msg = event.getMsg();
+        switch (msg) {
+            case ServiceEvent.SERVICE_POST_PLAYINGMUSIC:
+                mAdapter.notifyDataSetChanged();
                 break;
         }
     }
@@ -124,7 +142,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
                     ivTag.setImageResource(R.drawable.list_icn_dld_ok);
                 }
 
-                if (mMusicsManager.isPlaying(mMusicList.get(holder.getPosition()).getId())) {
+                if (mMusicsManager.isMusicPlaying(item.getId())) {
                     ivPlaying.setVisibility(VISIBLE);
                 } else {
                     ivPlaying.setVisibility(GONE);
@@ -162,6 +180,13 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         mAdapter.notifyDataSetChanged();
     }
 
+    public void setAdapter(BaseAdapter adapter) {
+        if (mAdapter != null) {
+            mAdapter = null;
+        }
+        lvMusics.setAdapter(adapter);
+    }
+
     public void notifyDataSetChanged(List<DbMusic> musicList) {
         mMusicList.clear();
         mMusicList.addAll(musicList);
@@ -175,6 +200,10 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
             llContent.setVisibility(View.GONE);
             tvHint.setText(mOnDataLoadedHint);
         }
+    }
+
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
     }
 
 }

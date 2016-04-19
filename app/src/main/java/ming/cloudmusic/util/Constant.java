@@ -25,14 +25,10 @@ public class Constant {
         public static final String PLAYINT_MODE = "playing_mode";
         public static final String PLAYING_POSITION = "playing_position";
         public static final String PLAYING_DURATION = "playing_duration";
+        public static final String PLAYING_ID = "playing_id";
 
         public static final String AS_VISITOR_LOGGED = "visitor_logged";
         public static final String AS_USER_LOGGED = "user_logged";
-    }
-
-    public static class Extra {
-        public static final String TIMINGPLAY_TIME = "time";
-        public static final String TIMINGPLAY_CHECKPOSITION = "checkposition";
     }
 
     public static class PlayMode {

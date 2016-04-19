@@ -1,9 +1,12 @@
 package ming.cloudmusic.activity;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -18,17 +21,20 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import ming.cloudmusic.R;
 import ming.cloudmusic.event.Event;
+import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.fragment.HistoryFragment;
+import ming.cloudmusic.fragment.LocalMusciFragment;
 import ming.cloudmusic.fragment.MyMusicFragment;
 import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.view.MenuDrawerHelper;
 
-public class CloudMusicMainActivity extends DefalutBaseActivity implements View.OnClickListener, OnTouchListener {
+public class CloudMusicMainActivity extends FragmentActivity implements View.OnClickListener, OnTouchListener {
 
     private RelativeLayout rlPlaybar;
     private ImageView ivPlaybarNext;
@@ -39,11 +45,14 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
     private Fragment mContent;
 
     private MyMusicFragment mMyMusicFragment;
+    private LocalMusciFragment mLocalMusciFragment;
     private HistoryFragment mHistoryFragment;
 
     private MenuDrawerHelper mDrawerHelper;
 
     private float startX;
+
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +76,7 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
+
     public void initView() {
         rlPlaybar = (RelativeLayout) findViewById(R.id.rl_playbar);
         ivPlaybarNext = (ImageView) findViewById(R.id.iv_playbar_next);
@@ -80,13 +89,14 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
         rlPlaybar.setOnTouchListener(this);
     }
 
-    @Override
+
     public void initData() {
+        mContext = this;
         mContent = new Fragment();
         mMyMusicFragment = new MyMusicFragment();
-        switchContent(mContent, mMyMusicFragment);
-
+        mLocalMusciFragment = new LocalMusciFragment();
         mHistoryFragment = new HistoryFragment();
+        switchContent(mContent, mMyMusicFragment);
 
         EventBus.getDefault().register(this);
 
@@ -101,9 +111,7 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
 
     private void switchContent(Fragment oldFragment, Fragment newFragment) {
         mContent = newFragment;
-        FragmentTransaction transaction = getFragmentManager().beginTransaction().setCustomAnimations(
-                R.animator.fragment_slide_left_enter, R.animator.fragment_slide_left_exit,
-                R.animator.fragment_slide_right_enter, R.animator.fragment_slide_right_exit);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (!newFragment.isAdded()) {
             LogUtils.log("添加");
             transaction.hide(oldFragment).add(R.id.fl_content, newFragment).addToBackStack(newFragment.getClass().getSimpleName()).commit();
@@ -113,17 +121,14 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
         }
     }
 
-    private void onBackFragment(Fragment showedFragment, Fragment showingFragment) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        if (showedFragment.isAdded() && showingFragment.isAdded())
-            transaction.hide(showedFragment).show(showingFragment).remove(showedFragment).commit();
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(KeyEvent event) {
         switch (event.getMsg()) {
             case KeyEvent.TOGGLE_MENU:
                 mDrawerHelper.toggleMenu();
+                break;
+            case KeyEvent.ACTION_LOCALMUSIC:
+                switchContent(mMyMusicFragment, mLocalMusciFragment);
                 break;
             case KeyEvent.ACTION_HISTORYMUSIC:
                 switchContent(mMyMusicFragment, mHistoryFragment);
@@ -138,7 +143,7 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ServiceEvent event) {
         String msg = event.getMsg();
-        HashMap data = event.getExtras();
+        Map data = event.getExtras();
 
         switch (msg) {
             case ServiceEvent.SERVICE_PLAY:
@@ -197,14 +202,22 @@ public class CloudMusicMainActivity extends DefalutBaseActivity implements View.
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 1) {
-            getFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
         } else {
             if (mDrawerHelper.isMenuOpened())
                 mDrawerHelper.closeMenu();
             else
                 finish();
         }
+    }
+
+    private void postEventMsg(String eventMsg) {
+        EventUtil.getDefault().postKeyEvent(eventMsg);
+    }
+
+    private void postEventMsgHasExtra(String eventMsg, Map extras) {
+        EventUtil.getDefault().postKeyEventHasExtra(eventMsg, extras);
     }
 
 }
