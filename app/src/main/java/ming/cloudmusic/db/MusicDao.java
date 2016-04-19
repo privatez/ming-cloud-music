@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.MediaStore.Audio;
 
 import org.xutils.DbManager;
+import org.xutils.db.table.DbModel;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
@@ -305,7 +306,7 @@ public class MusicDao {
         List<DbMusic> musics = new ArrayList<>();
         DbManager db = x.getDb(mDaoConfig);
         try {
-            musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_NAME, "like", "%"+msg+"%").findAll());
+            musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_NAME, "like", "%" + msg + "%").findAll());
         } catch (java.io.IOException e) {
             LogUtils.log("搜索本地音乐Excetion：" + e.getMessage());
         } finally {
@@ -315,28 +316,25 @@ public class MusicDao {
         return musics;
     }
 
-    /**
-     * ʹ�ø����������ʾ
-     *
-     * @return ArrayList�͵�Map���͵ļ���
-     */
-    public ArrayList<Map<String, String>> groupByArtlist() {
-        ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        Map<String, String> map;
-        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
-        String sql = "select * from(select artlist,count(artlist) "
-                + "as number from localmusic_info group by artlist)as temp "
-                + "order by number desc";
-        Cursor c = db.rawQuery(sql, null);
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            map = new HashMap<String, String>();
-            String artlist = c.getString(c.getColumnIndex("artlist"));
-            String number = c.getString(c.getColumnIndex("number"));
-            map.put(artlist, number);
-            list.add(map);
+
+    public List<DbMusic> getLocalMusicgroupByArt() {
+        List<DbMusic> musics = new ArrayList<>();
+        DbManager db = x.getDb(mDaoConfig);
+        try {
+            List<DbModel> dbModels = db.selector(DbMusic.class).groupBy(DbMusic.COLUMN_ARTLIST).
+                    select(DbMusic.COLUMN_ARTLIST, "count(" + DbMusic.COLUMN_ID + ")").findAll();
+            for (int i = 0; i < dbModels.size(); i++) {
+                LogUtils.log("歌手分类：" + dbModels.get(i).getDataMap());
+            }
+        } catch (java.io.IOException e) {
+            LogUtils.log("搜索本地音乐Excetion：" + e.getMessage());
+        } finally {
+            close(db);
         }
-        close(c);
-        return list;
+
+        //LogUtils.log("数据库中的音乐：" + musics.toString());
+
+        return musics;
     }
 
     /**

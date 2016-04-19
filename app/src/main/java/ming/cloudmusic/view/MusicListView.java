@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -100,7 +99,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
     private void initData() {
         mMusicList = new ArrayList<>();
         mMusicsManager = mMusicsManager.getInstance();
-        setAdapter();
+        setDefaultAdapter();
         EventBus.getDefault().register(this);
     }
 
@@ -124,7 +123,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         }
     }
 
-    private void setAdapter() {
+    private void setDefaultAdapter() {
         lvMusics.setAdapter(mAdapter = new CommonAdapter<DbMusic>(mContext, mMusicList, R.layout.item_musiclist_common) {
             @Override
             public void convert(ViewHolder holder, DbMusic item) {
@@ -180,11 +179,10 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void setAdapter(BaseAdapter adapter) {
-        if (mAdapter != null) {
-            mAdapter = null;
-        }
-        lvMusics.setAdapter(adapter);
+    public void setAdapter(CommonAdapter<DbMusic> adapter, AdapterView.OnItemClickListener onItemClickListener) {
+        mAdapter = adapter;
+        lvMusics.setAdapter(mAdapter);
+        lvMusics.setOnItemClickListener(onItemClickListener);
     }
 
     public void notifyDataSetChanged(List<DbMusic> musicList) {

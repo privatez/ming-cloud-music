@@ -10,14 +10,44 @@ import org.xutils.db.annotation.Table;
 public class DbMusic implements Parcelable {
 
     /**
-     * path 列
+     * id 列
      */
-    public static final String COLUMN_NAME= "name";
+    public static final String COLUMN_ID = "id";
+
+    /**
+     * name 列
+     */
+    public static final String COLUMN_NAME = "name";
+
+    /**
+     * title 列
+     */
+    public static final String COLUMN_TITLE = "title";
 
     /**
      * path 列
      */
     public static final String COLUMN_PATH = "path";
+
+    /**
+     * fileNmae 列
+     */
+    public static final String COLUMN_FILENAME = "fileNmae";
+
+    /**
+     * artlist 列
+     */
+    public static final String COLUMN_ARTLIST = "artlist";
+
+    /**
+     * album 列
+     */
+    public static final String COLUMN_ALBUM = "album";
+
+    /**
+     * duration 列
+     */
+    public static final String COLUMN_DURATION = "duration";
 
     /**
      * playSequence 列
@@ -28,6 +58,16 @@ public class DbMusic implements Parcelable {
      * histroySequence 列
      */
     public static final String COLUMN_HISTORY_SEQUENCE = "histroySequence";
+
+    /**
+     * playedTime 列
+     */
+    public static final String COLUMN_PLAYEDTIME = "playedTime";
+
+    /**
+     * isLocalMusic 列
+     */
+    public static final String COLUMN_ISLOCALMUSIC = "isLocalMusic";
 
     /**
      * 播放顺序默认值
@@ -43,85 +83,86 @@ public class DbMusic implements Parcelable {
     /**
      * music id
      */
-    @Column(name = "id", isId = true)
+    @Column(name = COLUMN_ID, isId = true)
     private long id;
 
 
     /**
      * music title
      */
-    @Column(name = "title")
+    @Column(name = COLUMN_TITLE)
     private String title;
 
 
     /**
      * music name
      */
-    @Column(name = "name")
+    @Column(name = COLUMN_NAME)
     private String name;
 
 
     /**
      * musci local path
      */
-    @Column(name = "path")
+    @Column(name = COLUMN_PATH)
     private String path;
 
 
     /**
-     * music local filename
+     * music 文件夹名
      */
-    @Column(name = "fileNmae")
+    @Column(name = COLUMN_FILENAME)
     private String fileNmae;
 
 
     /**
-     * 发行公司
+     * 歌手名
      */
-    @Column(name = "artlist")
+    @Column(name = COLUMN_ARTLIST)
     private String artlist;
 
 
     /**
      * 专辑
      */
-    @Column(name = "album")
+    @Column(name = COLUMN_ALBUM)
     private String album;
 
 
     /**
      * 歌曲时长
      */
-    @Column(name = "duration")
+    @Column(name = COLUMN_DURATION)
     private int duration;
 
 
     /**
      * 播放顺序
      */
-    @Column(name = "playSequence")
+    @Column(name = COLUMN_PLAY_SEQUENCE)
     private int playSequence;
 
 
     /**
      * 历史顺序
      */
-    @Column(name = "histroySequence")
+    @Column(name = COLUMN_HISTORY_SEQUENCE)
     private int histroySequence;
 
 
     /**
      * 现在播放的时间点
      */
-    @Column(name = "playedTime")
+    @Column(name = COLUMN_PLAYEDTIME)
     private long playedTime;
 
 
     /**
      * 是否是本地音乐
      */
-    @Column(name = "isLocalMusic")
+    @Column(name = COLUMN_ISLOCALMUSIC)
     private boolean isLocalMusic;
+
 
     public long getId() {
         return id;

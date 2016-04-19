@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ming.cloudmusic.R;
+import ming.cloudmusic.db.MusicDao;
 import ming.cloudmusic.util.MusicsManager;
 import ming.cloudmusic.view.MusicListView;
 
@@ -61,7 +62,7 @@ public class LocalMusicBaseFragment extends DefaultBaseFragment {
                 mlvLocalMusic.notifyDataSetChanged(MusicsManager.getInstance().getLocalMusics());
                 break;
             case LOCALMUSIC_ART:
-
+                MusicDao.getDefaultDao().getLocalMusicgroupByArt();
                 break;
             case LOCALMUSIC_ALBUM:
 
