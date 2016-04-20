@@ -202,7 +202,7 @@ public class MusicDao {
             close(db);
         }
 
-        LogUtils.log("播放中的音乐：" + musics.toString());
+        //LogUtils.log("播放中的音乐：" + musics.toString());
 
         return musics;
     }
@@ -317,15 +317,12 @@ public class MusicDao {
     }
 
 
-    public List<DbMusic> getLocalMusicgroupByArt() {
-        List<DbMusic> musics = new ArrayList<>();
+    public List<DbModel> getLocalMusicgroupByArt() {
+        List<DbModel> dbModels = new ArrayList<>();
         DbManager db = x.getDb(mDaoConfig);
         try {
-            List<DbModel> dbModels = db.selector(DbMusic.class).groupBy(DbMusic.COLUMN_ARTLIST).
+            dbModels = db.selector(DbMusic.class).groupBy(DbMusic.COLUMN_ARTLIST).
                     select(DbMusic.COLUMN_ARTLIST, "count(" + DbMusic.COLUMN_ID + ")").findAll();
-            for (int i = 0; i < dbModels.size(); i++) {
-                LogUtils.log("歌手分类：" + dbModels.get(i).getDataMap());
-            }
         } catch (java.io.IOException e) {
             LogUtils.log("搜索本地音乐Excetion：" + e.getMessage());
         } finally {
@@ -334,7 +331,7 @@ public class MusicDao {
 
         //LogUtils.log("数据库中的音乐：" + musics.toString());
 
-        return musics;
+        return dbModels;
     }
 
     /**

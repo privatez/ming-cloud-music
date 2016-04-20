@@ -4,10 +4,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+
+import org.xutils.db.table.DbModel;
+
+import java.util.List;
 
 import ming.cloudmusic.R;
+import ming.cloudmusic.adapter.CommonAdapter;
+import ming.cloudmusic.adapter.ViewHolder;
 import ming.cloudmusic.db.MusicDao;
+import ming.cloudmusic.model.DbMusic;
 import ming.cloudmusic.util.MusicsManager;
+import ming.cloudmusic.util.ToastUtils;
 import ming.cloudmusic.view.MusicListView;
 
 /**
@@ -25,6 +34,8 @@ public class LocalMusicBaseFragment extends DefaultBaseFragment {
     private MusicListView mlvLocalMusic;
 
     private String mFragmentType;
+
+    private MusicDao dao;
 
     public static LocalMusicBaseFragment getNewInstance(String fragmentType) {
         LocalMusicBaseFragment fragment = new LocalMusicBaseFragment();
@@ -55,6 +66,7 @@ public class LocalMusicBaseFragment extends DefaultBaseFragment {
 
     @Override
     public void initData() {
+        dao = MusicDao.getDefaultDao();
         mFragmentType = getArguments().getString(TYPE_LOCALMUSIC);
 
         switch (mFragmentType) {
@@ -62,7 +74,7 @@ public class LocalMusicBaseFragment extends DefaultBaseFragment {
                 mlvLocalMusic.notifyDataSetChanged(MusicsManager.getInstance().getLocalMusics());
                 break;
             case LOCALMUSIC_ART:
-                MusicDao.getDefaultDao().getLocalMusicgroupByArt();
+                groupByArt();
                 break;
             case LOCALMUSIC_ALBUM:
 
@@ -72,6 +84,28 @@ public class LocalMusicBaseFragment extends DefaultBaseFragment {
                 break;
         }
 
+    }
+
+    private void groupByArt() {
+        final List<DbModel> dbModels = dao.getLocalMusicgroupByArt();
+
+        CommonAdapter adapter = new CommonAdapter<DbModel>(mContext, dbModels, R.layout.item_localmusic_common) {
+            @Override
+            public void convert(ViewHolder holder, DbModel item) {
+                holder.setText(R.id.tv_title, item.getString(DbMusic.COLUMN_ARTLIST));
+                holder.setText(R.id.tv_count, item.getString("count(" + DbMusic.COLUMN_ID + ")") + "首");
+            }
+        };
+
+        AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ToastUtils.showShort(mContext, "点击" + dbModels.get(position).getString(DbMusic.COLUMN_ARTLIST));
+            }
+        };
+        
+        mlvLocalMusic.setPlayAllVisibility(View.GONE);
+        mlvLocalMusic.setAdapter(adapter, listener);
     }
 
     @Override

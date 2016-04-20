@@ -39,8 +39,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/tv_default"
-                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/tv_default"
+                android:paddingBottom="3dp"
                 android:text="(共0首)"
                 android:textSize="@dimen/text_normal" />
 

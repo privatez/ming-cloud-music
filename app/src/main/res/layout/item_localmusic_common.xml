@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_default"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:src="@drawable/scan_icn_folder" />
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_toLeftOf="@+id/iv_menu"
+        android:layout_toRightOf="@+id/iv_default">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/text_medium" />
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_title"
+            android:textColor="@color/text_content"
+            android:textSize="@dimen/text_small" />
+
+        <TextView
+            android:id="@+id/tv_music_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv_count"
+            android:layout_toRightOf="@+id/tv_count"
+            android:textColor="@color/text_content"
+            android:textSize="@dimen/text_small" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:padding="@dimen/padding_small"
+        android:src="@drawable/list_icn_more" />
+
+    <View
+        style="@style/Line"
+        android:layout_alignLeft="@+id/rl_content"
+        android:layout_below="@+id/rl_content"
+        android:layout_marginTop="3dp" />
+
+</RelativeLayout>

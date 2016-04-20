@@ -43,7 +43,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
 
     private MusicsManager mMusicsManager;
 
-    private CommonAdapter<DbMusic> mAdapter;
+    private CommonAdapter mAdapter;
     private List<DbMusic> mMusicList;
 
     private OnClickListener mOnMenuClickListener;
@@ -179,10 +179,13 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void setAdapter(CommonAdapter<DbMusic> adapter, AdapterView.OnItemClickListener onItemClickListener) {
+    public void setAdapter(CommonAdapter adapter, AdapterView.OnItemClickListener onItemClickListener) {
         mAdapter = adapter;
         lvMusics.setAdapter(mAdapter);
         lvMusics.setOnItemClickListener(onItemClickListener);
+        mAdapter.notifyDataSetChanged();
+        llBg.setVisibility(View.GONE);
+        llContent.setVisibility(View.VISIBLE);
     }
 
     public void notifyDataSetChanged(List<DbMusic> musicList) {
