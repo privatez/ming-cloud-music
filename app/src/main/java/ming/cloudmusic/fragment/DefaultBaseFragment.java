@@ -12,6 +12,7 @@ import java.util.Map;
 
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.util.Constant;
+import ming.cloudmusic.util.FragmentTaskManager;
 import ming.cloudmusic.util.SharedPrefsUtil;
 import ming.cloudmusic.view.OnViewCreateListener;
 
@@ -62,6 +63,10 @@ public abstract class DefaultBaseFragment extends Fragment implements OnViewCrea
     protected void refreshBackGround(View backGround, View content) {
         backGround.setVisibility(View.GONE);
         content.setVisibility(View.VISIBLE);
+    }
+
+    public void switchFragment(Fragment oldFragment, Class newFragmentClass) {
+        FragmentTaskManager.getInstance().switchFragment(oldFragment, newFragmentClass);
     }
 
 }

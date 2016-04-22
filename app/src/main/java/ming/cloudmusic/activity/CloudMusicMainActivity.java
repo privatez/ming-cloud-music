@@ -4,7 +4,6 @@ package ming.cloudmusic.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
@@ -28,10 +27,8 @@ import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
-import ming.cloudmusic.fragment.HistoryFragment;
-import ming.cloudmusic.fragment.LocalMusciFragment;
 import ming.cloudmusic.fragment.MyMusicFragment;
-import ming.cloudmusic.util.LogUtils;
+import ming.cloudmusic.util.FragmentTaskManager;
 import ming.cloudmusic.view.MenuDrawerHelper;
 
 public class CloudMusicMainActivity extends FragmentActivity implements View.OnClickListener, OnTouchListener {
@@ -42,16 +39,9 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
     private TextView tvPlaybarTitle;
     private TextView tvPlaybarArt;
 
-    private Fragment mContent;
-
-    private MyMusicFragment mMyMusicFragment;
-    private LocalMusciFragment mLocalMusciFragment;
-    private HistoryFragment mHistoryFragment;
-
     private MenuDrawerHelper mDrawerHelper;
 
     private float startX;
-
     private Context mContext;
 
     @Override
@@ -92,14 +82,11 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
 
     public void initData() {
         mContext = this;
-        mContent = new Fragment();
-        mMyMusicFragment = new MyMusicFragment();
-        mLocalMusciFragment = new LocalMusciFragment();
-        mHistoryFragment = new HistoryFragment();
-        switchContent(mContent, mMyMusicFragment);
 
         EventBus.getDefault().register(this);
+        FragmentTaskManager.getInstance().bind(getSupportFragmentManager(), R.id.fl_content);
 
+        addFragmentToContent();
         postEventMsg(KeyEvent.GET_PLAYINGMUSIC);
     }
 
@@ -109,16 +96,9 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
         tvPlaybarArt.setText(data.get(Event.Extra.PLAYING_ART).toString());
     }
 
-    private void switchContent(Fragment oldFragment, Fragment newFragment) {
-        mContent = newFragment;
+    private void addFragmentToContent() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (!newFragment.isAdded()) {
-            LogUtils.log("添加");
-            transaction.hide(oldFragment).add(R.id.fl_content, newFragment).addToBackStack(newFragment.getClass().getSimpleName()).commit();
-        } else {
-            LogUtils.log("!没有添加.....");
-            transaction.hide(oldFragment).show(newFragment).addToBackStack(newFragment.getClass().getSimpleName()).commit();
-        }
+        transaction.add(R.id.fl_content, new MyMusicFragment()).addToBackStack(MyMusicFragment.class.getSimpleName()).commit();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -126,12 +106,6 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
         switch (event.getMsg()) {
             case KeyEvent.TOGGLE_MENU:
                 mDrawerHelper.toggleMenu();
-                break;
-            case KeyEvent.ACTION_LOCALMUSIC:
-                switchContent(mMyMusicFragment, mLocalMusciFragment);
-                break;
-            case KeyEvent.ACTION_HISTORYMUSIC:
-                switchContent(mMyMusicFragment, mHistoryFragment);
                 break;
             case KeyEvent.POST_MILLISUNTILFINISHED:
                 mDrawerHelper.setTimeText((Long) event.getExtras().get(Event.Extra.TIMINGPLAY_TIME),
