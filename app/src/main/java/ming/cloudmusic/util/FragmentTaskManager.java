@@ -4,6 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lihaiye on 16/4/22.
  */
@@ -11,12 +14,14 @@ public class FragmentTaskManager {
 
     private FragmentManager mFragmentManager;
 
-    private int mContainerViewId;
+    private int mShowingActivityContainerViewId;
+
+    private List<OnBindActivity> mOnBindActivitys;
 
     private static FragmentTaskManager sFragmentTaskManager;
 
     private FragmentTaskManager() {
-
+        mOnBindActivitys = new ArrayList<>();
     }
 
     public static FragmentTaskManager getInstance() {
@@ -32,7 +37,10 @@ public class FragmentTaskManager {
 
     public void bind(FragmentManager fragmentManager, int containerViewId) {
         mFragmentManager = fragmentManager;
-        mContainerViewId = containerViewId;
+        mShowingActivityContainerViewId = containerViewId;
+        OnBindActivity onbind = new OnBindActivity();
+        onbind.containerViewId = containerViewId;
+        mOnBindActivitys.add(onbind);
     }
 
     public void switchFragment(Fragment oldFragment, Class newFragmentClass) {
@@ -42,7 +50,7 @@ public class FragmentTaskManager {
 
         Fragment newFragment = getFragment(newFragmentClass);
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.hide(oldFragment).add(mContainerViewId, newFragment).addToBackStack(newFragmentClass.getSimpleName()).commit();
+        transaction.hide(oldFragment).add(mShowingActivityContainerViewId, newFragment).addToBackStack(newFragmentClass.getSimpleName()).commit();
         mFragmentManager.executePendingTransactions();
     }
 
@@ -62,4 +70,17 @@ public class FragmentTaskManager {
         return fragment;
     }
 
+    public void onDestory() {
+        if (mOnBindActivitys == null || mOnBindActivitys.size() == 0) {
+            return;
+        }
+        mOnBindActivitys.remove(mOnBindActivitys.size() - 1);
+        if (mOnBindActivitys.size() > 0) {
+            mShowingActivityContainerViewId = mOnBindActivitys.get(mOnBindActivitys.size() - 1).containerViewId;
+        }
+    }
+
+    private class OnBindActivity {
+        public int containerViewId;
+    }
 }

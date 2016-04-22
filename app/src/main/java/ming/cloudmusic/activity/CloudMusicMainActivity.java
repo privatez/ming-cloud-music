@@ -64,6 +64,7 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        FragmentTaskManager.getInstance().onDestory();
     }
 
 
