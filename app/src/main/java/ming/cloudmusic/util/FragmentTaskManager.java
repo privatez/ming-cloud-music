@@ -1,6 +1,7 @@
 package ming.cloudmusic.util;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -35,11 +36,10 @@ public class FragmentTaskManager {
         return sFragmentTaskManager;
     }
 
-    public void bind(FragmentManager fragmentManager, int containerViewId) {
-        mFragmentManager = fragmentManager;
+    public void register(FragmentActivity activity, int containerViewId) {
+        mFragmentManager = activity.getSupportFragmentManager();
         mShowingActivityContainerViewId = containerViewId;
-        OnBindActivity onbind = new OnBindActivity();
-        onbind.containerViewId = containerViewId;
+        OnBindActivity onbind = new OnBindActivity(containerViewId, activity.getClass().getSimpleName());
         mOnBindActivitys.add(onbind);
     }
 
@@ -70,11 +70,15 @@ public class FragmentTaskManager {
         return fragment;
     }
 
-    public void onDestory() {
+    public void unregister(FragmentActivity activity) {
         if (mOnBindActivitys == null || mOnBindActivitys.size() == 0) {
             return;
         }
-        mOnBindActivitys.remove(mOnBindActivitys.size() - 1);
+        for (OnBindActivity onBindActivity : mOnBindActivitys) {
+            if (activity.getClass().getSimpleName().equals(onBindActivity.activitySimpleName)) {
+                mOnBindActivitys.remove(onBindActivity);
+            }
+        }
         if (mOnBindActivitys.size() > 0) {
             mShowingActivityContainerViewId = mOnBindActivitys.get(mOnBindActivitys.size() - 1).containerViewId;
         }
@@ -82,5 +86,11 @@ public class FragmentTaskManager {
 
     private class OnBindActivity {
         public int containerViewId;
+        public String activitySimpleName;
+
+        public OnBindActivity(int containerViewId, String activitySimpleName) {
+            this.containerViewId = containerViewId;
+            this.activitySimpleName = activitySimpleName;
+        }
     }
 }
