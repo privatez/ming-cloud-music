@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class FragmentTaskManager {
 
-    private FragmentManager mFragmentManager;
-
     private int mShowingActivityContainerViewId;
 
     private List<OnBindActivity> mOnBindActivitys;
@@ -37,21 +35,16 @@ public class FragmentTaskManager {
     }
 
     public void register(FragmentActivity activity, int containerViewId) {
-        mFragmentManager = activity.getSupportFragmentManager();
         mShowingActivityContainerViewId = containerViewId;
         OnBindActivity onbind = new OnBindActivity(containerViewId, activity.getClass().getSimpleName());
         mOnBindActivitys.add(onbind);
     }
 
     public void switchFragment(Fragment oldFragment, Class newFragmentClass) {
-        if (mFragmentManager == null) {
-            throw new UnInitException("FragmentManager is null !");
-        }
-
+        FragmentManager fragmentManager = oldFragment.getActivity().getSupportFragmentManager();
         Fragment newFragment = getFragment(newFragmentClass);
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.hide(oldFragment).add(mShowingActivityContainerViewId, newFragment).addToBackStack(newFragmentClass.getSimpleName()).commit();
-        mFragmentManager.executePendingTransactions();
     }
 
     private Fragment getFragment(Class fragmentClass) {
