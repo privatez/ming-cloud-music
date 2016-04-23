@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import ming.cloudmusic.fragment.LocalMusicBaseFragment;
+import ming.cloudmusic.fragment.LocalMusicChildBaseFragment;
 
 /**
  * Created by Lhy on 2016/4/19.
@@ -23,16 +23,16 @@ public class LocalMusicFragmentPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = LocalMusicBaseFragment.getNewInstance(LocalMusicBaseFragment.LOCALMUSIC_SINGLE);
+                fragment = LocalMusicChildBaseFragment.getNewInstance(LocalMusicChildBaseFragment.LOCALMUSIC_SINGLE);
                 break;
             case 1:
-                fragment = LocalMusicBaseFragment.getNewInstance(LocalMusicBaseFragment.LOCALMUSIC_ART);
+                fragment = LocalMusicChildBaseFragment.getNewInstance(LocalMusicChildBaseFragment.LOCALMUSIC_ART);
                 break;
             case 2:
-                fragment = LocalMusicBaseFragment.getNewInstance(LocalMusicBaseFragment.LOCALMUSIC_ALBUM);
+                fragment = LocalMusicChildBaseFragment.getNewInstance(LocalMusicChildBaseFragment.LOCALMUSIC_ALBUM);
                 break;
             case 3:
-                fragment = LocalMusicBaseFragment.getNewInstance(LocalMusicBaseFragment.LOCALMUSIC_FILE);
+                fragment = LocalMusicChildBaseFragment.getNewInstance(LocalMusicChildBaseFragment.LOCALMUSIC_FILE);
                 break;
         }
         return fragment;

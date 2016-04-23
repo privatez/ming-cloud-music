@@ -58,8 +58,8 @@
                 android:text="朴树"
                 android:textColor="@color/darkgray"
                 android:textSize="@dimen/text_normal" />
-        </RelativeLayout>
 
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/iv_menu"

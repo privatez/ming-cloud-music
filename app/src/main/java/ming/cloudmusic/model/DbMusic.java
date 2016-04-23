@@ -70,6 +70,11 @@ public class DbMusic implements Parcelable {
     public static final String COLUMN_ISLOCALMUSIC = "isLocalMusic";
 
     /**
+     * 总数
+     */
+    public static final String COLUMN_COUNT = "count(" + COLUMN_ID + ")";
+
+    /**
      * 播放顺序默认值
      */
     public static final int DEFAULT_PLAY_SEQUENCE = -1;

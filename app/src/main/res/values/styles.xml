@@ -59,4 +59,13 @@
         <item name="android:textColor">@color/text_content_light</item>
     </style>
 
+    <style name="Padding"></style>
+
+    <style name="Padding.TopNormalLeftMedium" parent="Padding">
+        <item name="android:paddingTop">@dimen/padding_normal</item>
+        <item name="android:paddingBottom">@dimen/padding_normal</item>
+        <item name="android:paddingLeft">@dimen/padding_medium</item>
+        <item name="android:paddingRight">@dimen/padding_medium</item>
+    </style>
+
 </resources>

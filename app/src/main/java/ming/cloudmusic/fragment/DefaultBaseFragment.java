@@ -22,6 +22,7 @@ import ming.cloudmusic.view.OnViewCreateListener;
 public abstract class DefaultBaseFragment extends Fragment implements OnViewCreateListener {
 
     protected Context mContext;
+    protected Fragment mFragment;
 
     protected SharedPrefsUtil mSharedPrefsUtil;
 
@@ -31,6 +32,7 @@ public abstract class DefaultBaseFragment extends Fragment implements OnViewCrea
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mContext = getActivity();
+        mFragment = this;
         mExtras = new HashMap();
         mSharedPrefsUtil = new SharedPrefsUtil(mContext, Constant.SharedPrefrence.SHARED_NAME);
     }

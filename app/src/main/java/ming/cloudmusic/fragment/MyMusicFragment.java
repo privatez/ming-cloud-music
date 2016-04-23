@@ -87,7 +87,7 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
                 mContext.startActivity(intent);
                 break;
             case R.id.rl_localmusic:
-                switchFragment(this, LocalMusciFragment.class);
+                switchFragment(this, LocalMusciParentFragment.class);
                 break;
             case R.id.rl_history:
                 switchFragment(this, HistoryFragment.class);

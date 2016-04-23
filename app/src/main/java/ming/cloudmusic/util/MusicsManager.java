@@ -2,6 +2,8 @@ package ming.cloudmusic.util;
 
 import android.content.Context;
 
+import org.xutils.db.table.DbModel;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -200,6 +202,46 @@ public class MusicsManager {
 
     public int getPlayingPosition() {
         return mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYING_POSITION, 0);
+    }
+
+    public List<DbModel> getMusicInfoGroupByArt() {
+
+        return getMusicInfoGroupByColumn(DbMusic.COLUMN_ARTLIST, DbMusic.COLUMN_ARTLIST);
+    }
+
+    public List<DbModel> getMusicInfoGroupByAlbum() {
+
+        return getMusicInfoGroupByColumn(DbMusic.COLUMN_ALBUM, new String[]{DbMusic.COLUMN_ALBUM, DbMusic.COLUMN_ARTLIST});
+    }
+
+    public List<DbModel> getMusicInfoGroupByFileName() {
+
+        return getMusicInfoGroupByColumn(DbMusic.COLUMN_FILENAME, new String[]{DbMusic.COLUMN_FILENAME});
+    }
+
+    private List<DbModel> getMusicInfoGroupByColumn(String groupByColumnName, String... selectColumns) {
+        String[] temp = new String[selectColumns.length + 1];
+        temp[0] = DbMusic.COLUMN_COUNT;
+        for (int i = 0; i < selectColumns.length; i++) {
+            temp[i + 1] = selectColumns[i];
+        }
+        return dao.getMusicInfoGroupByColumn(groupByColumnName, temp);
+    }
+
+    public List<DbMusic> getLocalMusicByArt(String key) {
+        return dao.getLocalMusicByColumnName(DbMusic.COLUMN_ARTLIST, key);
+    }
+
+    public List<DbMusic> getLocalMusicByAlbum(String key) {
+        return dao.getLocalMusicByColumnName(DbMusic.COLUMN_ALBUM, key);
+    }
+
+    public List<DbMusic> getLocalMusicByFilename(String key) {
+        return dao.getLocalMusicByColumnName(DbMusic.COLUMN_FILENAME, key);
+    }
+
+    private List<DbMusic> getLocalMusicByColumnName(String columnName, String key) {
+        return dao.getLocalMusicByColumnName(columnName, key);
     }
 
     public List<DbMusic> getPlayingMusics() {

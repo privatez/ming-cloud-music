@@ -1,5 +1,6 @@
 package ming.cloudmusic.util;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -41,10 +42,18 @@ public class FragmentTaskManager {
     }
 
     public void switchFragment(Fragment oldFragment, Class newFragmentClass) {
+        switchFragment(oldFragment, newFragmentClass, null);
+    }
+
+    public void switchFragment(Fragment oldFragment, Class newFragmentClass, Bundle bundle) {
         FragmentManager fragmentManager = oldFragment.getActivity().getSupportFragmentManager();
         Fragment newFragment = getFragment(newFragmentClass);
+        if (bundle != null) {
+            newFragment.setArguments(bundle);
+        }
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.hide(oldFragment).add(mShowingActivityContainerViewId, newFragment).addToBackStack(newFragmentClass.getSimpleName()).commit();
+        transaction.hide(oldFragment).add(mShowingActivityContainerViewId, newFragment)
+                .addToBackStack(newFragmentClass.getSimpleName()).commit();
     }
 
     private Fragment getFragment(Class fragmentClass) {

@@ -18,3 +18,5 @@ fragment的返回处理
 定时播放功能重写
 
 退出登录功能
+
+EXOPLAYER

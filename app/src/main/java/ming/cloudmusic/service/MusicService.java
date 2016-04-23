@@ -165,6 +165,7 @@ public class MusicService extends Service {
             case KeyEvent.PLAY_ALL:
                 pause();
                 mPlayingPosition = 0;
+                mPlayingProgress = 0;
                 play();
                 break;
             case KeyEvent.PLAY_BY_POSITION:

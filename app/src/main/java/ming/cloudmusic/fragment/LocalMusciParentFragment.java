@@ -13,7 +13,7 @@ import ming.cloudmusic.adapter.LocalMusicFragmentPagerAdapter;
 /**
  * Created by Lhy on 2016/4/17.
  */
-public class LocalMusciFragment extends DefaultBaseFragment implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
+public class LocalMusciParentFragment extends DefaultBaseFragment implements ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup rgLocalmusic;
     private ViewPager vpLocalmusic;

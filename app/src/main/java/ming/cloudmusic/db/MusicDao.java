@@ -2,7 +2,6 @@ package ming.cloudmusic.db;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.MediaStore.Audio;
 
@@ -14,16 +13,13 @@ import org.xutils.x;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ming.cloudmusic.model.DbMusic;
 import ming.cloudmusic.util.LogUtils;
 
 public class MusicDao {
 
-    private SQLiteDatabase db;
     /**
      * 数据库名字
      */
@@ -251,7 +247,7 @@ public class MusicDao {
             musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_HISTORY_SEQUENCE, ">",
                     DbMusic.DEFAULT_HISTORY_SEQUENCE).orderBy(DbMusic.COLUMN_HISTORY_SEQUENCE, true).findAll());
         } catch (java.io.IOException e) {
-            LogUtils.log("获取历史音乐Excetion：" + e.getMessage());
+            LogUtils.log("getHistoryMusics Exception：" + e.getMessage());
         } finally {
             close(db);
         }
@@ -275,7 +271,7 @@ public class MusicDao {
             count = (db.selector(DbMusic.class).where(DbMusic.COLUMN_HISTORY_SEQUENCE, ">",
                     DbMusic.DEFAULT_HISTORY_SEQUENCE).orderBy(DbMusic.COLUMN_HISTORY_SEQUENCE, true).count());
         } catch (java.io.IOException e) {
-            LogUtils.log("获取全部的历史播放歌曲总数Excetion：" + e.getMessage());
+            LogUtils.log("getHistoryMusicsCount Exception：" + e.getMessage());
         } finally {
             close(db);
         }
@@ -293,7 +289,7 @@ public class MusicDao {
         try {
             db.update(music);
         } catch (java.io.IOException e) {
-            LogUtils.log("插入历史音乐Excetion：" + e.getMessage());
+            LogUtils.log("insertHistoryMusics Exception：" + e.getMessage());
         } finally {
             close(db);
         }
@@ -308,7 +304,7 @@ public class MusicDao {
         try {
             musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_NAME, "like", "%" + msg + "%").findAll());
         } catch (java.io.IOException e) {
-            LogUtils.log("搜索本地音乐Excetion：" + e.getMessage());
+            LogUtils.log("searchLocalMusic Exception：" + e.getMessage());
         } finally {
             close(db);
         }
@@ -316,191 +312,35 @@ public class MusicDao {
         return musics;
     }
 
-
-    public List<DbModel> getLocalMusicgroupByArt() {
+    public List<DbModel> getMusicInfoGroupByColumn(String groupByColumnName, String... selectColumns) {
         List<DbModel> dbModels = new ArrayList<>();
         DbManager db = x.getDb(mDaoConfig);
         try {
-            dbModels = db.selector(DbMusic.class).groupBy(DbMusic.COLUMN_ARTLIST).
-                    select(DbMusic.COLUMN_ARTLIST, "count(" + DbMusic.COLUMN_ID + ")").findAll();
+            dbModels = db.selector(DbMusic.class).groupBy(groupByColumnName).select(selectColumns).findAll();
         } catch (java.io.IOException e) {
-            LogUtils.log("搜索本地音乐Excetion：" + e.getMessage());
+            LogUtils.log("getLocalMusicGroupBy " + groupByColumnName + " Exception：" + e.getMessage());
         } finally {
             close(db);
         }
 
-        //LogUtils.log("数据库中的音乐：" + musics.toString());
+        //LogUtils.log("getLocalMusicGroupBy " + groupBy + ".....result: " + musics.toString());
 
         return dbModels;
     }
 
-    /**
-     * ʹ���ļ��������ʾ
-     *
-     * @return ArrayList�͵�Map���͵ļ���
-     */
-    public ArrayList<Map<String, String>> groupByFilePath() {
-        ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        Map<String, String> map;
-        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
-        String sql = "select * from(select data,count(data)"
-                + "as number from localmusic_groupbyfile group by data)"
-                + "as temp order by number desc";
-        Cursor c = db.rawQuery(sql, null);
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            map = new HashMap<String, String>();
-            String data = c.getString(c.getColumnIndex("data"));
-            String number = c.getString(c.getColumnIndex("number"));
-            map.put(data, number);
-            list.add(map);
+    public List<DbMusic> getLocalMusicByColumnName(String columnName,String key) {
+        List<DbMusic> dbMusics = new ArrayList<>();
+        DbManager db = x.getDb(mDaoConfig);
+        try {
+            dbMusics.addAll(db.selector(DbMusic.class).where(columnName, "=", key).findAll());
+        } catch (java.io.IOException e) {
+            LogUtils.log("getLocalMusicBy: " + columnName + "....key: " + key + " Exception：" + e.getMessage());
+        } finally {
+            close(db);
         }
-        close(c);
-        return list;
-    }
+        //LogUtils.log("getLocalMusicBy: " + columnName + "....key: " + key "....result: "+ musics.toString());
 
-    /**
-     * ʹ��ר���������ʾ
-     *
-     * @return ArrayList�͵�Map���͵ļ���
-     */
-    public ArrayList<Map<String, String>> groupByAlubm() {
-        ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        Map<String, String> map;
-        DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
-        String sql = "select * from(select album,artlist,count(album)"
-                + "as number from localmusic_info group by album)"
-                + "as temp order by number desc";
-        Cursor c = db.rawQuery(sql, null);
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            map = new HashMap<String, String>();
-            music = new DbMusic();
-            String album = c.getString(c.getColumnIndex("album"));
-            String artlist = c.getString(c.getColumnIndex("artlist"));
-            String number = c.getString(c.getColumnIndex("number"));
-            music.setAlbum(album);
-            music.setArtlist(artlist);
-            map.put(album, number + "/." + artlist);
-            list.add(map);
-        }
-        close(c);
-        return list;
-    }
-
-    /**
-     * @param key   ����=?
-     * @param value ?��ֵ
-     * @return
-     */
-
-    public ArrayList<DbMusic> getMusicByTag(String key, String value) {
-        ArrayList<DbMusic> musics = new ArrayList<DbMusic>();
-        DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
-
-        String table = "localmusic_info";
-        String[] columns = {"*"};
-        String selection = key + "=?";
-        String[] selectionArgs = {value};
-        String groupBy = null;
-        String having = null;
-        String orderBy = null;
-        Cursor c = db.query(table, columns, selection, selectionArgs, groupBy,
-                having, orderBy);
-
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            music = new DbMusic();
-            music.setId(c.getLong(c.getColumnIndex("_id")));
-            music.setTitle(c.getString(c.getColumnIndex("_title")));
-            music.setName(c.getString(c.getColumnIndex("display_name")));
-            music.setPath(c.getString(c.getColumnIndex("data")));
-            music.setArtlist(c.getString(c.getColumnIndex("artlist")));
-            music.setAlbum(c.getString(c.getColumnIndex("album")));
-            music.setDuration(c.getInt(c.getColumnIndex("duration")));
-
-            musics.add(music);
-        }
-        close(c);
-        return musics;
-    }
-
-    public ArrayList<DbMusic> getMusicByFile(String value) {
-        ArrayList<DbMusic> musics = new ArrayList<DbMusic>();
-        DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
-
-        String table = "localmusic_groupbyfile";
-        String[] columns = {"*"};
-        String selection = "data=?";
-        String[] selectionArgs = {value};
-        String groupBy = null;
-        String having = null;
-        String orderBy = null;
-        Cursor c = db.query(table, columns, selection, selectionArgs, groupBy,
-                having, orderBy);
-
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            music = new DbMusic();
-            music.setId(c.getLong(c.getColumnIndex("_id")));
-            music.setTitle(c.getString(c.getColumnIndex("_title")));
-            music.setName(c.getString(c.getColumnIndex("display_name")));
-            music.setPath(c.getString(c.getColumnIndex("data")));
-            music.setArtlist(c.getString(c.getColumnIndex("artlist")));
-            music.setAlbum(c.getString(c.getColumnIndex("album")));
-            music.setDuration(c.getInt(c.getColumnIndex("duration")));
-
-            musics.add(music);
-        }
-        close(c);
-        return musics;
-    }
-
-    /**
-     * �������ظ���
-     *
-     * @param value
-     * @return
-     */
-
-    public ArrayList<DbMusic> findMusicByUser(String value) {
-        ArrayList<DbMusic> musics = new ArrayList<DbMusic>();
-        DbMusic music = null;
-        db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + "/cloudmusic.db", null);
-
-        String table = "localmusic_groupbyfile";
-        String[] columns = {"*"};
-        String selection = "display_name like ? or artlist like ? or album like ?";
-        String[] selectionArgs = {value, value, value};
-        String groupBy = null;
-        String having = null;
-        String orderBy = null;
-        Cursor c = db.query(table, columns, selection, selectionArgs, groupBy,
-                having, orderBy);
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            music = new DbMusic();
-            music.setId(c.getLong(c.getColumnIndex("_id")));
-            music.setTitle(c.getString(c.getColumnIndex("_title")));
-            music.setName(c.getString(c.getColumnIndex("display_name")));
-            music.setPath(c.getString(c.getColumnIndex("data")));
-            music.setArtlist(c.getString(c.getColumnIndex("artlist")));
-            music.setAlbum(c.getString(c.getColumnIndex("album")));
-            music.setDuration(c.getInt(c.getColumnIndex("duration")));
-            musics.add(music);
-        }
-        close(c);
-        return musics;
-    }
-
-    /**
-     * ����Cursor �ص��÷����ر���ݿ������Լ��ر�Cursor
-     */
-    public void close(Cursor c) {
-        if (db != null && db.isOpen()) {
-            db.close();
-        }
-        if (c != null && c.isAfterLast()) {
-            c.close();
-        }
+        return dbMusics;
     }
 
 
