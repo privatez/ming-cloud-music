@@ -115,9 +115,9 @@ public class MusicsManager {
     public void clearPlayingMusics() {
         mPlayingMusics.clear();
 
-        for (DbMusic music : mLocalMusics) {
-            if (music.getPlaySequence() > DbMusic.DEFAULT_PLAY_SEQUENCE) {
-                music.setPlaySequence(DbMusic.DEFAULT_PLAY_SEQUENCE);
+        for (int i = 0; i < mLocalMusics.size(); i++) {
+            if (mLocalMusics.get(i).getPlaySequence() > DbMusic.DEFAULT_PLAY_SEQUENCE) {
+                mLocalMusics.get(i).setPlaySequence(DbMusic.DEFAULT_PLAY_SEQUENCE);
             }
         }
 
