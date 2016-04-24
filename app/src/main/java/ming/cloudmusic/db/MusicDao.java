@@ -113,7 +113,7 @@ public class MusicDao {
         } catch (Throwable e) {
             LogUtils.log(e.getMessage());
         } finally {
-            close(db);
+            closeDbManagerWithUnUpdate(db);
             c.close();
         }
 
@@ -155,7 +155,7 @@ public class MusicDao {
         } catch (java.io.IOException e) {
             LogUtils.log(e.getMessage());
         } finally {
-            close(db);
+            closeDbManagerWithUnUpdate(db);
         }
 
         //LogUtils.log("数据库中的音乐：" + musics.toString());
@@ -175,7 +175,7 @@ public class MusicDao {
             }
         }
 
-        close(db);
+        closeDbManagerWithUpdate(db);
     }
 
 
@@ -195,7 +195,7 @@ public class MusicDao {
         } catch (java.io.IOException e) {
             e.printStackTrace();
         } finally {
-            close(db);
+            closeDbManagerWithUnUpdate(db);
         }
 
         //LogUtils.log("播放中的音乐：" + musics.toString());
@@ -227,7 +227,7 @@ public class MusicDao {
             }
         }
 
-        close(db);
+        closeDbManagerWithUpdate(db);
 
         return musics.size() - Flag;
     }
@@ -249,7 +249,7 @@ public class MusicDao {
         } catch (java.io.IOException e) {
             LogUtils.log("getHistoryMusics Exception：" + e.getMessage());
         } finally {
-            close(db);
+            closeDbManagerWithUnUpdate(db);
         }
 
         //LogUtils.log("获取历史音乐：" + musics.toString());
@@ -273,7 +273,7 @@ public class MusicDao {
         } catch (java.io.IOException e) {
             LogUtils.log("getHistoryMusicsCount Exception：" + e.getMessage());
         } finally {
-            close(db);
+            closeDbManagerWithUnUpdate(db);
         }
 
         //LogUtils.log("获取历史音乐：" + musics.toString());
@@ -291,7 +291,7 @@ public class MusicDao {
         } catch (java.io.IOException e) {
             LogUtils.log("insertHistoryMusics Exception：" + e.getMessage());
         } finally {
-            close(db);
+            closeDbManagerWithUpdate(db);
         }
 
         //EventUtil.getDefault().postEventMsg(DataEvent.HISTORYMUSICS_CHANGGE);
@@ -306,7 +306,7 @@ public class MusicDao {
         } catch (java.io.IOException e) {
             LogUtils.log("searchLocalMusic Exception：" + e.getMessage());
         } finally {
-            close(db);
+            closeDbManagerWithUnUpdate(db);
         }
         LogUtils.log(musics.toString());
         return musics;
@@ -320,7 +320,7 @@ public class MusicDao {
         } catch (java.io.IOException e) {
             LogUtils.log("getLocalMusicGroupBy " + groupByColumnName + " Exception：" + e.getMessage());
         } finally {
-            close(db);
+            closeDbManagerWithUnUpdate(db);
         }
 
         //LogUtils.log("getLocalMusicGroupBy " + groupBy + ".....result: " + musics.toString());
@@ -328,7 +328,7 @@ public class MusicDao {
         return dbModels;
     }
 
-    public List<DbMusic> getLocalMusicByColumnName(String columnName,String key) {
+    public List<DbMusic> getLocalMusicByColumnName(String columnName, String key) {
         List<DbMusic> dbMusics = new ArrayList<>();
         DbManager db = x.getDb(mDaoConfig);
         try {
@@ -336,19 +336,29 @@ public class MusicDao {
         } catch (java.io.IOException e) {
             LogUtils.log("getLocalMusicBy: " + columnName + "....key: " + key + " Exception：" + e.getMessage());
         } finally {
-            close(db);
+            closeDbManagerWithUnUpdate(db);
         }
         //LogUtils.log("getLocalMusicBy: " + columnName + "....key: " + key "....result: "+ musics.toString());
 
         return dbMusics;
     }
 
+    private void closeDbManagerWithUnUpdate(DbManager db) {
+        closeDbManager(db, false);
+    }
 
-    public void close(DbManager db) {
+    private void closeDbManagerWithUpdate(DbManager db) {
+        closeDbManager(db, true);
+    }
+
+    private void closeDbManager(DbManager db, boolean isDbUpdate) {
         try {
             db.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if (isDbUpdate) {
+            //TODO 发送更新
         }
     }
 
