@@ -1,4 +1,4 @@
-package ming.cloudmusic.event;
+package ming.cloudmusic.delete;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import ming.cloudmusic.event.model.ServiceEvent;
  * <p>
  * Event池
  */
-public class EventPool {
+public class OldEventPool {
 
     /**
      * 默认最小Event数
@@ -35,9 +35,9 @@ public class EventPool {
     private List<KeyEvent> mKeyEvents;
     private List<ServiceEvent> mServiceEvents;
 
-    private static EventPool sEventPool;
+    private static OldEventPool sEventPool;
 
-    private EventPool() {
+    private OldEventPool() {
         mMaxEvents = DEFAULT_MAX;
         mKeyEvents = new ArrayList<>(mMaxEvents);
         mServiceEvents = new ArrayList<>(mMaxEvents);
@@ -51,12 +51,12 @@ public class EventPool {
      *
      * @return
      */
-    public static EventPool getDefaultPool() {
+    public static OldEventPool getDefaultPool() {
 
         if (sEventPool == null) {
-            synchronized (EventPool.class) {
+            synchronized (OldEventPool.class) {
                 if (sEventPool == null)
-                    sEventPool = new EventPool();
+                    sEventPool = new OldEventPool();
             }
         }
 
