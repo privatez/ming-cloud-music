@@ -13,11 +13,11 @@
     <RelativeLayout
         android:id="@+id/rl_playbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="@color/white"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_default"
@@ -28,24 +28,6 @@
             android:layout_marginLeft="10dp"
             android:src="@drawable/default_disc_141" />
 
-        <ImageView
-            android:id="@+id/iv_playbar_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/playbar_btn_next" />
-
-        <ImageView
-            android:id="@+id/iv_playbar_playorpause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/iv_playbar_next"
-            android:src="@drawable/playbar_btn_play" />
-
         <TextView
             android:id="@+id/tv_playbar_title"
             android:layout_width="140dp"
@@ -55,7 +37,7 @@
             android:layout_toRightOf="@+id/iv_default"
             android:singleLine="true"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="@dimen/text_normal" />
 
         <TextView
             android:id="@+id/tv_playbar_art"
@@ -64,7 +46,35 @@
             android:layout_alignLeft="@+id/tv_playbar_title"
             android:layout_below="@+id/tv_playbar_title"
             android:singleLine="true"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_small" />
+
+        <ImageView
+            android:id="@+id/iv_playbar_musiclist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_ssmall"
+            android:layout_toLeftOf="@+id/iv_playbar_playorpause"
+            android:src="@drawable/playbar_btn_playlist" />
+
+        <ImageView
+            android:id="@+id/iv_playbar_playorpause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_ssmall"
+            android:layout_toLeftOf="@+id/iv_playbar_next"
+            android:src="@drawable/playbar_btn_play" />
+
+        <ImageView
+            android:id="@+id/iv_playbar_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:src="@drawable/playbar_btn_next" />
 
     </RelativeLayout>
 

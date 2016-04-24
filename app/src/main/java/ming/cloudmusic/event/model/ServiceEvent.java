@@ -19,5 +19,7 @@ public class ServiceEvent extends BaseEvent {
 
     public static final String SERVICE_POST_PLAYINGMUSIC = "S_POST_PLAYINGMUSIC";
 
+    public static final String PLAY_ERROR = "error";
+
 
 }

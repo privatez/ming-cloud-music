@@ -7,4 +7,6 @@ public class DataEvent extends BaseEvent {
 
     public static final String HISTORYMUSICS_CHANGGE = "HISTORYMUSICS_CHANGGE";
 
+    public static final String PLAYINTMUSICS_ISCLEAR = "PLAYINTMUSICS_ISCLEAR";
+
 }

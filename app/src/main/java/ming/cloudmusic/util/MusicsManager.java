@@ -97,6 +97,33 @@ public class MusicsManager {
         }
     }
 
+    public void removePlayingMusicById(long id) {
+        for (int i = 0; i < mLocalMusics.size(); i++) {
+            if (mLocalMusics.get(i).getId() == id) {
+                mPlayingMusics.remove(mLocalMusics.get(i));
+                mLocalMusics.get(i).setPlaySequence(DbMusic.DEFAULT_PLAY_SEQUENCE);
+            }
+        }
+
+        if (getPlayingMusicsSize() == 0) {
+           //TODO
+        }
+
+        dao.updateDbMusics(mLocalMusics);
+    }
+
+    public void clearPlayingMusics() {
+        mPlayingMusics.clear();
+
+        for (DbMusic music : mLocalMusics) {
+            if (music.getPlaySequence() > DbMusic.DEFAULT_PLAY_SEQUENCE) {
+                music.setPlaySequence(DbMusic.DEFAULT_PLAY_SEQUENCE);
+            }
+        }
+
+        dao.updateDbMusics(mLocalMusics);
+    }
+
     /**
      * 更新数据库
      *
@@ -148,6 +175,10 @@ public class MusicsManager {
 
         int newPosition;
         int playingMusicsSize = getPlayingMusicsSize();
+
+        if (playingMusicsSize == 0) {
+            return 0;
+        }
 
         do {
             newPosition = (int) (Math.random() * playingMusicsSize);

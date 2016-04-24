@@ -283,11 +283,12 @@ public class MusicService extends Service {
 
     private void play() {
         mPlayingMusic = mMusicsManager.getOnPlayMusicByPosition(mPlayingPosition);
-        mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYING_POSITION, mPlayingPosition);
-        mSharedPrefsUtil.setLongSP(Constant.SharedPrefrence.PLAYING_ID,mPlayingMusic.getId());
         if (mPlayingMusic == null) {
+            postEventMsg(ServiceEvent.PLAY_ERROR);
             return;
         }
+        mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYING_POSITION, mPlayingPosition);
+        mSharedPrefsUtil.setLongSP(Constant.SharedPrefrence.PLAYING_ID,mPlayingMusic.getId());
         try {
             mPlayer.reset();
             mPlayer.setDataSource(mPlayingMusic.getPath());

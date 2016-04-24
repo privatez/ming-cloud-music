@@ -7,11 +7,23 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
+
+import ming.cloudmusic.R;
+import ming.cloudmusic.adapter.CommonAdapter;
+import ming.cloudmusic.adapter.ViewHolder;
+import ming.cloudmusic.model.DbMusic;
 
 /**
  * Created by lihaiye on 16/3/24.
@@ -105,7 +117,7 @@ public class CustomUtils {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
         WindowManager.LayoutParams lp = window.getAttributes();
-        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.gravity = gravity;
 
@@ -136,6 +148,95 @@ public class CustomUtils {
         window.setAttributes(lp);
 
         return dialog;
+    }
+
+    /**
+     * 创建底部弹框
+     * 宽度为match_parent，停留在底部
+     *
+     * @param context
+     * @param layout
+     * @return
+     */
+    public static AlertDialog createButtomDialog(Context context, int layout, int animation, boolean showSoftInput) {
+
+        return createDialog(context, layout, animation, showSoftInput, Gravity.BOTTOM);
+    }
+
+    public static AlertDialog createPlayingMusicListDialog(final Context context) {
+        AlertDialog dialog = createButtomDialog(context, R.layout.dialog_playing_musiclist, 0, false);
+        final MusicsManager musicsManager = MusicsManager.getInstance();
+        final List<DbMusic> musicList = musicsManager.getPlayingMusics();
+        final CommonAdapter<DbMusic> adapter;
+
+        ListView listView = (ListView) dialog.findViewById(R.id.lv_playing_musiclist);
+        final TextView tvTitle = (TextView) dialog.findViewById(R.id.tv_title);
+        TextView tvClear = (TextView) dialog.findViewById(R.id.tv_clear);
+
+        tvTitle.setText("播放列表（" + musicList.size() + "）");
+
+        listView.setAdapter(adapter = new CommonAdapter<DbMusic>(context, musicList, R.layout.item_playing_musiclist_dialog) {
+            @Override
+            public void convert(ViewHolder holder, final DbMusic item) {
+                TextView tvMusicName = holder.getView(R.id.tv_music_name);
+                TextView tvMusicArt = holder.getView(R.id.tv_music_art);
+                ImageView ivPlaying = holder.getView(R.id.iv_playing);
+                ImageView ivDelete = holder.getView(R.id.iv_delete);
+
+                tvMusicName.setText(item.getTitle() + " - ");
+                tvMusicArt.setText(item.getArtlist());
+
+                int color;
+                if (MusicsManager.getInstance().isMusicPlaying(item.getId())) {
+                    color = getResColor(context, R.color.cloudred);
+                    ivPlaying.setVisibility(View.VISIBLE);
+                } else {
+                    color = getResColor(context, R.color.black);
+                    ivPlaying.setVisibility(View.GONE);
+                }
+                tvMusicName.setTextColor(color);
+                tvMusicArt.setTextColor(color);
+
+                ivDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        musicsManager.removePlayingMusicById(item.getId());
+                        musicList.remove(item);
+                        notifyDataSetChanged();
+                        tvTitle.setText("播放列表（" + musicList.size() + "）");
+                    }
+                });
+            }
+        });
+
+        tvClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                musicsManager.clearPlayingMusics();
+                musicList.clear();
+                adapter.notifyDataSetChanged();
+                tvTitle.setText("播放列表（" + musicList.size() + "）");
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                musicsManager.playMusicByPosition(musicList, position);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        return dialog;
+    }
+
+    public static int getResColor(Context context, int color) {
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= 23) {
+            return ContextCompat.getColor(context, color);
+        } else {
+            return context.getResources().getColor(color);
+        }
     }
 
     /**

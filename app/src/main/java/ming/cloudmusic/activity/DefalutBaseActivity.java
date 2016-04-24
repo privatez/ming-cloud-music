@@ -2,15 +2,14 @@ package ming.cloudmusic.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.util.Constant;
+import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.SharedPrefsUtil;
 import ming.cloudmusic.view.OnViewCreateListener;
 
@@ -43,12 +42,7 @@ public abstract class DefalutBaseActivity extends Activity implements OnViewCrea
     }
 
     protected int getResColor(int color) {
-        final int version = Build.VERSION.SDK_INT;
-        if (version >= 23) {
-            return ContextCompat.getColor(mContext, color);
-        } else {
-            return getResources().getColor(color);
-        }
+        return CustomUtils.getResColor(mContext, color);
     }
 
 }

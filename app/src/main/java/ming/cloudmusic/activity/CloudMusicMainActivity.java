@@ -28,7 +28,9 @@ import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.fragment.MyMusicFragment;
+import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.FragmentTaskManager;
+import ming.cloudmusic.util.ToastUtils;
 import ming.cloudmusic.view.MenuDrawerHelper;
 
 public class CloudMusicMainActivity extends FragmentActivity implements View.OnClickListener, OnTouchListener {
@@ -78,6 +80,8 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
         ivPlaybarNext.setOnClickListener(this);
         ivPlaybarPlayorpause.setOnClickListener(this);
         rlPlaybar.setOnTouchListener(this);
+
+        findViewById(R.id.iv_playbar_musiclist).setOnClickListener(this);
     }
 
 
@@ -137,17 +141,23 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
             case ServiceEvent.SERVICE_POST_PLAYINGMUSIC:
                 refreshView(event.getExtras());
                 break;
+            case ServiceEvent.PLAY_ERROR:
+                ToastUtils.showShort(mContext, "暂无可播放歌曲");
+                break;
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_playbar_next:
-                postEventMsg(KeyEvent.NEXT);
+            case R.id.iv_playbar_musiclist:
+                CustomUtils.createPlayingMusicListDialog(mContext);
                 break;
             case R.id.iv_playbar_playorpause:
                 postEventMsg(KeyEvent.PLAY_OR_PAUSE);
+                break;
+            case R.id.iv_playbar_next:
+                postEventMsg(KeyEvent.NEXT);
                 break;
         }
     }
