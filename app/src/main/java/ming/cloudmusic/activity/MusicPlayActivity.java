@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -24,18 +25,13 @@ import ming.cloudmusic.util.DateSDF;
 
 public class MusicPlayActivity extends DrawableBaseActivity implements OnClickListener, OnSeekBarChangeListener {
 
-    private TextView tvPlayinfo;
-    private TextView tvPlayBack;
     private TextView tvPlaytitleArt;
     private TextView tvPlaytitleTitle;
-    private TextView tvPlayorpasue;
-    private TextView tvPlayPrev;
-    private TextView tvPlayNext;
-    private TextView tvPlayMode;
-    private TextView tvPlayMenu;
-    private SeekBar seekBar;
-    private TextView tvAlltime;
     private TextView tvPlaytime;
+    private SeekBar seekbarPlay;
+    private TextView tvAlltime;
+    private ImageView ivPlayorpasue;
+    private ImageView ivMode;
 
     private int duration;
 
@@ -61,18 +57,13 @@ public class MusicPlayActivity extends DrawableBaseActivity implements OnClickLi
     @Override
     public void initView() {
 
-        tvPlayinfo = (TextView) findViewById(R.id.tv_playinfo);
-        tvPlayBack = (TextView) findViewById(R.id.tv_play_back);
         tvPlaytitleArt = (TextView) findViewById(R.id.tv_playtitle_art);
         tvPlaytitleTitle = (TextView) findViewById(R.id.tv_playtitle_title);
-        tvPlayorpasue = (TextView) findViewById(R.id.tv_play_playorpasue);
-        tvPlayPrev = (TextView) findViewById(R.id.tv_play_prev);
-        tvPlayNext = (TextView) findViewById(R.id.tv_play_next);
-        tvPlayMode = (TextView) findViewById(R.id.tv_play_mode);
-        tvPlayMenu = (TextView) findViewById(R.id.tv_play_menu);
-        seekBar = (SeekBar) findViewById(R.id.seekbar_play);
-        tvAlltime = (TextView) findViewById(R.id.tv_alltime);
         tvPlaytime = (TextView) findViewById(R.id.tv_playtime);
+        seekbarPlay = (SeekBar) findViewById(R.id.seekbar_play);
+        tvAlltime = (TextView) findViewById(R.id.tv_alltime);
+        ivPlayorpasue = (ImageView) findViewById(R.id.iv_playorpasue);
+        ivMode = (ImageView) findViewById(R.id.iv_mode);
 
     }
 
@@ -82,14 +73,15 @@ public class MusicPlayActivity extends DrawableBaseActivity implements OnClickLi
     }
 
     private void setListener() {
-        tvPlayNext.setOnClickListener(this);
-        tvPlayPrev.setOnClickListener(this);
-        tvPlayorpasue.setOnClickListener(this);
-        tvPlayMode.setOnClickListener(this);
-        tvPlayMenu.setOnClickListener(this);
-        tvPlayBack.setOnClickListener(this);
+        ivMode.setOnClickListener(this);
+        ivPlayorpasue.setOnClickListener(this);
 
-        seekBar.setOnSeekBarChangeListener(this);
+        findViewById(R.id.iv_next).setOnClickListener(this);
+        findViewById(R.id.iv_prev).setOnClickListener(this);
+        findViewById(R.id.iv_menu).setOnClickListener(this);
+        findViewById(R.id.iv_back).setOnClickListener(this);
+
+        seekbarPlay.setOnSeekBarChangeListener(this);
     }
 
     private void refreshView(Map data) {
@@ -109,23 +101,23 @@ public class MusicPlayActivity extends DrawableBaseActivity implements OnClickLi
 
         switch (msg) {
             case ServiceEvent.SERVICE_PLAY:
-                tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_pause);
+                ivPlayorpasue.setImageResource(R.drawable.play_btn_pause);
                 break;
             case ServiceEvent.SERVICE_PAUSE:
-                tvPlayorpasue.setBackgroundResource(R.drawable.play_btn_play);
+                ivPlayorpasue.setImageResource(R.drawable.play_btn_play);
                 break;
             case ServiceEvent.SERVICE_BAR_CHANGE:
                 int currentPosition = (int) data.get(Event.Extra.BAR_CHANGE);
                 if (duration > 0) {
                     tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());
-                    seekBar.setProgress(currentPosition * 100 / duration);
+                    seekbarPlay.setProgress(currentPosition * 100 / duration);
                 }
                 break;
             case ServiceEvent.SERVICE_PLAY_MODE:
                 setPlayModeIcon((int) data.get(Event.Extra.PLAY_MODE));
                 break;
             case ServiceEvent.SERVICE_POST_PLAYINGMUSIC:
-                if (!tvPlayNext.hasOnClickListeners()) {
+                if (!ivPlayorpasue.hasOnClickListeners()) {
                     setListener();
                 }
                 refreshView(event.getExtras());
@@ -136,13 +128,13 @@ public class MusicPlayActivity extends DrawableBaseActivity implements OnClickLi
     private void setPlayModeIcon(int mode) {
         switch (mode) {
             case Constant.PlayMode.SINGLE:
-                tvPlayMode.setBackgroundResource(R.drawable.play_icn_one);
+                ivMode.setImageResource(R.drawable.play_icn_one);
                 break;
             case Constant.PlayMode.RAMDOM:
-                tvPlayMode.setBackgroundResource(R.drawable.play_icn_shuffle);
+                ivMode.setImageResource(R.drawable.play_icn_shuffle);
                 break;
             case Constant.PlayMode.ALL:
-                tvPlayMode.setBackgroundResource(R.drawable.play_icn_loop);
+                ivMode.setImageResource(R.drawable.play_icn_loop);
                 break;
         }
     }
@@ -151,22 +143,22 @@ public class MusicPlayActivity extends DrawableBaseActivity implements OnClickLi
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
-            case R.id.tv_play_playorpasue:
-                postEventMsg(KeyEvent.PLAY_OR_PAUSE);
-                break;
-            case R.id.tv_play_next:
-                postEventMsg(KeyEvent.NEXT);
-                break;
-            case R.id.tv_play_prev:
-                postEventMsg(KeyEvent.PREVIOUS);
-                break;
-            case R.id.tv_play_mode:
-                postEventMsg(KeyEvent.PLAY_MODE);
-                break;
-            case R.id.tv_play_back:
+            case R.id.iv_back:
                 finish();
                 break;
-            case R.id.tv_play_menu:
+            case R.id.iv_playorpasue:
+                postEventMsg(KeyEvent.PLAY_OR_PAUSE);
+                break;
+            case R.id.iv_next:
+                postEventMsg(KeyEvent.NEXT);
+                break;
+            case R.id.iv_prev:
+                postEventMsg(KeyEvent.PREVIOUS);
+                break;
+            case R.id.iv_mode:
+                postEventMsg(KeyEvent.PLAY_MODE);
+                break;
+            case R.id.iv_menu:
                 CustomUtils.createPlayingMusicListDialog(mContext);
                 break;
         }
