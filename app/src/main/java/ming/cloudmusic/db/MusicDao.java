@@ -95,7 +95,11 @@ public class MusicDao {
                 dbMusic.setTitle(title);
                 dbMusic.setName(name);
                 dbMusic.setPath(path);
-                dbMusic.setArtlist(artlist);
+                if (artlist.contains("unknown")) {
+                    dbMusic.setArtlist("未知");
+                } else {
+                    dbMusic.setArtlist(artlist);
+                }
                 dbMusic.setAlbum(album);
                 dbMusic.setDuration(duration);
                 //TODO
@@ -150,8 +154,7 @@ public class MusicDao {
         List<DbMusic> musics = new ArrayList<>();
         DbManager db = x.getDb(mDaoConfig);
         try {
-            musics.addAll(db.findAll(DbMusic.class));
-
+            musics.addAll(checkDbMusicsResultNull(db.findAll(DbMusic.class)));
         } catch (java.io.IOException e) {
             LogUtils.log(e.getMessage());
         } finally {
@@ -190,8 +193,8 @@ public class MusicDao {
 
         DbManager db = x.getDb(mDaoConfig);
         try {
-            musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_PLAY_SEQUENCE, ">",
-                    DbMusic.DEFAULT_PLAY_SEQUENCE).findAll());
+            musics.addAll(checkDbMusicsResultNull(db.selector(DbMusic.class).where(DbMusic.COLUMN_PLAY_SEQUENCE, ">",
+                    DbMusic.DEFAULT_PLAY_SEQUENCE).findAll()));
         } catch (java.io.IOException e) {
             e.printStackTrace();
         } finally {
@@ -244,8 +247,8 @@ public class MusicDao {
 
         DbManager db = x.getDb(mDaoConfig);
         try {
-            musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_HISTORY_SEQUENCE, ">",
-                    DbMusic.DEFAULT_HISTORY_SEQUENCE).orderBy(DbMusic.COLUMN_HISTORY_SEQUENCE, true).findAll());
+            musics.addAll(checkDbMusicsResultNull(db.selector(DbMusic.class).where(DbMusic.COLUMN_HISTORY_SEQUENCE, ">",
+                    DbMusic.DEFAULT_HISTORY_SEQUENCE).orderBy(DbMusic.COLUMN_HISTORY_SEQUENCE, true).findAll()));
         } catch (java.io.IOException e) {
             LogUtils.log("getHistoryMusics Exception：" + e.getMessage());
         } finally {
@@ -302,7 +305,8 @@ public class MusicDao {
         List<DbMusic> musics = new ArrayList<>();
         DbManager db = x.getDb(mDaoConfig);
         try {
-            musics.addAll(db.selector(DbMusic.class).where(DbMusic.COLUMN_NAME, "like", "%" + msg + "%").findAll());
+            musics.addAll(checkDbMusicsResultNull(db.selector(DbMusic.class).where(DbMusic.COLUMN_NAME,
+                    "like", "%" + msg + "%").findAll()));
         } catch (java.io.IOException e) {
             LogUtils.log("searchLocalMusic Exception：" + e.getMessage());
         } finally {
@@ -316,7 +320,7 @@ public class MusicDao {
         List<DbModel> dbModels = new ArrayList<>();
         DbManager db = x.getDb(mDaoConfig);
         try {
-            dbModels = db.selector(DbMusic.class).groupBy(groupByColumnName).select(selectColumns).findAll();
+            dbModels.addAll(checkModelResultNull(db.selector(DbMusic.class).groupBy(groupByColumnName).select(selectColumns).findAll()));
         } catch (java.io.IOException e) {
             LogUtils.log("getLocalMusicGroupBy " + groupByColumnName + " Exception：" + e.getMessage());
         } finally {
@@ -332,7 +336,7 @@ public class MusicDao {
         List<DbMusic> dbMusics = new ArrayList<>();
         DbManager db = x.getDb(mDaoConfig);
         try {
-            dbMusics.addAll(db.selector(DbMusic.class).where(columnName, "=", key).findAll());
+            dbMusics.addAll(checkDbMusicsResultNull(db.selector(DbMusic.class).where(columnName, "=", key).findAll()));
         } catch (java.io.IOException e) {
             LogUtils.log("getLocalMusicBy: " + columnName + "....key: " + key + " Exception：" + e.getMessage());
         } finally {
@@ -341,6 +345,22 @@ public class MusicDao {
         //LogUtils.log("getLocalMusicBy: " + columnName + "....key: " + key "....result: "+ musics.toString());
 
         return dbMusics;
+    }
+
+    private List<DbMusic> checkDbMusicsResultNull(List<DbMusic> result) {
+        List<DbMusic> list = new ArrayList<>();
+        if (result != null) {
+            list.addAll(result);
+        }
+        return list;
+    }
+
+    private List<DbModel> checkModelResultNull(List<DbModel> result) {
+        List<DbModel> list = new ArrayList<>();
+        if (result != null) {
+            list.addAll(result);
+        }
+        return list;
     }
 
     private void closeDbManagerWithUnUpdate(DbManager db) {

@@ -40,7 +40,7 @@ public abstract class DefalutBaseActivity extends Activity implements OnViewCrea
     }
 
     protected void setStatusBar() {
-        CustomUtils.setStatusBarColor(this, getResColor(R.color.red));
+        CustomUtils.setStatusBarColor(this, getResources().getDrawable(R.drawable.actionbar_bg));
     }
 
     protected void postEventMsg(String eventMsg) {

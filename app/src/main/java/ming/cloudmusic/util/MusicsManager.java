@@ -77,6 +77,9 @@ public class MusicsManager {
      * @param dbMusics
      */
     public void playAllMusic(List<DbMusic> dbMusics) {
+        if (dbMusics == null || dbMusics.size() == 0) {
+            return;
+        }
         updateDbMusics(dbMusics);
         postEventMsg(KeyEvent.PLAY_ALL);
     }
@@ -106,7 +109,7 @@ public class MusicsManager {
         }
 
         if (getPlayingMusicsSize() == 0) {
-           //TODO
+            //TODO
         }
 
         dao.updateDbMusics(mLocalMusics);
@@ -130,6 +133,9 @@ public class MusicsManager {
      * @param dbMusics
      */
     private void updateDbMusics(List<DbMusic> dbMusics) {
+        if (dbMusics == null || dbMusics.size() == 0) {
+            return;
+        }
         if (mPlayingMusics.containsAll(dbMusics)) {
             return;
         }

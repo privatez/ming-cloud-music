@@ -123,6 +123,17 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         }
     }
 
+    private void refreBg(int dataSize) {
+        if (dataSize > 0) {
+            llBg.setVisibility(View.GONE);
+            llContent.setVisibility(View.VISIBLE);
+        } else {
+            llBg.setVisibility(View.VISIBLE);
+            llContent.setVisibility(View.GONE);
+            tvHint.setText(mOnDataLoadedHint);
+        }
+    }
+
     private void setDefaultAdapter() {
         lvMusics.setAdapter(mAdapter = new CommonAdapter<DbMusic>(mContext, mMusicList, R.layout.item_musiclist_common) {
             @Override
@@ -184,8 +195,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         lvMusics.setAdapter(mAdapter);
         lvMusics.setOnItemClickListener(onItemClickListener);
         mAdapter.notifyDataSetChanged();
-        llBg.setVisibility(View.GONE);
-        llContent.setVisibility(View.VISIBLE);
+        refreBg(mAdapter.getCount());
     }
 
     public void notifyDataSetChanged(List<DbMusic> musicList) {
@@ -193,14 +203,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         mMusicList.addAll(musicList);
         mAdapter.notifyDataSetChanged();
         tvMusicsCount.setText("(共" + mMusicList.size() + "首)");
-        if (mMusicList.size() > 0) {
-            llBg.setVisibility(View.GONE);
-            llContent.setVisibility(View.VISIBLE);
-        } else {
-            llBg.setVisibility(View.VISIBLE);
-            llContent.setVisibility(View.GONE);
-            tvHint.setText(mOnDataLoadedHint);
-        }
+        refreBg(mMusicList.size());
     }
 
     public void onDestroy() {
