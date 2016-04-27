@@ -72,11 +72,32 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
+        <activity
+            android:name=".activity.screenoff.ScreenOffActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="ming.cloudmusic.lockscreen"
+            android:theme="@style/LockScreenTheme" />
+
+        <activity
+            android:name=".activity.screenoff.ScreenOffHomeActivity"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service android:name=".service.MusicService" />
 
         <service android:name=".service.ExitService" />
 
+        <receiver android:name=".service.MusicService$ScreenOffReceiver" />
+
+        <receiver android:name=".activity.screenoff.ScreenOffActivity$InterceptKeyEventReceiver"/>
 
     </application>
 

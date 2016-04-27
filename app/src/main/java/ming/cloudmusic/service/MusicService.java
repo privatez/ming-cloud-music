@@ -1,7 +1,10 @@
 package ming.cloudmusic.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.AsyncTask;
@@ -14,6 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import ming.cloudmusic.activity.screenoff.ScreenOffActivity;
 import ming.cloudmusic.db.MusicDao;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.EventUtil;
@@ -25,6 +29,8 @@ import ming.cloudmusic.util.MusicsManager;
 import ming.cloudmusic.util.SharedPrefsUtil;
 
 public class MusicService extends Service {
+
+    private static final String SCREENOFF_ACTION = "android.intent.action.SCREEN_OFF";
 
     private MediaPlayer mPlayer;
 
@@ -55,6 +61,8 @@ public class MusicService extends Service {
     private MusicsManager mMusicsManager;
     private Map mExtras;
 
+    private ScreenOffReceiver mScreenOffReceiver;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -70,6 +78,11 @@ public class MusicService extends Service {
         mPlayingPosition = mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYING_POSITION, 0);
         mPlayingMode = mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYINT_MODE, 0);
         new InnerAsyncTask().execute();
+        mScreenOffReceiver = new ScreenOffReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(SCREENOFF_ACTION);
+        intentFilter.setPriority(2147483647);
+        registerReceiver(mScreenOffReceiver, intentFilter);
     }
 
     @Override
@@ -81,6 +94,7 @@ public class MusicService extends Service {
             mPlayer.release();
             mPlayer = null;
         }
+        unregisterReceiver(mScreenOffReceiver);
     }
 
     @Override
@@ -274,7 +288,7 @@ public class MusicService extends Service {
     }
 
     private void pause() {
-        if(mPlayer.isPlaying()) {
+        if (mPlayer.isPlaying()) {
             mPlayer.stop();
         }
         mPlayingProgress = mPlayer.getCurrentPosition();
@@ -288,7 +302,7 @@ public class MusicService extends Service {
             return;
         }
         mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYING_POSITION, mPlayingPosition);
-        mSharedPrefsUtil.setLongSP(Constant.SharedPrefrence.PLAYING_ID,mPlayingMusic.getId());
+        mSharedPrefsUtil.setLongSP(Constant.SharedPrefrence.PLAYING_ID, mPlayingMusic.getId());
         try {
             mPlayer.reset();
             mPlayer.setDataSource(mPlayingMusic.getPath());
@@ -314,6 +328,21 @@ public class MusicService extends Service {
 
     private void postEventMsgHasExtra(String eventMsg, Map extars) {
         EventUtil.getDefault().postSerEventHasExtra(eventMsg, extars);
+    }
+
+    public class ScreenOffReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(SCREENOFF_ACTION)) {
+                if (mPlayer.isPlaying()) {
+                    abortBroadcast();
+                    Intent action = new Intent(MusicService.this, ScreenOffActivity.class);
+                    action.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(action);
+                }
+            }
+        }
     }
 
 }

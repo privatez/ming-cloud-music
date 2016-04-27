@@ -9,7 +9,7 @@ import ming.cloudmusic.util.Constant;
 /**
  * Created by Lhy on 2016/3/5.
  */
-public class LaunchActivity extends DefalutBaseActivity {
+public class LaunchActivity extends DrawableBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

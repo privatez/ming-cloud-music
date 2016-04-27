@@ -7,6 +7,7 @@ import android.os.Bundle;
 import java.util.HashMap;
 import java.util.Map;
 
+import ming.cloudmusic.R;
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.CustomUtils;
@@ -30,7 +31,16 @@ public abstract class DefalutBaseActivity extends Activity implements OnViewCrea
         mExtras = new HashMap();
         mContext = this;
         mSharedPrefs = new SharedPrefsUtil(getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
+    }
 
+    @Override
+    public void setContentView(int layoutResID) {
+        super.setContentView(layoutResID);
+        setStatusBar();
+    }
+
+    protected void setStatusBar() {
+        CustomUtils.setStatusBarColor(this, getResColor(R.color.red));
     }
 
     protected void postEventMsg(String eventMsg) {

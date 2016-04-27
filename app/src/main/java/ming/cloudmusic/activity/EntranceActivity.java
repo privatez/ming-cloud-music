@@ -12,7 +12,7 @@ import ming.cloudmusic.util.Constant;
 /**
  * Created by Lhy on 2016/3/20.
  */
-public class EntranceActivity extends DefalutBaseActivity implements OnClickListener {
+public class EntranceActivity extends DrawableBaseActivity implements OnClickListener {
 
     private TextView tvVisitorLogin;
 

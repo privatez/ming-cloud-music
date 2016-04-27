@@ -19,9 +19,10 @@ import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.util.Constant;
+import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.DateSDF;
 
-public class MusicPlayActivity extends DefalutBaseActivity implements OnClickListener, OnSeekBarChangeListener {
+public class MusicPlayActivity extends DrawableBaseActivity implements OnClickListener, OnSeekBarChangeListener {
 
     private TextView tvPlayinfo;
     private TextView tvPlayBack;
@@ -37,9 +38,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     private TextView tvPlaytime;
 
     private int duration;
-    private int mPlayingMusic;
-
-    private boolean mIsPlaying;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +93,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
     }
 
     private void refreshView(Map data) {
-        mPlayingMusic = (int) data.get(Event.Extra.PLAYING_POSITION);
         tvPlaytitleTitle.setText(data.get(Event.Extra.PLAYING_TITLE).toString());
         tvPlaytitleArt.setText(data.get(Event.Extra.PLAYING_ART).toString());
         tvPlaytime.setText(DateSDF.getSDF(data.get(Event.Extra.PLAYING_POINT)).toString());
@@ -136,10 +133,6 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
         }
     }
 
-    private void setSeekBarPro(int currentPosition) {
-
-    }
-
     private void setPlayModeIcon(int mode) {
         switch (mode) {
             case Constant.PlayMode.SINGLE:
@@ -174,7 +167,7 @@ public class MusicPlayActivity extends DefalutBaseActivity implements OnClickLis
                 finish();
                 break;
             case R.id.tv_play_menu:
-
+                CustomUtils.createPlayingMusicListDialog(mContext);
                 break;
         }
     }

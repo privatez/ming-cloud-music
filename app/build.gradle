@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "ming.cloudmusic"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName " v1.0.0"
@@ -55,4 +55,5 @@ dependencies {
     compile 'cn.bmob.android:bmob-sdk:3.4.5'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okio:okio:1.4.0'
+    compile project(path: ':library')
 }
