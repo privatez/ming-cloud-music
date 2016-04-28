@@ -6,8 +6,10 @@ import android.os.Parcelable;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
+import cn.bmob.v3.BmobObject;
+
 @Table(name = "DbMusic")
-public class DbMusic implements Parcelable {
+public class DbMusic extends BmobObject implements Parcelable {
 
     /**
      * id 列

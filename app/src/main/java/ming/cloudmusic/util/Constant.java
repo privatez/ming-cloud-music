@@ -55,7 +55,7 @@ public class Constant {
         private int index;
 
         // 构造方法
-        private TimingPlay(String timeText, long time, int index) {
+        TimingPlay(String timeText, long time, int index) {
             this.timeText = timeText;
             this.time = time;
             this.index = index;

@@ -98,7 +98,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
 
     private void initData() {
         mMusicList = new ArrayList<>();
-        mMusicsManager = mMusicsManager.getInstance();
+        mMusicsManager = MusicsManager.getInstance();
         setDefaultAdapter();
         EventBus.getDefault().register(this);
     }

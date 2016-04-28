@@ -227,10 +227,7 @@ public class MusicsManager {
             return false;
         }
 
-        if (playingId == id) {
-            return true;
-        }
-        return false;
+        return playingId == id;
     }
 
     public long getPlayingMusicId() {
@@ -248,12 +245,12 @@ public class MusicsManager {
 
     public List<DbModel> getMusicInfoGroupByAlbum() {
 
-        return getMusicInfoGroupByColumn(DbMusic.COLUMN_ALBUM, new String[]{DbMusic.COLUMN_ALBUM, DbMusic.COLUMN_ARTLIST});
+        return getMusicInfoGroupByColumn(DbMusic.COLUMN_ALBUM, DbMusic.COLUMN_ALBUM, DbMusic.COLUMN_ARTLIST);
     }
 
     public List<DbModel> getMusicInfoGroupByFileName() {
 
-        return getMusicInfoGroupByColumn(DbMusic.COLUMN_FILENAME, new String[]{DbMusic.COLUMN_FILENAME});
+        return getMusicInfoGroupByColumn(DbMusic.COLUMN_FILENAME, DbMusic.COLUMN_FILENAME);
     }
 
     private List<DbModel> getMusicInfoGroupByColumn(String groupByColumnName, String... selectColumns) {

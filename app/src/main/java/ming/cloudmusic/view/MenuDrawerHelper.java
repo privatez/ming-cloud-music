@@ -267,10 +267,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
 
     public boolean isMenuOpened() {
         int drawerState = mDrawer.getDrawerState();
-        if (drawerState == MenuDrawer.STATE_OPEN || drawerState == MenuDrawer.STATE_OPENING) {
-            return true;
-        }
-        return false;
+        return drawerState == MenuDrawer.STATE_OPEN || drawerState == MenuDrawer.STATE_OPENING;
     }
 
 }
