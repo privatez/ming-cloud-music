@@ -16,7 +16,7 @@ public class Constant {
      */
     public static final String HTTPURL = "http://apis.baidu.com/geekery/music/query";
 
-    public static final String[] WEEK_STRING = new String[]{"一", "二", "三", "四", "五", "六", "日"};
+    public static final String[] WEEK_STRING = new String[]{"", "一", "二", "三", "四", "五", "六", "日"};
 
     public static class SharedPrefrence {
         public static final String SHARED_NAME = "cloud_music";
