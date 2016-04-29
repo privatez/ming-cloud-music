@@ -12,7 +12,7 @@ import ming.cloudmusic.event.model.ServiceEvent;
  */
 public class EventUtil {
 
-    private static final String EVENTTYPE_KEY = "EVENTTYPE_KEY";
+    private static final String EVENTTYPE_KEY = "KEY";
     private static final String EVENTTYPE_SER = "SER";
 
     private KeyEvent mKeyEvent;
@@ -53,22 +53,23 @@ public class EventUtil {
         postEventMsgHasExtra(eventMsg, extras, EVENTTYPE_SER);
     }
 
-    /**
-     * 发送Event
-     *
-     * @param eventMsg
-     * @param eventType Event种类
-     */
     private void postEventMsg(String eventMsg, String eventType) {
         postEventMsgHasExtra(eventMsg, null, eventType);
     }
 
-    private void postEventMsgHasExtra(String msg, Map extras, String eventType) {
+    /**
+     * 发送Event
+     *
+     * @param eventMsg
+     * @param extras
+     * @param eventType
+     */
+    private void postEventMsgHasExtra(String eventMsg, Map extras, String eventType) {
         switch (eventType) {
             case EVENTTYPE_SER:
                 mSerEvent = mEventPool.getServiceEvent();
                 if (mSerEvent != null) {
-                    mSerEvent.setMsg(msg);
+                    mSerEvent.setMsg(eventMsg);
                     if (extras != null) {
                         mSerEvent.getExtras().putAll(extras);
                     }
@@ -78,7 +79,7 @@ public class EventUtil {
             case EVENTTYPE_KEY:
                 mKeyEvent = mEventPool.getKeyEvent();
                 if (mKeyEvent != null) {
-                    mKeyEvent.setMsg(msg);
+                    mKeyEvent.setMsg(eventMsg);
                     if (extras != null) {
                         mKeyEvent.getExtras().putAll(extras);
                     }
