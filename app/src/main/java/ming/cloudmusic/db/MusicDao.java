@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore.Audio;
+import android.text.TextUtils;
 
 import org.xutils.DbManager;
 import org.xutils.db.table.DbModel;
@@ -167,6 +168,9 @@ public class MusicDao {
     }
 
     public void updateDbMusics(List<DbMusic> musics) {
+        if (musics != null || musics.isEmpty()) {
+            return;
+        }
 
         DbManager db = x.getDb(mDaoConfig);
 
@@ -210,12 +214,15 @@ public class MusicDao {
      * 添加音乐到播放数据库
      *
      * @param musics
-     * @return musics.size() - Flag
+     * @return musics.size() - Flag  成功的数量
      */
 
     public int insertPlayingMusics(List<DbMusic> musics) {
-
         int Flag = 0;
+
+        if (musics != null || musics.isEmpty()) {
+            return Flag;
+        }
 
         DbMusic music;
 
@@ -242,7 +249,6 @@ public class MusicDao {
      * @return
      */
     public List<DbMusic> getHistoryMusics() {
-
         List<DbMusic> musics = new ArrayList();
 
         DbManager db = x.getDb(mDaoConfig);
@@ -266,7 +272,6 @@ public class MusicDao {
      * @return
      */
     public long getHistoryMusicsCount() {
-
         long count = 0;
 
         DbManager db = x.getDb(mDaoConfig);
@@ -286,6 +291,9 @@ public class MusicDao {
 
 
     public void insertHistoryMusics(DbMusic music, int playingPosition) {
+        if (music == null || playingPosition < 0) {
+            return;
+        }
         music.setHistroySequence(playingPosition);
         music.setPlayedTime(System.currentTimeMillis());
         DbManager db = x.getDb(mDaoConfig);
@@ -303,6 +311,9 @@ public class MusicDao {
 
     public List<DbMusic> searchLocalMusic(String msg) {
         List<DbMusic> musics = new ArrayList<>();
+        if (TextUtils.isEmpty(msg)) {
+            return musics;
+        }
         DbManager db = x.getDb(mDaoConfig);
         try {
             musics.addAll(checkDbMusicsResultNull(db.selector(DbMusic.class).where(DbMusic.COLUMN_NAME,
