@@ -4,7 +4,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 
-import ming.cloudmusic.delete.OldEventPool;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 
@@ -19,11 +18,11 @@ public class EventUtil {
     private KeyEvent mKeyEvent;
     private ServiceEvent mSerEvent;
 
-    private OldEventPool mEventPool;
+    private EventPoolManager mEventPoolManager;
     private static EventUtil mEventUtil;
 
     private EventUtil() {
-        mEventPool = OldEventPool.getDefaultPool();
+        mEventPoolManager = EventPoolManager.getDefaultPool();
     }
 
     public static EventUtil getDefault() {
@@ -68,7 +67,7 @@ public class EventUtil {
     private void postEventMsgHasExtra(String eventMsg, Map extras, String eventType) {
         switch (eventType) {
             case EVENTTYPE_SER:
-                mSerEvent = (ServiceEvent) EventPoolManager.getDefaultPool().getEvent(ServiceEvent.class);
+                mSerEvent = (ServiceEvent) mEventPoolManager.getEvent(ServiceEvent.class);
                 if (mSerEvent != null) {
                     mSerEvent.setMsg(eventMsg);
                     if (extras != null) {
@@ -78,7 +77,7 @@ public class EventUtil {
                 }
                 break;
             case EVENTTYPE_KEY:
-                mKeyEvent = (KeyEvent) EventPoolManager.getDefaultPool().getEvent(KeyEvent.class);
+                mKeyEvent = (KeyEvent) mEventPoolManager.getEvent(KeyEvent.class);
                 if (mKeyEvent != null) {
                     mKeyEvent.setMsg(eventMsg);
                     if (extras != null) {
