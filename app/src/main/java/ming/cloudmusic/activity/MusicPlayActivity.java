@@ -87,8 +87,8 @@ public class MusicPlayActivity extends DrawableBaseActivity implements OnClickLi
     private void refreshView(Map data) {
         tvPlaytitleTitle.setText(data.get(Event.Extra.PLAYING_TITLE).toString());
         tvPlaytitleArt.setText(data.get(Event.Extra.PLAYING_ART).toString());
-        tvPlaytime.setText(DateSDF.getSDF(data.get(Event.Extra.PLAYING_POINT)).toString());
-        tvAlltime.setText(DateSDF.getSDF(data.get(Event.Extra.PLAYING_DURATION)).toString());
+        tvPlaytime.setText(DateSDF.getDefaultSDF(data.get(Event.Extra.PLAYING_POINT)).toString());
+        tvAlltime.setText(DateSDF.getDefaultSDF(data.get(Event.Extra.PLAYING_DURATION)).toString());
         duration = (int) data.get(Event.Extra.PLAYING_DURATION);
         setPlayModeIcon((int) data.get(Event.Extra.PLAY_MODE));
     }
@@ -109,7 +109,7 @@ public class MusicPlayActivity extends DrawableBaseActivity implements OnClickLi
             case ServiceEvent.SERVICE_BAR_CHANGE:
                 int currentPosition = (int) data.get(Event.Extra.BAR_CHANGE);
                 if (duration > 0) {
-                    tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());
+                    tvPlaytime.setText(DateSDF.getDefaultSDF(currentPosition).toString());
                     seekbarPlay.setProgress(currentPosition * 100 / duration);
                 }
                 break;

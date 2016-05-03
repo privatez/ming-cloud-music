@@ -241,7 +241,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
             tvMenuTime.setText("");
             mCheckPosition = 0;
         } else {
-            tvMenuTime.setText(DateSDF.getSDF(time).toString());
+            tvMenuTime.setText(DateSDF.getDefaultSDF(time).toString());
             mCheckPosition = position;
         }
     }

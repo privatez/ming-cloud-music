@@ -10,16 +10,16 @@ public class ToastUtils {
 
     public static boolean isShow = true;
 
+    private static Toast mToast;
+
     /**
      * 短时间显示Toast
      *
      * @param context
      * @param message
      */
-    public static void showShort(Context context, CharSequence message)
-    {
-        if (isShow)
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    public static void showShort(Context context, CharSequence message) {
+        show(context, message, Toast.LENGTH_SHORT);
     }
 
     /**
@@ -28,10 +28,8 @@ public class ToastUtils {
      * @param context
      * @param message
      */
-    public static void showShort(Context context, int message)
-    {
-        if (isShow)
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    public static void showShort(Context context, int message) {
+        show(context, message, Toast.LENGTH_SHORT);
     }
 
     /**
@@ -40,10 +38,8 @@ public class ToastUtils {
      * @param context
      * @param message
      */
-    public static void showLong(Context context, CharSequence message)
-    {
-        if (isShow)
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    public static void showLong(Context context, CharSequence message) {
+        show(context, message, Toast.LENGTH_LONG);
     }
 
     /**
@@ -52,10 +48,8 @@ public class ToastUtils {
      * @param context
      * @param message
      */
-    public static void showLong(Context context, int message)
-    {
-        if (isShow)
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    public static void showLong(Context context, int message) {
+        show(context, message, Toast.LENGTH_LONG);
     }
 
     /**
@@ -65,10 +59,15 @@ public class ToastUtils {
      * @param message
      * @param duration
      */
-    public static void show(Context context, CharSequence message, int duration)
-    {
-        if (isShow)
-            Toast.makeText(context, message, duration).show();
+    public static void show(Context context, CharSequence message, int duration) {
+        if (isShow) {
+            if (mToast == null) {
+                mToast = Toast.makeText(context, message, duration);
+            } else {
+                mToast.setText(message);
+            }
+            mToast.show();
+        }
     }
 
     /**
@@ -78,9 +77,7 @@ public class ToastUtils {
      * @param message
      * @param duration
      */
-    public static void show(Context context, int message, int duration)
-    {
-        if (isShow)
-            Toast.makeText(context, message, duration).show();
+    public static void show(Context context, int message, int duration) {
+        show(context, String.valueOf(message), duration);
     }
 }

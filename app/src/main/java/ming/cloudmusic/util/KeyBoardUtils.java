@@ -8,6 +8,7 @@ import android.widget.EditText;
  * Created by Lhy on 2015/12/23.
  */
 public class KeyBoardUtils {
+
     /**
      * 打开软键盘
      *

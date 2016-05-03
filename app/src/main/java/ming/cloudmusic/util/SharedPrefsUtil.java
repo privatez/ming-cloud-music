@@ -31,7 +31,6 @@ public class SharedPrefsUtil {
         return mSharedPreferences.getAll();
     }
 
-
     /**
      * 存int值
      *
@@ -166,9 +165,6 @@ public class SharedPrefsUtil {
         return mSharedPreferences.getBoolean(mContext.getResources().getString(key), defaultValue);
     }
 
-
-    //对Float值的处理
-
     /**
      * 存float值
      *
@@ -257,6 +253,47 @@ public class SharedPrefsUtil {
         return mSharedPreferences.getLong(mContext.getResources().getString(key), defaultValue);
     }
 
+    /**
+     * 存double值
+     *
+     * @param key
+     * @param value
+     */
+    public void setDoubleSP(String key, double value) {
+        setStringSP(key, String.valueOf(value));
+    }
+
+    /**
+     * 存double值
+     *
+     * @param key
+     * @param value
+     */
+    public void setDoubleSP(int key, double value) {
+        setStringSP(mContext.getResources().getString(key), String.valueOf(value));
+    }
+
+    /**
+     * 取double值
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public double getDoubleSP(String key, double defaultValue) {
+        return Double.valueOf(getStringSP(key, String.valueOf(defaultValue)));
+    }
+
+    /**
+     * 取double值
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public double getDoubleSP(int key, double defaultValue) {
+        return Double.valueOf(getStringSP(mContext.getResources().getString(key), String.valueOf(defaultValue)));
+    }
 
     /**
      * 清空所有数据

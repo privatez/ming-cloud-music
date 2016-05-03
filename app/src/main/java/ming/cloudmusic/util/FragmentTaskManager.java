@@ -16,12 +16,13 @@ public class FragmentTaskManager {
 
     private int mShowingActivityContainerViewId;
 
-    private List<OnBindActivity> mOnBindActivitys;
+    private List<OnRegisterActivity> OnRegisterActivitys;
 
     private static FragmentTaskManager sFragmentTaskManager;
 
     private FragmentTaskManager() {
-        mOnBindActivitys = new ArrayList<>();
+        mShowingActivityContainerViewId = -1;
+        OnRegisterActivitys = new ArrayList<>();
     }
 
     public static FragmentTaskManager getInstance() {
@@ -37,8 +38,8 @@ public class FragmentTaskManager {
 
     public void register(FragmentActivity activity, int containerViewId) {
         mShowingActivityContainerViewId = containerViewId;
-        OnBindActivity onbind = new OnBindActivity(containerViewId, activity.getClass().getSimpleName());
-        mOnBindActivitys.add(onbind);
+        OnRegisterActivity onRegisterActivity = new OnRegisterActivity(containerViewId, activity.getClass().getSimpleName());
+        OnRegisterActivitys.add(onRegisterActivity);
     }
 
     public void switchFragment(Fragment oldFragment, Class newFragmentClass) {
@@ -46,6 +47,10 @@ public class FragmentTaskManager {
     }
 
     public void switchFragment(Fragment oldFragment, Class newFragmentClass, Bundle bundle) {
+        if (mShowingActivityContainerViewId == -1) {
+            LogUtils.log("mShowingActivityContainerViewId is -1!");
+            return;
+        }
         FragmentManager fragmentManager = oldFragment.getActivity().getSupportFragmentManager();
         Fragment newFragment = getFragment(newFragmentClass);
         if (bundle != null) {
@@ -73,24 +78,25 @@ public class FragmentTaskManager {
     }
 
     public void unregister(FragmentActivity activity) {
-        if (mOnBindActivitys == null || mOnBindActivitys.size() == 0) {
+        if (OnRegisterActivitys == null || OnRegisterActivitys.isEmpty()) {
+            LogUtils.log("unregister OnRegisterActivitys isEmpty");
             return;
         }
-        for (OnBindActivity onBindActivity : mOnBindActivitys) {
-            if (activity.getClass().getSimpleName().equals(onBindActivity.activitySimpleName)) {
-                mOnBindActivitys.remove(onBindActivity);
+        for (OnRegisterActivity onRegisterActivity : OnRegisterActivitys) {
+            if (activity.getClass().getSimpleName().equals(onRegisterActivity.activitySimpleName)) {
+                OnRegisterActivitys.remove(onRegisterActivity);
             }
         }
-        if (mOnBindActivitys.size() > 0) {
-            mShowingActivityContainerViewId = mOnBindActivitys.get(mOnBindActivitys.size() - 1).containerViewId;
+        if (!OnRegisterActivitys.isEmpty()) {
+            mShowingActivityContainerViewId = OnRegisterActivitys.get(OnRegisterActivitys.size() - 1).containerViewId;
         }
     }
 
-    private class OnBindActivity {
+    private class OnRegisterActivity {
         public int containerViewId;
         public String activitySimpleName;
 
-        public OnBindActivity(int containerViewId, String activitySimpleName) {
+        public OnRegisterActivity(int containerViewId, String activitySimpleName) {
             this.containerViewId = containerViewId;
             this.activitySimpleName = activitySimpleName;
         }

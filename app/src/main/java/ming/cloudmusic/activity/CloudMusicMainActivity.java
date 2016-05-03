@@ -134,7 +134,7 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
             case ServiceEvent.SERVICE_BAR_CHANGE:
                /* int currentPosition = (int) data.get(Event.Extra.BAR_CHANGE);
                 if (duration > 0) {
-                    tvPlaytime.setText(DateSDF.getSDF(currentPosition).toString());
+                    tvPlaytime.setText(DateSDF.getDefaultSDF(currentPosition).toString());
                     seekBar.setProgress(currentPosition * 100 / duration);
                 }*/
                 break;
