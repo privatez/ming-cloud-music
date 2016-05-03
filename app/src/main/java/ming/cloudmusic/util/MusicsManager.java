@@ -12,6 +12,7 @@ import java.util.Map;
 import ming.cloudmusic.db.MusicDao;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.EventUtil;
+import ming.cloudmusic.event.model.DataEvent;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.model.DbMusic;
 
@@ -65,7 +66,7 @@ public class MusicsManager {
             }
         }.run();
 
-        mSharedPrefsUtil = new SharedPrefsUtil(context.getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
+        mSharedPrefsUtil = new SharedPrefsUtil(context.getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME_DATA);
 
         mLocalMusics = dao.getInAppDbMusics();
         mPlayingMusics = dao.getPlayingMusics();
@@ -81,7 +82,7 @@ public class MusicsManager {
             return;
         }
         updateDbMusics(dbMusics);
-        postEventMsg(KeyEvent.PLAY_ALL);
+        postKeyEventMsg(KeyEvent.PLAY_ALL);
     }
 
     /**
@@ -96,7 +97,7 @@ public class MusicsManager {
         if (id != (dbMusics.get(position).getId())) {
             mExtras.clear();
             mExtras.put(Event.Extra.PLAY_BY_POSITION, position);
-            postEventMsgHasExtra(KeyEvent.PLAY_BY_POSITION, mExtras);
+            postKeyEventMsgHasExtra(KeyEvent.PLAY_BY_POSITION, mExtras);
         }
     }
 
@@ -108,10 +109,7 @@ public class MusicsManager {
             }
         }
 
-        if (getPlayingMusicsSize() == 0) {
-            //TODO
-        }
-
+        checkPlayingMusics();
         dao.updateDbMusics(mLocalMusics);
     }
 
@@ -124,7 +122,16 @@ public class MusicsManager {
             }
         }
 
+        checkPlayingMusics();
         dao.updateDbMusics(mLocalMusics);
+    }
+
+    private void checkPlayingMusics() {
+        if (getPlayingMusicsSize() == 0) {
+            postKeyEventMsg(KeyEvent.PLAY_OR_PAUSE);
+            postDataEventMsg(DataEvent.PLAYINTMUSICS_ISCLEAR);
+            mSharedPrefsUtil.clearAll();
+        }
     }
 
     /**
@@ -210,6 +217,7 @@ public class MusicsManager {
     }
 
     public DbMusic getOnPlayMusicByPosition(int position) {
+        checkPlayingMusics();
         if (getPlayingMusicsSize() == 0) {
             return null;
         }
@@ -297,12 +305,20 @@ public class MusicsManager {
         this.mLocalMusics = mLocalMusics;
     }
 
-    private void postEventMsg(String eventMsg) {
+    private void postKeyEventMsg(String eventMsg) {
         EventUtil.getDefault().postKeyEvent(eventMsg);
     }
 
-    private void postEventMsgHasExtra(String eventMsg, Map extars) {
+    private void postKeyEventMsgHasExtra(String eventMsg, Map extars) {
         EventUtil.getDefault().postKeyEventHasExtra(eventMsg, extars);
+    }
+
+    private void postDataEventMsg(String eventMsg) {
+        EventUtil.getDefault().postDataEvent(eventMsg);
+    }
+
+    private void postDataEventMsgHasExtra(String eventMsg, Map extars) {
+        EventUtil.getDefault().postDataEventHasExtra(eventMsg, extars);
     }
 
 }

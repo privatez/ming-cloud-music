@@ -25,6 +25,7 @@ import java.util.Map;
 import ming.cloudmusic.R;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.EventUtil;
+import ming.cloudmusic.event.model.DataEvent;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.fragment.MyMusicFragment;
@@ -143,6 +144,15 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
                 break;
             case ServiceEvent.PLAY_ERROR:
                 ToastUtils.showShort(mContext, "暂无可播放歌曲");
+                break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DataEvent event) {
+        switch (event.getMsg()) {
+            case DataEvent.PLAYINTMUSICS_ISCLEAR:
+                rlPlaybar.setVisibility(View.GONE);
                 break;
         }
     }

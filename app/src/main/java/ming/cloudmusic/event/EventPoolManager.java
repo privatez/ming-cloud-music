@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import ming.cloudmusic.event.model.BaseEvent;
+import ming.cloudmusic.event.model.DataEvent;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.util.LogUtils;
@@ -36,6 +37,7 @@ public class EventPoolManager {
         //TODO 临时方案-手动添加类名
         mEventClasses.add(KeyEvent.class);
         mEventClasses.add(ServiceEvent.class);
+        mEventClasses.add(DataEvent.class);
         mEventPoolMap = new HashMap<>();
         initPool();
     }

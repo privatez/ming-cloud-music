@@ -5,8 +5,6 @@ package ming.cloudmusic.event.model;
  */
 public class KeyEvent extends BaseEvent {
 
-    //TODO 删除KEY_
-
     public static final String PLAY_OR_PAUSE = "PLAY_OR_PAUSE";
 
     public static final String NEXT = "K_NEXT";

@@ -74,7 +74,7 @@ public class MusicService extends Service {
         mExtras = new HashMap<>();
         mMusicsManager = MusicsManager.getInstance();
         EventBus.getDefault().register(this);
-        mSharedPrefsUtil = new SharedPrefsUtil(getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
+        mSharedPrefsUtil = new SharedPrefsUtil(getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME_DATA);
         mPlayingPosition = mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYING_POSITION, 0);
         mPlayingMode = mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYINT_MODE, 0);
         new InnerAsyncTask().execute();

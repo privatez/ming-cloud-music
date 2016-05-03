@@ -17,7 +17,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="@color/white"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/iv_default"
@@ -25,15 +25,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/margin_normal"
             android:src="@drawable/default_disc_141" />
 
         <TextView
             android:id="@+id/tv_playbar_title"
-            android:layout_width="140dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/iv_default"
             android:layout_marginLeft="15dp"
+            android:layout_toLeftOf="@+id/iv_playbar_musiclist"
             android:layout_toRightOf="@+id/iv_default"
             android:singleLine="true"
             android:textColor="@color/black"
@@ -41,10 +42,11 @@
 
         <TextView
             android:id="@+id/tv_playbar_art"
-            android:layout_width="140dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/tv_playbar_title"
             android:layout_below="@+id/tv_playbar_title"
+            android:layout_toLeftOf="@+id/iv_playbar_musiclist"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/text_small" />

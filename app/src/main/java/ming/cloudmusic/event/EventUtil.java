@@ -4,6 +4,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 
+import ming.cloudmusic.event.model.DataEvent;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 
@@ -14,9 +15,11 @@ public class EventUtil {
 
     private static final String EVENTTYPE_KEY = "KEY";
     private static final String EVENTTYPE_SER = "SER";
+    private static final String EVENTTYPE_DATA = "DATA";
 
     private KeyEvent mKeyEvent;
     private ServiceEvent mSerEvent;
+    private DataEvent mDataEvent;
 
     private EventPoolManager mEventPoolManager;
     private static EventUtil mEventUtil;
@@ -53,6 +56,14 @@ public class EventUtil {
         postEventMsgHasExtra(eventMsg, extras, EVENTTYPE_SER);
     }
 
+    public void postDataEvent(String eventMsg) {
+        postEventMsg(eventMsg, EVENTTYPE_DATA);
+    }
+
+    public void postDataEventHasExtra(String eventMsg, Map extras) {
+        postEventMsgHasExtra(eventMsg, extras, EVENTTYPE_DATA);
+    }
+
     private void postEventMsg(String eventMsg, String eventType) {
         postEventMsgHasExtra(eventMsg, null, eventType);
     }
@@ -84,6 +95,16 @@ public class EventUtil {
                         mKeyEvent.getExtras().putAll(extras);
                     }
                     EventBus.getDefault().post(mKeyEvent);
+                }
+                break;
+            case EVENTTYPE_DATA:
+                mDataEvent = (DataEvent) mEventPoolManager.getEvent(DataEvent.class);
+                if (mDataEvent != null) {
+                    mDataEvent.setMsg(eventMsg);
+                    if (extras != null) {
+                        mDataEvent.getExtras().putAll(extras);
+                    }
+                    EventBus.getDefault().post(mDataEvent);
                 }
                 break;
         }
