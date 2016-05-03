@@ -98,7 +98,7 @@ public class CustomUtils {
         if (CustomUtils.isIntentAvailable(activity, intent)) {
             activity.startActivityForResult(Intent.createChooser(intent, "请选择文件!"), requestCode);
         } else {
-            ToastUtils.showShort(activity, "请安装文件管理器");
+            ToastUtils.showShort("请安装文件管理器");
         }
     }
 
@@ -252,8 +252,10 @@ public class CustomUtils {
      */
     public static void logout(Context context) {
         SharedPrefsUtil sharedPrefs = new SharedPrefsUtil(context.getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME);
-        ToastUtils.showShort(context, "退出登录成功");
+        SharedPrefsUtil sharedPrefsData = new SharedPrefsUtil(context.getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME_DATA);
+        ToastUtils.showShort("退出登录成功");
         sharedPrefs.clearAll();
+        sharedPrefsData.clearAll();
         Intent intent = new Intent();
         intent.setAction(Constant.ACTION_LOGOUT);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -359,7 +361,7 @@ public class CustomUtils {
 
     /**
      * 使状态栏透明
-     * <p>
+     * <p/>
      * 适用于图片作为背景的界面,此时需要图片填充到状态栏
      *
      * @param activity 需要设置的activity

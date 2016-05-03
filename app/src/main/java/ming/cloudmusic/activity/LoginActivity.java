@@ -18,7 +18,6 @@ import ming.cloudmusic.util.ToastUtils;
  */
 public class LoginActivity extends DefalutBaseActivity implements View.OnClickListener, View.OnFocusChangeListener {
 
-    private TextView tvBack;
     private TextView tvSubmit;
     private EditText etAccount;
     private EditText etPassword;
@@ -37,15 +36,12 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
     @Override
     public void initView() {
 
-        tvBack = (TextView) findViewById(R.id.tv_back);
         tvSubmit = (TextView) findViewById(R.id.tv_submit);
         etAccount = (EditText) findViewById(R.id.et_account);
         etPassword = (EditText) findViewById(R.id.et_password);
         vAccount = findViewById(R.id.v_account);
         vPassword = findViewById(R.id.v_password);
 
-        tvBack.setText("登录");
-        tvBack.setOnClickListener(this);
         tvSubmit.setOnClickListener(this);
         etAccount.setOnFocusChangeListener(this);
         etPassword.setOnFocusChangeListener(this);
@@ -57,15 +53,15 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
 
     }
 
-    private boolean canRegister(String account,String password) {
+    private boolean canRegister(String account, String password) {
 
         if (account.length() == 0) {
-            ToastUtils.showShort(mContext, "请输入用户名");
+            ToastUtils.showShort("请输入用户名");
             return false;
         }
 
         if (password.length() == 0) {
-            ToastUtils.showShort(mContext, "请输入密码");
+            ToastUtils.showShort("请输入密码");
             return false;
         }
 
@@ -114,11 +110,11 @@ public class LoginActivity extends DefalutBaseActivity implements View.OnClickLi
                     mSharedPrefs.setStringSP(Constant.SharedPrefrence.USER_ID, user.getObjectId());
                     mSharedPrefs.setStringSP(Constant.SharedPrefrence.USER_NAME, user.getUsername());
                     mSharedPrefs.setBooleanSP(Constant.SharedPrefrence.ISADMIN, user.isAdmin());
-                    ToastUtils.showShort(mContext, "登录成功");
+                    ToastUtils.showShort("登录成功");
                     startActivity(new Intent(mContext, CloudMusicMainActivity.class));
                     finish();
                 } else
-                    ToastUtils.showShort(mContext, "用户名或密码不正确");
+                    ToastUtils.showShort("用户名或密码不正确");
             }
         });
     }

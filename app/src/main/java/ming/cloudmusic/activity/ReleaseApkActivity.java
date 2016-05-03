@@ -76,7 +76,7 @@ public class ReleaseApkActivity extends DefalutBaseActivity implements View.OnCl
         switch (v.getId()) {
             case R.id.tv_upload:
                 if (etVersionCode.getText().toString().length() == 0) {
-                    ToastUtils.showShort(mContext, "请先输入版本号");
+                    ToastUtils.showShort("请先输入版本号");
                 } else {
                     tvUpload.setEnabled(false);
                     CustomUtils.startFileManager(this, REQ_FILE_MANAGER);
@@ -86,13 +86,13 @@ public class ReleaseApkActivity extends DefalutBaseActivity implements View.OnCl
                 if (etVersionCode.getText().toString().trim().length() > 0)
                     uploadUpdateInfo(Integer.parseInt(etVersionCode.getText().toString().trim()));
                 else
-                    ToastUtils.showShort(mContext, "请先输入版本号");
+                    ToastUtils.showShort("请先输入版本号");
                 break;
         }
     }
 
     private void uploadApk(String apkPath) {
-        ToastUtils.showShort(mContext, "正在上传...");
+        ToastUtils.showShort("正在上传...");
 
         final BmobFile bmobFile = new BmobFile(new File(apkPath));
         bmobFile.uploadblock(mContext, new UploadFileListener() {
@@ -100,7 +100,7 @@ public class ReleaseApkActivity extends DefalutBaseActivity implements View.OnCl
             @Override
             public void onSuccess() {
                 mApkUrl = bmobFile.getFileUrl(mContext);
-                ToastUtils.showShort(mContext, "上传成功...");
+                ToastUtils.showShort("上传成功...");
             }
 
             @Override
@@ -113,9 +113,9 @@ public class ReleaseApkActivity extends DefalutBaseActivity implements View.OnCl
             public void onFailure(int code, String msg) {
                 tvUpload.setEnabled(true);
                 if (code == BombServer.COED_NETWORK_ERROR) {
-                    ToastUtils.showShort(mContext, "网络异常，上传失败...");
+                    ToastUtils.showShort("网络异常，上传失败...");
                 } else {
-                    ToastUtils.showShort(mContext, "上传失败...");
+                    ToastUtils.showShort("上传失败...");
                 }
                 LogUtils.log("code:" + code + "....msg:" + msg);
             }
@@ -125,7 +125,7 @@ public class ReleaseApkActivity extends DefalutBaseActivity implements View.OnCl
     private void uploadUpdateInfo(final int versionCode) {
 
         if (TextUtils.isEmpty(mApkUrl)) {
-            ToastUtils.showShort(mContext, "请先上传apk");
+            ToastUtils.showShort("请先上传apk");
             return;
         }
 
@@ -138,7 +138,7 @@ public class ReleaseApkActivity extends DefalutBaseActivity implements View.OnCl
             @Override
             public void onSuccess() {
                 tvSubmit.setEnabled(true);
-                ToastUtils.showLong(mContext, "版本 " + versionCode + " 发布成功");
+                ToastUtils.showLong("版本 " + versionCode + " 发布成功");
             }
 
             @Override

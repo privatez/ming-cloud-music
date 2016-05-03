@@ -143,7 +143,7 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
                 refreshView(event.getExtras());
                 break;
             case ServiceEvent.PLAY_ERROR:
-                ToastUtils.showShort(mContext, "暂无可播放歌曲");
+                ToastUtils.showShort("暂无可播放歌曲");
                 break;
         }
     }

@@ -109,7 +109,7 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
                 if (result != null && result.size() > 0) {
                     updateApk(result.get(0));
                 } else {
-                    ToastUtils.showShort(mContext, "已经是最新版本");
+                    ToastUtils.showShort("已经是最新版本");
                 }
             }
 
@@ -158,7 +158,7 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
     }
 
     private void uploadMusic(final DbMusic music) {
-        ToastUtils.showShort(mContext, "正在上传...");
+        ToastUtils.showShort("正在上传...");
 
         final BmobFile bmobFile = new BmobFile(new File(music.getPath()));
 
@@ -179,9 +179,9 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
             public void onFailure(int i, String s) {
                 LogUtils.log("code:" + i + "....msg:" + s);
                 if (i == BombServer.COED_NETWORK_ERROR) {
-                    ToastUtils.showShort(mContext, "网络异常，上传失败...");
+                    ToastUtils.showShort("网络异常，上传失败...");
                 } else {
-                    ToastUtils.showShort(mContext, "上传失败...");
+                    ToastUtils.showShort("上传失败...");
                 }
             }
         });
@@ -191,12 +191,12 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
         music.save(mContext, new SaveListener() {
             @Override
             public void onSuccess() {
-                ToastUtils.showLong(mContext, music.getName() + " 上传成功");
+                ToastUtils.showLong(music.getName() + " 上传成功");
             }
 
             @Override
             public void onFailure(int i, String s) {
-                ToastUtils.showLong(mContext, music.getName() + " 上传失败");
+                ToastUtils.showLong(music.getName() + " 上传失败");
                 LogUtils.log("上传失败：" + i + ",msg:" + s);
             }
         });

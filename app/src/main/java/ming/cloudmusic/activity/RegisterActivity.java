@@ -16,7 +16,6 @@ import ming.cloudmusic.util.ToastUtils;
  */
 public class RegisterActivity extends DefalutBaseActivity implements View.OnClickListener, View.OnFocusChangeListener {
 
-    private TextView tvBack;
     private TextView tvSubmit;
     private EditText etAccount;
     private EditText etPassword;
@@ -35,15 +34,12 @@ public class RegisterActivity extends DefalutBaseActivity implements View.OnClic
     @Override
     public void initView() {
 
-        tvBack = (TextView) findViewById(R.id.tv_back);
         tvSubmit = (TextView) findViewById(R.id.tv_submit);
         etAccount = (EditText) findViewById(R.id.et_account);
         etPassword = (EditText) findViewById(R.id.et_password);
         vAccount = findViewById(R.id.v_account);
         vPassword = findViewById(R.id.v_password);
 
-        tvBack.setText("注册用户");
-        tvBack.setOnClickListener(this);
         tvSubmit.setOnClickListener(this);
         etAccount.setOnFocusChangeListener(this);
         etPassword.setOnFocusChangeListener(this);
@@ -58,17 +54,17 @@ public class RegisterActivity extends DefalutBaseActivity implements View.OnClic
     private boolean canRegister() {
 
         if (etAccount.getText().toString().trim().length() == 0) {
-            ToastUtils.showShort(mContext, "请设置用户名");
+            ToastUtils.showShort("请设置用户名");
             return false;
         }
 
         if (etPassword.getText().toString().trim().length() == 0) {
-            ToastUtils.showShort(mContext, "请设置密码");
+            ToastUtils.showShort("请设置密码");
             return false;
         }
 
         if (etPassword.getText().toString().trim().length() < 6) {
-            ToastUtils.showShort(mContext, "密码最少6位");
+            ToastUtils.showShort("密码最少6位");
             return false;
         }
 
@@ -112,14 +108,14 @@ public class RegisterActivity extends DefalutBaseActivity implements View.OnClic
         user.signUp(this, new SaveListener() {
             @Override
             public void onSuccess() {
-                ToastUtils.showShort(mContext, "注册成功");
+                ToastUtils.showShort("注册成功");
                 finish();
             }
 
             @Override
             public void onFailure(int code, String msg) {
                 if (code == 202 && msg.contains("taken"))
-                    ToastUtils.showShort(mContext, "用户名已被注册");
+                    ToastUtils.showShort("用户名已被注册");
                 else
                     LogUtils.log("注册失败+code:" + code + "....msg:" + msg);
             }

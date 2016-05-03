@@ -137,7 +137,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
     }
 
     private void refreshViewByLoginStatus(boolean isLogin) {
-        if(isLogin) {
+        if (isLogin) {
             tvMenuTitle.setText(mSharedPrefs.getStringSP(Constant.SharedPrefrence.USER_NAME, ""));
             tvMenuLogin.setVisibility(View.GONE);
             llMenuLogout.setVisibility(View.VISIBLE);
@@ -206,9 +206,9 @@ public class MenuDrawerHelper implements View.OnClickListener {
                 service.putExtra(ExitService.EXTRA_CHECK_POSITION, position);
                 mActivity.startService(service);
                 if (position != 0) {
-                    ToastUtils.showShort(mActivity, "设置成功，将于" + mExitTime.get(position) + "关闭");
+                    ToastUtils.showShort("设置成功，将于" + mExitTime.get(position) + "关闭");
                 } else {
-                    ToastUtils.showShort(mActivity, "定时停止播放已取消");
+                    ToastUtils.showShort("定时停止播放已取消");
                 }
                 dialog.dismiss();
             }

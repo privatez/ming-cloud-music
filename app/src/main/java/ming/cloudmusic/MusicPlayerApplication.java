@@ -9,6 +9,7 @@ import cn.bmob.v3.Bmob;
 import ming.cloudmusic.service.MusicService;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.MusicsManager;
+import ming.cloudmusic.util.ToastUtils;
 
 public class MusicPlayerApplication extends Application {
 
@@ -26,6 +27,8 @@ public class MusicPlayerApplication extends Application {
 
         //初始化数据
         MusicsManager.getInstance().init(getApplicationContext());
+
+        ToastUtils.init(getApplicationContext());
 
     }
 

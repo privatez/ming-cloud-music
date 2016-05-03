@@ -12,57 +12,63 @@ public class ToastUtils {
 
     private static Toast mToast;
 
+    private static Context mContext;
+
     /**
-     * 短时间显示Toast
+     * 初始化
      *
      * @param context
-     * @param message
      */
-    public static void showShort(Context context, CharSequence message) {
-        show(context, message, Toast.LENGTH_SHORT);
+    public static void init(Context context) {
+        mContext = context;
     }
 
     /**
      * 短时间显示Toast
      *
-     * @param context
      * @param message
      */
-    public static void showShort(Context context, int message) {
-        show(context, message, Toast.LENGTH_SHORT);
+    public static void showShort(CharSequence message) {
+        show(message, Toast.LENGTH_SHORT);
+    }
+
+    /**
+     * 短时间显示Toast
+     *
+     * @param message
+     */
+    public static void showShort(int message) {
+        show(message, Toast.LENGTH_SHORT);
     }
 
     /**
      * 长时间显示Toast
      *
-     * @param context
      * @param message
      */
-    public static void showLong(Context context, CharSequence message) {
-        show(context, message, Toast.LENGTH_LONG);
+    public static void showLong(CharSequence message) {
+        show(message, Toast.LENGTH_LONG);
     }
 
     /**
      * 长时间显示Toast
      *
-     * @param context
      * @param message
      */
-    public static void showLong(Context context, int message) {
-        show(context, message, Toast.LENGTH_LONG);
+    public static void showLong(int message) {
+        show(message, Toast.LENGTH_LONG);
     }
 
     /**
      * 自定义显示Toast时间
      *
-     * @param context
      * @param message
      * @param duration
      */
-    public static void show(Context context, CharSequence message, int duration) {
+    public static void show(CharSequence message, int duration) {
         if (isShow) {
             if (mToast == null) {
-                mToast = Toast.makeText(context, message, duration);
+                mToast = Toast.makeText(mContext, message, duration);
             } else {
                 mToast.setText(message);
             }
@@ -73,11 +79,11 @@ public class ToastUtils {
     /**
      * 自定义显示Toast时间
      *
-     * @param context
      * @param message
      * @param duration
      */
-    public static void show(Context context, int message, int duration) {
-        show(context, String.valueOf(message), duration);
+    public static void show(int message, int duration) {
+        show(String.valueOf(message), duration);
     }
+
 }

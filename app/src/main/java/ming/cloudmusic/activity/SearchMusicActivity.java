@@ -118,7 +118,7 @@ public class SearchMusicActivity extends DefalutBaseActivity implements View.OnC
             musics.addAll(MusicsManager.getInstance().searchLocalMusic(msg));
             mlvSearch.notifyDataSetChanged(musics);
         } else if (mSearchType == SEARCH_CLOUDMUSIC) {
-            ToastUtils.showShort(mContext,"网路搜索");
+            ToastUtils.showShort("网路搜索");
         }
     }
 
