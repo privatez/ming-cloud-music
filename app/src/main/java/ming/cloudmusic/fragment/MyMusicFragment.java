@@ -3,6 +3,7 @@ package ming.cloudmusic.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import ming.cloudmusic.util.MusicsManager;
 /**
  * Created by Lhy on 2016/3/19.
  */
-public class MyMusicFragment extends DefaultBaseFragment implements View.OnClickListener {
+public class MyMusicFragment extends DefaultBaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private ImageView ivMenu;
     private ImageView ivSearch;
@@ -29,8 +30,7 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
     private TextView tvHistoryNum;
     private View rlDld;
     private TextView tvDldNum;
-    private View rlMyart;
-    private TextView tvMyartNum;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -57,22 +57,22 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
         tvHistoryNum = (TextView) view.findViewById(R.id.tv_history_num);
         rlDld = view.findViewById(R.id.rl_dld);
         tvDldNum = (TextView) view.findViewById(R.id.tv_dld_num);
-        rlMyart = view.findViewById(R.id.rl_myart);
-        tvMyartNum = (TextView) view.findViewById(R.id.tv_myart_num);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
 
         ivMenu.setOnClickListener(this);
         rlLocalmusic.setOnClickListener(this);
         rlHistory.setOnClickListener(this);
         rlDld.setOnClickListener(this);
-        rlMyart.setOnClickListener(this);
         view.findViewById(R.id.iv_search).setOnClickListener(this);
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.white);
+        swipeRefreshLayout.setColorSchemeResources(R.color.cloudred);
     }
 
     @Override
     public void initData() {
-        Map<String,String> map = MusicsManager.getInstance().getMusicsCount();
-        tvLocalmusicNum.setText("(" + map.get(MusicsManager.KEY_LOCALMUSICS_COUNT) + ")");
-        tvHistoryNum.setText("(" + map.get(MusicsManager.KEY_HISTORYMUSICS_COUNT) + ")");
+        refreView();
     }
 
     @Override
@@ -95,10 +95,18 @@ public class MyMusicFragment extends DefaultBaseFragment implements View.OnClick
             case R.id.rl_dld:
                 postEventMsg(KeyEvent.ACTION_DLD);
                 break;
-            case R.id.rl_myart:
-                postEventMsg(KeyEvent.ACTION_ARTLIST);
-                break;
         }
     }
 
+    @Override
+    public void onRefresh() {
+        refreView();
+    }
+
+    private void refreView() {
+        Map<String, String> map = MusicsManager.getInstance().getMusicsCount();
+        tvLocalmusicNum.setText("(" + map.get(MusicsManager.KEY_LOCALMUSICS_COUNT) + ")");
+        tvHistoryNum.setText("(" + map.get(MusicsManager.KEY_HISTORYMUSICS_COUNT) + ")");
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }
