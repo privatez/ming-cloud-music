@@ -25,6 +25,7 @@ import ming.cloudmusic.adapter.CommonAdapter;
 import ming.cloudmusic.adapter.ViewHolder;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.model.DbMusic;
+import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.util.MusicsManager;
 
 /**
@@ -42,6 +43,7 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
     private Context mContext;
 
     private MusicsManager mMusicsManager;
+    private MusicDetailPopwindow mMusicDetailPopwindow;
 
     private CommonAdapter mAdapter;
     private List<DbMusic> mMusicList;
@@ -134,22 +136,39 @@ public class MusicListView extends FrameLayout implements View.OnClickListener {
         }
     }
 
+    private void showMusicDetailPopwindow(DbMusic music) {
+        if (mMusicDetailPopwindow == null) {
+            mMusicDetailPopwindow = new MusicDetailPopwindow(mContext);
+        }
+        mMusicDetailPopwindow.showAtLocationAndSetDbMusic(music, llContent, 0, 0, 0);
+    }
+
     private void setDefaultAdapter() {
         lvMusics.setAdapter(mAdapter = new CommonAdapter<DbMusic>(mContext, mMusicList, R.layout.item_musiclist_common) {
             @Override
-            public void convert(ViewHolder holder, DbMusic item) {
-                ImageView ivTag = holder.getView(R.id.iv_tag);
+            public void convert(ViewHolder holder, final DbMusic item) {
+                ImageView ivIsLocal = holder.getView(R.id.iv_tag);
                 ImageView ivPlaying = holder.getView(R.id.iv_playing);
                 holder.setText(R.id.tv_title, item.getTitle());
                 holder.setText(R.id.tv_art, item.getArtlist());
+
                 if (mOnMenuClickListener != null) {
+                    LogUtils.log("mOnMenuClickListener");
                     holder.getView(R.id.iv_menu).setOnClickListener(mOnMenuClickListener);
+                } else {
+                    LogUtils.log("setOnClickListener" + holder.getPosition());
+                    holder.getView(R.id.iv_menu).setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showMusicDetailPopwindow(item);
+                        }
+                    });
                 }
 
                 if (item.isLocalMusic()) {
-                    ivTag.setImageResource(R.drawable.list_icn_mobile);
+                    ivIsLocal.setImageResource(R.drawable.list_icn_mobile);
                 } else {
-                    ivTag.setImageResource(R.drawable.list_icn_dld_ok);
+                    ivIsLocal.setImageResource(R.drawable.list_icn_dld_ok);
                 }
 
                 if (mMusicsManager.isMusicPlaying(item.getId())) {

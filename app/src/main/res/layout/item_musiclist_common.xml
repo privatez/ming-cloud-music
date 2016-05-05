@@ -12,7 +12,6 @@
         android:orientation="horizontal"
         android:paddingBottom="@dimen/padding_small"
         android:paddingLeft="@dimen/padding_medium"
-        android:paddingRight="@dimen/padding_medium"
         android:paddingTop="@dimen/padding_small">
 
         <ImageView
@@ -33,7 +32,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="平凡之路"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_medium" />
 
@@ -55,7 +53,6 @@
                 android:layout_marginTop="@dimen/margin_ssmall"
                 android:layout_toRightOf="@+id/iv_tag"
                 android:singleLine="true"
-                android:text="朴树"
                 android:textColor="@color/darkgray"
                 android:textSize="@dimen/text_normal" />
 
@@ -65,7 +62,7 @@
             android:id="@+id/iv_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_small"
+            android:padding="@dimen/padding_normal"
             android:src="@drawable/list_icn_more" />
 
     </LinearLayout>

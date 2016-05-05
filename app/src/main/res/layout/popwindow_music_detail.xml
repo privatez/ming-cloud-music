@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/v_blank"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#80000000" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/v_blank"
+        android:layout_weight="2"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_music_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_medium"
+                android:text="歌曲："
+                android:textColor="@color/text_content"
+                android:textSize="@dimen/text_small" />
+
+            <RelativeLayout
+                android:id="@+id/rl_next_play"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_medium"
+                android:paddingRight="@dimen/padding_medium"
+                android:paddingTop="@dimen/padding_medium">
+
+                <ImageView
+                    android:id="@+id/iv_nex_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/lay_icn_next" />
+
+                <TextView
+                    android:id="@+id/tv_next_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_toRightOf="@+id/iv_nex_play"
+                    android:text="下一首播放"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_normal" />
+
+                <View
+                    style="@style/Line"
+                    android:layout_alignLeft="@+id/tv_next_play"
+                    android:layout_below="@+id/iv_nex_play"
+                    android:layout_marginTop="@dimen/margin_medium" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_fav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_medium"
+                android:paddingRight="@dimen/padding_medium"
+                android:paddingTop="@dimen/padding_medium">
+
+                <ImageView
+                    android:id="@+id/iv_fav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/lay_icn_fav" />
+
+                <TextView
+                    android:id="@+id/tv_fav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_toRightOf="@+id/iv_fav"
+                    android:text="收藏到歌单"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_normal" />
+
+                <View
+                    style="@style/Line"
+                    android:layout_alignLeft="@+id/tv_fav"
+                    android:layout_below="@+id/iv_fav"
+                    android:layout_marginTop="@dimen/margin_medium" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_dld"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_medium"
+                android:paddingRight="@dimen/padding_medium"
+                android:paddingTop="@dimen/padding_medium">
+
+                <ImageView
+                    android:id="@+id/iv_dld"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/lay_icn_dld" />
+
+                <TextView
+                    android:id="@+id/tv_dld"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_toRightOf="@+id/iv_dld"
+                    android:text="下载"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_normal" />
+
+                <View
+                    style="@style/Line"
+                    android:layout_alignLeft="@+id/tv_dld"
+                    android:layout_below="@+id/iv_dld"
+                    android:layout_marginTop="@dimen/margin_medium" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_medium"
+                android:paddingRight="@dimen/padding_medium"
+                android:paddingTop="@dimen/padding_medium">
+
+                <ImageView
+                    android:id="@+id/iv_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/lay_icn_delete" />
+
+                <TextView
+                    android:id="@+id/tv_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_toRightOf="@+id/iv_delete"
+                    android:text="删除"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_normal" />
+
+                <View
+                    style="@style/Line"
+                    android:layout_alignLeft="@+id/tv_delete"
+                    android:layout_below="@+id/iv_delete"
+                    android:layout_marginTop="@dimen/margin_medium" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_ring"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding_medium"
+                android:paddingRight="@dimen/padding_medium"
+                android:paddingTop="@dimen/padding_medium">
+
+                <ImageView
+                    android:id="@+id/iv_ring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/lay_icn_ring" />
+
+                <TextView
+                    android:id="@+id/tv_ring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_toRightOf="@+id/iv_ring"
+                    android:text="设为铃声"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_normal" />
+
+                <View
+                    style="@style/Line"
+                    android:layout_alignLeft="@+id/tv_ring"
+                    android:layout_below="@+id/iv_ring"
+                    android:layout_marginTop="@dimen/margin_medium" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
