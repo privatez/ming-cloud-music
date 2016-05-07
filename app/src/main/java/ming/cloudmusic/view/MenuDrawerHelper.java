@@ -13,6 +13,10 @@ import android.widget.TextView;
 
 import net.simonvt.menudrawer.MenuDrawer;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +25,8 @@ import ming.cloudmusic.activity.AboutAppActivity;
 import ming.cloudmusic.activity.EntranceActivity;
 import ming.cloudmusic.adapter.CommonAdapter;
 import ming.cloudmusic.adapter.ViewHolder;
+import ming.cloudmusic.event.Event;
+import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.service.ExitService;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.CustomUtils;
@@ -76,6 +82,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
         mListener = listener;
         initMenu();
         initExitAdapter();
+        EventBus.getDefault().register(this);
     }
 
     private void initMenu() {
@@ -143,6 +150,19 @@ public class MenuDrawerHelper implements View.OnClickListener {
             llMenuLogout.setVisibility(View.VISIBLE);
         } else {
             llMenuLogout.setVisibility(View.GONE);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(KeyEvent event) {
+        switch (event.getMsg()) {
+            case KeyEvent.TOGGLE_MENU:
+                toggleMenu();
+                break;
+            case KeyEvent.POST_MILLISUNTILFINISHED:
+                setTimeText((Long) event.getExtras().get(Event.Extra.TIMINGPLAY_TIME),
+                        (int) event.getExtras().get(Event.Extra.TIMINGPLAY_CHECK_POSITION));
+                break;
         }
     }
 
@@ -236,7 +256,7 @@ public class MenuDrawerHelper implements View.OnClickListener {
         };
     }
 
-    public void setTimeText(long time, int position) {
+    private void setTimeText(long time, int position) {
         if (time == 0) {
             tvMenuTime.setText("");
             mCheckPosition = 0;
@@ -268,6 +288,10 @@ public class MenuDrawerHelper implements View.OnClickListener {
     public boolean isMenuOpened() {
         int drawerState = mDrawer.getDrawerState();
         return drawerState == MenuDrawer.STATE_OPEN || drawerState == MenuDrawer.STATE_OPENING;
+    }
+
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
     }
 
 }

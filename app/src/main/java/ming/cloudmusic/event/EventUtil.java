@@ -7,6 +7,7 @@ import java.util.Map;
 import ming.cloudmusic.event.model.DataEvent;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
+import ming.cloudmusic.util.LogUtils;
 
 /**
  * Created by Lhy on 2016/3/5.
@@ -21,10 +22,13 @@ public class EventUtil {
     private ServiceEvent mSerEvent;
     private DataEvent mDataEvent;
 
+    private EventBus mEventBus;
     private EventPoolManager mEventPoolManager;
+
     private static EventUtil mEventUtil;
 
     private EventUtil() {
+        mEventBus = EventBus.getDefault();
         mEventPoolManager = EventPoolManager.getDefaultPool();
     }
 
@@ -84,7 +88,7 @@ public class EventUtil {
                     if (extras != null) {
                         mSerEvent.getExtras().putAll(extras);
                     }
-                    EventBus.getDefault().post(mSerEvent);
+                    mEventBus.post(mSerEvent);
                 }
                 break;
             case EVENTTYPE_KEY:
@@ -94,21 +98,21 @@ public class EventUtil {
                     if (extras != null) {
                         mKeyEvent.getExtras().putAll(extras);
                     }
-                    EventBus.getDefault().post(mKeyEvent);
+                    mEventBus.post(mKeyEvent);
                 }
                 break;
             case EVENTTYPE_DATA:
                 mDataEvent = (DataEvent) mEventPoolManager.getEvent(DataEvent.class);
+                LogUtils.log("EVENTTYPE_DATA123" + eventMsg);
                 if (mDataEvent != null) {
                     mDataEvent.setMsg(eventMsg);
                     if (extras != null) {
                         mDataEvent.getExtras().putAll(extras);
                     }
-                    EventBus.getDefault().post(mDataEvent);
+                    mEventBus.post(mDataEvent);
                 }
                 break;
         }
     }
-
 
 }

@@ -31,6 +31,7 @@ import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.fragment.MyMusicFragment;
 import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.FragmentTaskManager;
+import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.util.ToastUtils;
 import ming.cloudmusic.view.MenuDrawerHelper;
 
@@ -68,6 +69,7 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         FragmentTaskManager.getInstance().unregister(this);
+        mDrawerHelper.onDestroy();
     }
 
 
@@ -108,19 +110,6 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(KeyEvent event) {
-        switch (event.getMsg()) {
-            case KeyEvent.TOGGLE_MENU:
-                mDrawerHelper.toggleMenu();
-                break;
-            case KeyEvent.POST_MILLISUNTILFINISHED:
-                mDrawerHelper.setTimeText((Long) event.getExtras().get(Event.Extra.TIMINGPLAY_TIME),
-                        (int) event.getExtras().get(Event.Extra.TIMINGPLAY_CHECK_POSITION));
-                break;
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(ServiceEvent event) {
         String msg = event.getMsg();
         Map data = event.getExtras();
@@ -143,6 +132,7 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
                 refreshView(event.getExtras());
                 break;
             case ServiceEvent.PLAY_ERROR:
+                ivPlaybarPlayorpause.setImageResource(R.drawable.playbar_btn_play);
                 ToastUtils.showShort("暂无可播放歌曲");
                 break;
         }
@@ -150,8 +140,10 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(DataEvent event) {
+        LogUtils.log("onEvent DataEvent1");
         switch (event.getMsg()) {
             case DataEvent.PLAYINTMUSICS_ISCLEAR:
+                LogUtils.log("onEvent DataEvent2");
                 rlPlaybar.setVisibility(View.GONE);
                 break;
         }

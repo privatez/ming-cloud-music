@@ -11,8 +11,6 @@ public class Event {
 
         public static final String BAR_CHANGE = "bar_change";
 
-        public static final String PLAYING_POSITION = "playing_position";
-
         public static final String PLAYING_TITLE = "title";
 
         public static final String PLAYING_ART = "art";

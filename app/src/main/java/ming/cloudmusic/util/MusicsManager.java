@@ -66,7 +66,8 @@ public class MusicsManager {
             }
         }.run();
 
-        mSharedPrefsUtil = new SharedPrefsUtil(context.getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME_DATA);
+        mSharedPrefsUtil = new SharedPrefsUtil(context.getApplicationContext(),
+                Constant.SharedPrefrence.SHARED_NAME_DATA);
 
         mLocalMusics = dao.getInAppDbMusics();
         mPlayingMusics = dao.getPlayingMusics();
@@ -92,9 +93,8 @@ public class MusicsManager {
      * @param position
      */
     public void playMusicByPosition(List<DbMusic> dbMusics, int position) {
-        long id = mPlayingMusics.get(getPlayingPosition()).getId();
         updateDbMusics(dbMusics);
-        if (id != (dbMusics.get(position).getId())) {
+        if (!isMusicPlaying(dbMusics.get(position).getId())) {
             mExtras.clear();
             mExtras.put(Event.Extra.PLAY_BY_POSITION, position);
             postKeyEventMsgHasExtra(KeyEvent.PLAY_BY_POSITION, mExtras);
@@ -102,6 +102,9 @@ public class MusicsManager {
     }
 
     public void removePlayingMusicById(long id) {
+        if (isMusicPlaying(id)) {
+            postKeyEventMsg(KeyEvent.NEXT);
+        }
         for (int i = 0; i < mLocalMusics.size(); i++) {
             if (mLocalMusics.get(i).getId() == id) {
                 mPlayingMusics.remove(mLocalMusics.get(i));
@@ -109,7 +112,7 @@ public class MusicsManager {
             }
         }
 
-        checkPlayingMusics();
+        checkIsHasPlayingList();
         dao.updateDbMusics(mLocalMusics);
     }
 
@@ -122,42 +125,51 @@ public class MusicsManager {
             }
         }
 
-        checkPlayingMusics();
+        checkIsHasPlayingList();
         dao.updateDbMusics(mLocalMusics);
     }
 
-    private void checkPlayingMusics() {
+    private boolean checkIsHasPlayingList() {
         if (getPlayingMusicsSize() == 0) {
-            postKeyEventMsg(KeyEvent.PLAY_OR_PAUSE);
             postDataEventMsg(DataEvent.PLAYINTMUSICS_ISCLEAR);
             mSharedPrefsUtil.clearAll();
+            return false;
         }
+        return true;
     }
 
     /**
      * 更新数据库
      *
-     * @param dbMusics
+     * @param newPlayMusics
      */
-    private void updateDbMusics(List<DbMusic> dbMusics) {
-        if (dbMusics == null || dbMusics.size() == 0) {
+    private void updateDbMusics(List<DbMusic> newPlayMusics) {
+        if (newPlayMusics == null || newPlayMusics.size() == 0) {
             return;
         }
-        if (mPlayingMusics.containsAll(dbMusics)) {
+
+        if (mPlayingMusics.containsAll(newPlayMusics)) {
             return;
         }
+
         mPlayingMusics.clear();
-        mPlayingMusics.addAll(dbMusics);
+        mPlayingMusics.addAll(newPlayMusics);
 
-        for (int i = 0; i < dbMusics.size(); i++) {
-            dbMusics.get(i).setPlaySequence(i);
+        int localCount = mLocalMusics.size();
+        int playingCount = getPlayingMusicsSize();
+
+        for (int local = 0; local < localCount; local++) {
+            mLocalMusics.get(local).setPlaySequence(DbMusic.DEFAULT_PLAY_SEQUENCE);
         }
 
-        mLocalMusics.removeAll(dbMusics);
-        for (int i = 0; i < mLocalMusics.size(); i++) {
-            mLocalMusics.get(i).setPlaySequence(DbMusic.DEFAULT_PLAY_SEQUENCE);
+        for (int newPlay = 0; newPlay < playingCount; newPlay++) {
+            for (int local = 0; local < localCount; local++) {
+                if (mPlayingMusics.get(newPlay).getId() == mLocalMusics.get(local).getId()) {
+                    mPlayingMusics.get(newPlay).setPlaySequence(newPlay);
+                    mLocalMusics.get(local).setPlaySequence(newPlay);
+                }
+            }
         }
-        mLocalMusics.addAll(dbMusics);
 
         dao.updateDbMusics(mLocalMusics);
     }
@@ -199,7 +211,8 @@ public class MusicsManager {
        /* LogUtils.log("playingMusicsSize:" + playingMusicsSize);
         LogUtils.log("newPosition:" + newPosition);
         LogUtils.log((playingMusicsSize <= MAX_RANDOM ? playingMusicsSize - 1 : MAX_RANDOM) + ":MAX_RANDOM");*/
-        if (mPlayedMusicPositions.size() >= (playingMusicsSize <= MAX_RANDOM ? playingMusicsSize - 1 : MAX_RANDOM)) {
+        if (mPlayedMusicPositions.size() >= (playingMusicsSize <= MAX_RANDOM
+                ? playingMusicsSize - 1 : MAX_RANDOM)) {
             mPlayedMusicPositions.remove(0);
         }
         mPlayedMusicPositions.add(newPosition);
@@ -207,21 +220,18 @@ public class MusicsManager {
         return newPosition;
     }
 
-    public int getPlayingMusicById(long id) {
-        for (int i = 0; i < getPlayingMusicsSize(); i++) {
-            if (id == mPlayingMusics.get(i).getId()) {
-                return i;
-            }
-        }
-        return -1;
+    public DbMusic getOnPlayMusicByPosition(int position) {
+        return checkIsHasPlayingList() ? mPlayingMusics.get(position) : null;
     }
 
-    public DbMusic getOnPlayMusicByPosition(int position) {
-        checkPlayingMusics();
-        if (getPlayingMusicsSize() == 0) {
-            return null;
+    public DbMusic getPlayingMusicById(long id) {
+        DbMusic isPlayingMusic = null;
+        for (DbMusic music : mPlayingMusics) {
+            if (music.getId() == id) {
+                isPlayingMusic = music;
+            }
         }
-        return mPlayingMusics.get(position);
+        return isPlayingMusic;
     }
 
     public List<DbMusic> searchLocalMusic(String msg) {
@@ -230,16 +240,9 @@ public class MusicsManager {
     }
 
     public boolean isMusicPlaying(long id) {
-        long playingId = getPlayingMusicId();
-        if (playingId == DEFAULT_PLAYINGID) {
-            return false;
-        }
 
-        return playingId == id;
-    }
-
-    public long getPlayingMusicId() {
-        return mSharedPrefsUtil.getLongSP(Constant.SharedPrefrence.PLAYING_ID, DEFAULT_PLAYINGID);
+        return mSharedPrefsUtil.getLongSP(
+                Constant.SharedPrefrence.PLAYING_ID, DEFAULT_PLAYINGID) == id;
     }
 
     public int getPlayingPosition() {

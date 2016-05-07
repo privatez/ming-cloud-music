@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
-import android.os.AsyncTask;
 import android.os.IBinder;
 
 import org.greenrobot.eventbus.EventBus;
@@ -16,11 +15,14 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ming.cloudmusic.activity.screenoff.ScreenOffActivity;
 import ming.cloudmusic.db.MusicDao;
 import ming.cloudmusic.event.Event;
 import ming.cloudmusic.event.EventUtil;
+import ming.cloudmusic.event.model.DataEvent;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.model.DbMusic;
@@ -55,13 +57,12 @@ public class MusicService extends Service {
      */
     private int mPlayingProgress;
 
-    private boolean isRunning;
+    private Map mExtras;
 
     private SharedPrefsUtil mSharedPrefsUtil;
     private MusicsManager mMusicsManager;
-    private Map mExtras;
-
     private ScreenOffReceiver mScreenOffReceiver;
+    private Timer mUpdateSeekBarTimer;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -71,13 +72,49 @@ public class MusicService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        initData();
+        initScreenOffReceiver();
+
+        EventBus.getDefault().register(this);
+    }
+
+    private void initData() {
         mExtras = new HashMap<>();
         mMusicsManager = MusicsManager.getInstance();
-        EventBus.getDefault().register(this);
+
         mSharedPrefsUtil = new SharedPrefsUtil(getApplicationContext(), Constant.SharedPrefrence.SHARED_NAME_DATA);
         mPlayingPosition = mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYING_POSITION, 0);
         mPlayingMode = mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYINT_MODE, 0);
-        new InnerAsyncTask().execute();
+        mPlayingProgress = mSharedPrefsUtil.getIntSP(Constant.SharedPrefrence.PLAYING_DURATION, 0);
+
+        mPlayingMusic = mMusicsManager.getOnPlayMusicByPosition(mPlayingPosition);
+        musicsSize = mMusicsManager.getPlayingMusicsSize();
+
+        mPlayer = new MediaPlayer();
+        mPlayer.setOnCompletionListener(new OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                next();
+            }
+        });
+
+        mUpdateSeekBarTimer = new Timer();
+        mUpdateSeekBarTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (mPlayer.isPlaying()) {
+                    mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYING_DURATION, mPlayer.getCurrentPosition());
+                    mExtras.put(Event.Extra.BAR_CHANGE, mPlayer.getCurrentPosition());
+                    postSerEventMsgHasExtra(ServiceEvent.SERVICE_BAR_CHANGE, mExtras);
+                }
+            }
+        }, 0, 200);
+
+    }
+
+    private void initScreenOffReceiver() {
         mScreenOffReceiver = new ScreenOffReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SCREENOFF_ACTION);
@@ -86,65 +123,20 @@ public class MusicService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_NOT_STICKY;
+    }
+
+    @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        isRunning = false;
         if (mPlayer != null) {
             mPlayer.stop();
             mPlayer.release();
             mPlayer = null;
         }
         unregisterReceiver(mScreenOffReceiver);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_NOT_STICKY;
-    }
-
-    private class InnerAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            mPlayingMusic = mMusicsManager.getOnPlayMusicByPosition(mPlayingPosition);
-            musicsSize = mMusicsManager.getPlayingMusicsSize();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-
-            mPlayer = new MediaPlayer();
-            isRunning = true;
-
-            new UpdateSeekBarThread().start();
-
-            mPlayer.setOnCompletionListener(new OnCompletionListener() {
-
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    next();
-                }
-            });
-        }
-    }
-
-    private class UpdateSeekBarThread extends Thread {
-        @Override
-        public void run() {
-            try {
-                while (isRunning) {
-                    if (mPlayer.isPlaying()) {
-                        mExtras.put(Event.Extra.BAR_CHANGE, mPlayer.getCurrentPosition());
-                        postEventMsgHasExtra(ServiceEvent.SERVICE_BAR_CHANGE, mExtras);
-                        Thread.sleep(1000);
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        mUpdateSeekBarTimer.cancel();
     }
 
     @Subscribe
@@ -198,15 +190,19 @@ public class MusicService extends Service {
         }
 
         mExtras.put(Event.Extra.PLAY_MODE, mPlayingMode);
-        postEventMsgHasExtra(ServiceEvent.SERVICE_PLAY_MODE, mExtras);
+        postSerEventMsgHasExtra(ServiceEvent.SERVICE_PLAY_MODE, mExtras);
         mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYINT_MODE, mPlayingMode);
     }
 
     public void sendMusicInfo() {
 
+        if (mPlayingMusic == null) {
+            postDataEventMsg(DataEvent.PLAYINTMUSICS_ISCLEAR);
+            return;
+        }
+
         if (mPlayingMusic != null) {
 
-            mExtras.put(Event.Extra.PLAYING_POSITION, mPlayingPosition);
             mExtras.put(Event.Extra.PLAYING_TITLE, mPlayingMusic.getTitle());
             mExtras.put(Event.Extra.PLAYING_ART, mPlayingMusic.getArtlist());
             mExtras.put(Event.Extra.PLAYING_DURATION, mPlayingMusic.getDuration());
@@ -214,18 +210,16 @@ public class MusicService extends Service {
 
             if (mPlayer.isPlaying()) {
                 mExtras.put(Event.Extra.PLAYING_POINT, mPlayer.getCurrentPosition());
-                postEventMsg(ServiceEvent.SERVICE_PLAY);
+                postSerEventMsg(ServiceEvent.SERVICE_PLAY);
                 //LogUtils.log("SERVICE_PLAY");
             } else {
-                mExtras.put(Event.Extra.PLAYING_POINT, 0);
-                postEventMsg(ServiceEvent.SERVICE_PAUSE);
+                mExtras.put(Event.Extra.PLAYING_POINT, mPlayingProgress);
+                postSerEventMsg(ServiceEvent.SERVICE_PAUSE);
                 //LogUtils.log("SERVICE_PAUSE");
             }
 
-        } else {
-            return;
         }
-        postEventMsgHasExtra(ServiceEvent.SERVICE_POST_PLAYINGMUSIC, mExtras);
+        postSerEventMsgHasExtra(ServiceEvent.SERVICE_POST_PLAYINGMUSIC, mExtras);
     }
 
     public void right() {
@@ -292,13 +286,14 @@ public class MusicService extends Service {
             mPlayer.stop();
         }
         mPlayingProgress = mPlayer.getCurrentPosition();
-        postEventMsg(ServiceEvent.SERVICE_PAUSE);
+        postSerEventMsg(ServiceEvent.SERVICE_PAUSE);
     }
 
     private void play() {
+        musicsSize = mMusicsManager.getPlayingMusicsSize();
         mPlayingMusic = mMusicsManager.getOnPlayMusicByPosition(mPlayingPosition);
         if (mPlayingMusic == null) {
-            postEventMsg(ServiceEvent.PLAY_ERROR);
+            postSerEventMsg(ServiceEvent.PLAY_ERROR);
             return;
         }
         mSharedPrefsUtil.setIntSP(Constant.SharedPrefrence.PLAYING_POSITION, mPlayingPosition);
@@ -322,12 +317,20 @@ public class MusicService extends Service {
         }
     }
 
-    private void postEventMsg(String eventMsg) {
+    private void postSerEventMsg(String eventMsg) {
         EventUtil.getDefault().postSerEvent(eventMsg);
     }
 
-    private void postEventMsgHasExtra(String eventMsg, Map extars) {
+    private void postSerEventMsgHasExtra(String eventMsg, Map extars) {
         EventUtil.getDefault().postSerEventHasExtra(eventMsg, extars);
+    }
+
+    private void postDataEventMsg(String eventMsg) {
+        postDataEventMsgHasExtra(eventMsg, null);
+    }
+
+    private void postDataEventMsgHasExtra(String eventMsg, Map extars) {
+        EventUtil.getDefault().postDataEventHasExtra(eventMsg, extars);
     }
 
     public class ScreenOffReceiver extends BroadcastReceiver {

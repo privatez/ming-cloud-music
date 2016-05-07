@@ -168,7 +168,7 @@ public class MusicDao {
     }
 
     public void updateDbMusics(List<DbMusic> musics) {
-        if (musics != null || musics.isEmpty()) {
+        if (musics == null || musics.isEmpty()) {
             return;
         }
 

@@ -56,7 +56,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/margin_ssmall"
             android:layout_toLeftOf="@+id/iv_playbar_playorpause"
             android:src="@drawable/playbar_btn_playlist" />
 
@@ -65,7 +64,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/margin_ssmall"
             android:layout_toLeftOf="@+id/iv_playbar_next"
             android:src="@drawable/playbar_btn_play" />
 
@@ -75,7 +73,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/margin_normal"
             android:src="@drawable/playbar_btn_next" />
 
     </RelativeLayout>

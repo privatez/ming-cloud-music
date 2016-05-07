@@ -72,7 +72,7 @@ public class EventPoolManager {
                     LogUtils.log("initPool IllegalAccessException" + e.getMessage());
                 }
             }
-            LogUtils.log(c.getSimpleName() + "....." + eventPool.toString());
+            //LogUtils.log(c.getSimpleName() + "....." + eventPool.toString());
             mEventPoolMap.put(getKey(c), eventPool);
         }
     }

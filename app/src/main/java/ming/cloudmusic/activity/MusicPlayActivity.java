@@ -85,11 +85,14 @@ public class MusicPlayActivity extends DrawableBaseActivity implements OnClickLi
     }
 
     private void refreshView(Map data) {
+        int playingPoint = (int) data.get(Event.Extra.PLAYING_POINT);
+        duration = (int) data.get(Event.Extra.PLAYING_DURATION);
+
         tvPlaytitleTitle.setText(data.get(Event.Extra.PLAYING_TITLE).toString());
         tvPlaytitleArt.setText(data.get(Event.Extra.PLAYING_ART).toString());
-        tvPlaytime.setText(DateSDF.getDefaultSDF(data.get(Event.Extra.PLAYING_POINT)).toString());
-        tvAlltime.setText(DateSDF.getDefaultSDF(data.get(Event.Extra.PLAYING_DURATION)).toString());
-        duration = (int) data.get(Event.Extra.PLAYING_DURATION);
+        tvPlaytime.setText(DateSDF.getDefaultSDF(playingPoint).toString());
+        tvAlltime.setText(DateSDF.getDefaultSDF(duration).toString());
+        seekbarPlay.setProgress(playingPoint * 100 / duration);
         setPlayModeIcon((int) data.get(Event.Extra.PLAY_MODE));
     }
 
@@ -121,6 +124,9 @@ public class MusicPlayActivity extends DrawableBaseActivity implements OnClickLi
                     setListener();
                 }
                 refreshView(event.getExtras());
+                break;
+            case ServiceEvent.PLAY_ERROR:
+                ivPlayorpasue.setImageResource(R.drawable.play_btn_play);
                 break;
         }
     }
