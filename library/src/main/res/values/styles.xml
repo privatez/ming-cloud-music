@@ -8,4 +8,23 @@
         <item name="shadow_bottom">@drawable/shadow_bottom</item>
     </style>
 
+    <style name="Ming"></style>
+
+    <style name="Ming.Divider">
+        <item name="android:background">@color/grey_lighter</item>
+    </style>
+
+    <style name="Ming.Divider.Horizontal" parent="Ming.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+    </style>
+
+    <style name="Ming.BtnSubmitRed">
+        <item name="android:background">@drawable/shape_bg_btn_red</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">@dimen/padding_normal</item>
+    </style>
+
 </resources>
