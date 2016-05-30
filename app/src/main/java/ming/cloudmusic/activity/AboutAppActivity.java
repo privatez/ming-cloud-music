@@ -22,6 +22,7 @@ import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.util.MusicsManager;
 import ming.cloudmusic.util.ToastUtils;
+import update.UpdateDialog;
 
 /**
  * Created by Lhy on 2016/3/24.
@@ -116,6 +117,7 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
             @Override
             public void onError(int code, String msg) {
                 mTvUpdate.setEnabled(true);
+                ToastUtils.showShort("检查更新失败,请重试...");
                 LogUtils.log("复合与查询失败：" + code + ",msg:" + msg);
             }
         };
@@ -143,7 +145,9 @@ public class AboutAppActivity extends DefalutBaseActivity implements View.OnClic
     }
 
     private void updateApk(AppUpdate app) {
-        LogUtils.log(app.toString());
+        UpdateDialog dialog = new UpdateDialog(mContext);
+        String title = "音乐播放器第 " + app.getVersionCode() + " 版更新啦!";
+        dialog.init(title, app.getChangeLog(), app.getUrl(), "private");
     }
 
     private void findMusicByPath(String musicPath) {

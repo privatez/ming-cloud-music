@@ -193,7 +193,7 @@ public class ScreenOffActivity extends SwipeBackActivity implements OnClickListe
         EventUtil.getDefault().postKeyEvent(eventMsg);
     }
 
-    public class InterceptKeyEventReceiver extends BroadcastReceiver {
+    public static class InterceptKeyEventReceiver extends BroadcastReceiver {
 
         private static final String SYSTEM_DIALOG_REASON_KEY = "reason";
         private static final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";

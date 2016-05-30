@@ -4,3 +4,5 @@
 使用okhttp下载文件
 
 EXOPLAYER
+
+./gradlew assemble -Psuffix=V1

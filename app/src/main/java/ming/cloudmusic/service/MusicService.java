@@ -180,6 +180,13 @@ public class MusicService extends Service {
                 mPlayingPosition = (int) event.getExtras().get(Event.Extra.PLAY_BY_POSITION);
                 play();
                 break;
+            case KeyEvent.SCRREN_OFF:
+                if (mPlayer.isPlaying()) {
+                    Intent action = new Intent(MusicService.this, ScreenOffActivity.class);
+                    action.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(action);
+                }
+                break;
         }
     }
 
@@ -333,17 +340,13 @@ public class MusicService extends Service {
         EventUtil.getDefault().postDataEventHasExtra(eventMsg, extars);
     }
 
-    public class ScreenOffReceiver extends BroadcastReceiver {
+    public static class ScreenOffReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(SCREENOFF_ACTION)) {
-                if (mPlayer.isPlaying()) {
-                    abortBroadcast();
-                    Intent action = new Intent(MusicService.this, ScreenOffActivity.class);
-                    action.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(action);
-                }
+                abortBroadcast();
+                EventUtil.getDefault().postKeyEvent(KeyEvent.SCRREN_OFF);
             }
         }
     }

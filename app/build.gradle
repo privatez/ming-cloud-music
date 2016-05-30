@@ -4,12 +4,21 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    signingConfigs {
+        myConfig {
+            storeFile file("private.jks")
+            storePassword "mlng8023."
+            keyAlias "private"
+            keyPassword "mlng8023."
+        }
+    }
+
     defaultConfig {
         applicationId "ming.cloudmusic"
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName " v1.0.0"
+        versionName " v1.0.2"
     }
 
     compileOptions {
