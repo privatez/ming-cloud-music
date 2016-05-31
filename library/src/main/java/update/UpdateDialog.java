@@ -40,7 +40,7 @@ public class UpdateDialog extends AlertDialog {
         show();
 
         setContentView(R.layout.widget_dialog_update);
-        setCancelable(true);
+        setCancelable(false);
         Window window = getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;

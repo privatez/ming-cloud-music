@@ -13,12 +13,24 @@ android {
         }
     }
 
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.myConfig
+        }
+
+        release {
+            signingConfig signingConfigs.myConfig
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
     defaultConfig {
         applicationId "ming.cloudmusic"
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
-        versionName " v1.0.2"
+        versionName " v1.0.1"
     }
 
     compileOptions {

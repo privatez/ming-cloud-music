@@ -1,7 +1,9 @@
 package ming.cloudmusic.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class LaunchActivity extends DrawableBaseActivity {
             @Override
             public void onSuccess(List<AppUpdate> result) {
                 if (result != null && result.size() > 0) {
-                    updateApk(result.get(0));
+                    showConfirmDialog(result.get(0));
                 } else {
                     checkLoginStatus();
                 }
@@ -79,6 +81,26 @@ public class LaunchActivity extends DrawableBaseActivity {
             }
         };
         BombServer.checkUpdate(mContext, findListener);
+    }
+
+    private void showConfirmDialog(final AppUpdate appUpdate) {
+        new AlertDialog.Builder(mContext).setTitle("音乐播放器第 " + appUpdate.getVersionCode() + " 版更新啦!")//设置对话框标题
+                .setMessage("确定要更新吗?")//设置显示的内容
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {//添加确定按钮
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {//确定按钮的响应事件
+                        updateApk(appUpdate);
+                    }
+
+                }).setNegativeButton("暂时不", new DialogInterface.OnClickListener() {//添加返回按钮
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                checkLoginStatus();
+            }
+
+        }).show();//在按键响应事件中显示此对话框
     }
 
     private void updateApk(AppUpdate app) {
