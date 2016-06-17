@@ -1,4 +1,4 @@
-package update;
+package ming.download;
 
 import android.os.AsyncTask;
 

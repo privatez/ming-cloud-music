@@ -32,6 +32,7 @@ import ming.cloudmusic.fragment.MyMusicFragment;
 import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.FragmentTaskManager;
 import ming.cloudmusic.util.LogUtils;
+import ming.cloudmusic.util.StatusBarUtils;
 import ming.cloudmusic.util.ToastUtils;
 import ming.cloudmusic.view.MenuDrawerHelper;
 
@@ -61,7 +62,8 @@ public class CloudMusicMainActivity extends FragmentActivity implements View.OnC
 
         initView();
         initData();
-
+        StatusBarUtils.setPadding(mContext, findViewById(R.id.fl_content));
+        StatusBarUtils.setStatusBarDefaultBackgroundDrawable(this);
     }
 
     @Override

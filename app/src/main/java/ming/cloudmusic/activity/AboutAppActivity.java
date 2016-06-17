@@ -22,7 +22,7 @@ import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.LogUtils;
 import ming.cloudmusic.util.MusicsManager;
 import ming.cloudmusic.util.ToastUtils;
-import update.UpdateDialog;
+import ming.update.UpdateDialog;
 
 /**
  * Created by Lhy on 2016/3/24.

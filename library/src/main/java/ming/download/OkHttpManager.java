@@ -1,4 +1,4 @@
-package update;
+package ming.download;
 
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.ConnectionPool;
@@ -8,7 +8,6 @@ import com.squareup.okhttp.Protocol;
 import com.squareup.okhttp.internal.Util;
 import com.squareup.okhttp.internal.tls.OkHostnameVerifier;
 
-import java.io.File;
 import java.net.ProxySelector;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -42,33 +41,27 @@ public class OkHttpManager {
     }
 
     public OkHttpClient getDefaultOkHttpClient() {
-
         if (okHttpClient == null) {
-            okHttpClient = new OkHttpClient();
-            okHttpClient.setProtocols(DEFAULT_PROTOCOLS);
-            okHttpClient.setConnectionSpecs(DEFAULT_CONNECTION_SPECS);
-            okHttpClient.setProxySelector(ProxySelector.getDefault());
-            okHttpClient.setSocketFactory(SocketFactory.getDefault());
-            okHttpClient.setHostnameVerifier(OkHostnameVerifier.INSTANCE);
-            okHttpClient.setCertificatePinner(CertificatePinner.DEFAULT);
-            okHttpClient.setConnectionPool(ConnectionPool.getDefault());
-            okHttpClient.setFollowRedirects(true);
-            okHttpClient.setFollowSslRedirects(true);
-            okHttpClient.setRetryOnConnectionFailure(true);
-            okHttpClient.setConnectTimeout(10000, TimeUnit.MILLISECONDS);
-            okHttpClient.setWriteTimeout(10000, TimeUnit.MILLISECONDS);
-            okHttpClient.setReadTimeout(10000, TimeUnit.MILLISECONDS);
+            setOkHttpClientConfig();
         }
-
         return okHttpClient;
-
     }
 
-    public static void download(String url, File target, FileDownloadCallback callback) {
-        if (url != null && url.length() > 0 && target != null) {
-            FileDownloadTask task = new FileDownloadTask(url, target, callback);
-            task.execute();
-        }
+    private void setOkHttpClientConfig() {
+        okHttpClient = new OkHttpClient();
+        okHttpClient.setProtocols(DEFAULT_PROTOCOLS);
+        okHttpClient.setConnectionSpecs(DEFAULT_CONNECTION_SPECS);
+        okHttpClient.setProxySelector(ProxySelector.getDefault());
+        okHttpClient.setSocketFactory(SocketFactory.getDefault());
+        okHttpClient.setHostnameVerifier(OkHostnameVerifier.INSTANCE);
+        okHttpClient.setCertificatePinner(CertificatePinner.DEFAULT);
+        okHttpClient.setConnectionPool(ConnectionPool.getDefault());
+        okHttpClient.setFollowRedirects(true);
+        okHttpClient.setFollowSslRedirects(true);
+        okHttpClient.setRetryOnConnectionFailure(true);
+        okHttpClient.setConnectTimeout(10000, TimeUnit.MILLISECONDS);
+        okHttpClient.setWriteTimeout(10000, TimeUnit.MILLISECONDS);
+        okHttpClient.setReadTimeout(10000, TimeUnit.MILLISECONDS);
     }
 
 }

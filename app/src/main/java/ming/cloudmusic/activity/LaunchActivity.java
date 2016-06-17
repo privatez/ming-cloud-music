@@ -13,7 +13,7 @@ import ming.cloudmusic.api.BombServer;
 import ming.cloudmusic.model.AppUpdate;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.LogUtils;
-import update.UpdateDialog;
+import ming.update.UpdateDialog;
 
 /**
  * Created by Lhy on 2016/3/5.

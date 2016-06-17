@@ -7,11 +7,11 @@ import android.os.Bundle;
 import java.util.HashMap;
 import java.util.Map;
 
-import ming.cloudmusic.R;
 import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.util.Constant;
 import ming.cloudmusic.util.CustomUtils;
 import ming.cloudmusic.util.SharedPrefsUtil;
+import ming.cloudmusic.util.StatusBarUtils;
 import ming.cloudmusic.view.OnViewCreateListener;
 
 /**
@@ -40,7 +40,7 @@ public abstract class DefalutBaseActivity extends Activity implements OnViewCrea
     }
 
     protected void setStatusBar() {
-        CustomUtils.setStatusBarColor(this, getResources().getDrawable(R.drawable.actionbar_bg));
+        StatusBarUtils.setStatusBarDefaultBackgroundDrawable(this);
     }
 
     protected void postEventMsg(String eventMsg) {

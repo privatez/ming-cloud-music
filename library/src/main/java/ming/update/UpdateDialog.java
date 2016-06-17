@@ -1,10 +1,11 @@
-package update;
+package ming.update;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,9 +17,11 @@ import android.widget.TextView;
 import java.io.File;
 
 import me.imid.swipebacklayout.lib.R;
+import ming.download.FileDownloadCallback;
+import ming.download.FileUtils;
 
 /**
- * reconstuct by private on 16/5/28.
+ * Created by private on 16/5/28.
  */
 public class UpdateDialog extends AlertDialog {
 
@@ -35,7 +38,7 @@ public class UpdateDialog extends AlertDialog {
 
     public void init(String title, String content, final String downloadUrl, String appName) {
 
-        final String localPath = Environment.getExternalStorageDirectory() + "/download/" + appName + ".apk";
+        final String localPath = Environment.getExternalStorageDirectory() + "/cloudmusic/download/" + appName + ".apk";
 
         show();
 
@@ -68,12 +71,10 @@ public class UpdateDialog extends AlertDialog {
                 FileDownloadCallback callback = new FileDownloadCallback() {
                     @Override
                     public void onStart() {
-                        super.onStart();
                     }
 
                     @Override
                     public void onProgress(float downloaded, long total) {
-                        super.onProgress(downloaded, total);
                         pb_progress.setMax((int) (total / 1000000.0));
                         tv_progress.setText(String.format("%.1fMB/%.1fMB", downloaded / 1000000.0, (float) (total / 1000000.0)));
                         pb_progress.setProgress((int) (downloaded / 1000000.0));
@@ -81,7 +82,6 @@ public class UpdateDialog extends AlertDialog {
 
                     @Override
                     public void onFailure() {
-                        super.onFailure();
                         btn_submit.setVisibility(View.VISIBLE);
                         ll_progress.setVisibility(View.GONE);
                         pb_progress.setVisibility(View.GONE);
@@ -89,7 +89,6 @@ public class UpdateDialog extends AlertDialog {
 
                     @Override
                     public void onDone() {
-                        super.onDone();
                         btn_submit.setVisibility(View.VISIBLE);
                         ll_progress.setVisibility(View.GONE);
                         pb_progress.setVisibility(View.GONE);
@@ -104,10 +103,10 @@ public class UpdateDialog extends AlertDialog {
     }
 
     private void downloadFile(String url, File target, FileDownloadCallback callback) {
-        if (url == null || url.length() <= 0 || target == null || callback == null) {
+        if (TextUtils.isEmpty(url) || target == null || callback == null) {
             return;
         }
-        OkHttpManager.download(url, target, callback);
+        FileUtils.download(url, target, callback);
     }
 
     private void installApk(String apkPath) {

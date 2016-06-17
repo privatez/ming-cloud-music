@@ -1,4 +1,4 @@
-package update;
+package ming.download;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,13 @@ import java.io.IOException;
  * Created by private on 16/5/28.
  */
 public class FileUtils {
+
+    public static void download(String url, File target, FileDownloadCallback callback) {
+        if (url != null && url.length() > 0 && target != null) {
+            FileDownloadTask task = new FileDownloadTask(url, target, callback);
+            task.execute();
+        }
+    }
 
     public static void forceMkdir(File directory) throws IOException {
         if (directory.exists()) {

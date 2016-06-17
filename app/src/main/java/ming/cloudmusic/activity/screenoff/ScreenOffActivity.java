@@ -30,7 +30,7 @@ import ming.cloudmusic.event.EventUtil;
 import ming.cloudmusic.event.model.KeyEvent;
 import ming.cloudmusic.event.model.ServiceEvent;
 import ming.cloudmusic.util.Constant;
-import ming.cloudmusic.util.CustomUtils;
+import ming.cloudmusic.util.StatusBarUtils;
 
 /**
  * Created by lihaiye on 16/4/26.
@@ -59,7 +59,7 @@ public class ScreenOffActivity extends SwipeBackActivity implements OnClickListe
         setContentView(R.layout.activity_screenoff);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        CustomUtils.setTranslucent(this);
+        StatusBarUtils.setStatusBarTranslucent(this);
 
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setSwipeMode(SwipeBackLayout.FULL_SCREEN_LEFT);
