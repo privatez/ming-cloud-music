@@ -139,9 +139,11 @@ public class StatusBarUtils {
     }
 
     public static void setPadding(Context context, View view) {
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
-        view.setPadding(0, statusBarHeight, 0, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            int statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+            view.setPadding(0, statusBarHeight, 0, 0);
+        }
     }
 
     /**
