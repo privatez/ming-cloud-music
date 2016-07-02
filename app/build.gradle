@@ -27,7 +27,7 @@ android {
 
     defaultConfig {
         applicationId "ming.cloudmusic"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName " v1.0.1"
@@ -66,7 +66,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'org.xutils:xutils:3.3.20'
@@ -77,4 +77,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.okio:okio:1.4.0'
     compile project(path: ':library')
+    compile project(':libraries:android-library-util')
 }

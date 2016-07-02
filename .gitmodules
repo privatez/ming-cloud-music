@@ -1,0 +1,5 @@
+
+[submodule "libraries/android-library-util"]
+	path = libraries/android-library-util
+	url = git@github.com:privatez/android-library-util.git
+	branch = master
